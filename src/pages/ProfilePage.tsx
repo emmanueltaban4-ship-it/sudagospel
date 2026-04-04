@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useIsAdmin } from "@/hooks/use-admin";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { LogIn, UserPlus, Music, Heart, Download, Settings, Upload, LogOut } from "lucide-react";
+import { LogIn, UserPlus, Music, Heart, Download, Settings, Upload, LogOut, Shield } from "lucide-react";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
