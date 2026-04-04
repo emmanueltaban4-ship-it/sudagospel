@@ -7,10 +7,12 @@ import AdminApprovalQueue from "@/components/admin/AdminApprovalQueue";
 import AdminUserManagement from "@/components/admin/AdminUserManagement";
 import AdminModeration from "@/components/admin/AdminModeration";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft } from "lucide-react";
+import AdminArticles from "@/components/admin/AdminArticles";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
+  { id: "articles", label: "Articles", icon: FileText },
   { id: "approvals", label: "Approvals", icon: CheckSquare },
   { id: "users", label: "Users", icon: Users },
   { id: "moderation", label: "Moderation", icon: MessageCircle },
