@@ -1,6 +1,7 @@
 import { Bell, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
+import ThemeToggle from "./ThemeToggle";
 
 const TopBar = () => {
   return (
