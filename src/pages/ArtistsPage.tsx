@@ -28,6 +28,7 @@ const ArtistsPage = () => {
         name: a.name,
         genre: a.genre || "Gospel",
         songs: (a.songs as any)?.[0]?.count || 0,
+        avatarUrl: a.avatar_url,
       }))
     : demoArtists;
 
