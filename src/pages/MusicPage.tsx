@@ -2,25 +2,48 @@ import Layout from "@/components/Layout";
 import SongCard from "@/components/SongCard";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Search, SlidersHorizontal } from "lucide-react";
+import { useSongs } from "@/hooks/use-music-data";
+import { useState } from "react";
 
-const allSongs = [
-  { title: "Hallelujah Praise", artist: "Grace Worship", coverUrl: "", plays: "12.5K" },
-  { title: "Juba Rejoice", artist: "Emmanuel Choir", coverUrl: "", plays: "8.3K" },
-  { title: "South Sudan Worship", artist: "Faith Singers", coverUrl: "", plays: "6.1K" },
-  { title: "New Dawn", artist: "Hope Ministry", coverUrl: "", plays: "4.7K" },
-  { title: "Glory to God", artist: "David Lual", coverUrl: "", plays: "3.9K" },
-  { title: "Praise Him", artist: "Sarah Ayen", coverUrl: "", plays: "2.8K" },
-  { title: "Mighty Savior", artist: "Juba Praise", coverUrl: "", plays: "2.1K" },
-  { title: "Rise Up", artist: "Gospel Stars", coverUrl: "", plays: "1.9K" },
-  { title: "Holy Ground", artist: "Worship Team", coverUrl: "", plays: "1.5K" },
-  { title: "Amazing Grace", artist: "Mary Akech", coverUrl: "", plays: "1.2K" },
-  { title: "Blessed Assurance", artist: "Faith Choir", coverUrl: "", plays: "980" },
-  { title: "Redeemed", artist: "Christ Ensemble", coverUrl: "", plays: "870" },
+const demoSongs = [
+  { title: "Hallelujah Praise", artist: "Grace Worship", plays: "12.5K" },
+  { title: "Juba Rejoice", artist: "Emmanuel Choir", plays: "8.3K" },
+  { title: "South Sudan Worship", artist: "Faith Singers", plays: "6.1K" },
+  { title: "New Dawn", artist: "Hope Ministry", plays: "4.7K" },
+  { title: "Glory to God", artist: "David Lual", plays: "3.9K" },
+  { title: "Praise Him", artist: "Sarah Ayen", plays: "2.8K" },
+  { title: "Mighty Savior", artist: "Juba Praise", plays: "2.1K" },
+  { title: "Rise Up", artist: "Gospel Stars", plays: "1.9K" },
+  { title: "Holy Ground", artist: "Worship Team", plays: "1.5K" },
+  { title: "Amazing Grace", artist: "Mary Akech", plays: "1.2K" },
+  { title: "Blessed Assurance", artist: "Faith Choir", plays: "980" },
+  { title: "Redeemed", artist: "Christ Ensemble", plays: "870" },
 ];
 
 const categories = ["All", "Worship", "Praise", "Afro Gospel", "Traditional", "Contemporary"];
 
 const MusicPage = () => {
+  const { data: songs } = useSongs();
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  // Use real songs if available, else demo
+  const displaySongs = songs && songs.length > 0
+    ? songs.map((s) => ({
+        title: s.title,
+        artist: (s.artists as any)?.name || "Unknown",
+        plays: `${s.play_count || 0}`,
+        coverUrl: s.cover_url || "",
+        fileUrl: s.file_url,
+      }))
+    : demoSongs.map((s) => ({ ...s, coverUrl: "", fileUrl: "" }));
+
+  const filtered = displaySongs.filter((s) => {
+    const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) ||
+      s.artist.toLowerCase().includes(search.toLowerCase());
+    return matchSearch;
+  });
+
   return (
     <Layout>
       <div className="container py-6">
@@ -28,13 +51,14 @@ const MusicPage = () => {
           🎵 Explore Music
         </h1>
 
-        {/* Search */}
         <div className="flex gap-2 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search songs, artists..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-full border border-input bg-card pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
@@ -43,13 +67,13 @@ const MusicPage = () => {
           </button>
         </div>
 
-        {/* Categories */}
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-4">
-          {categories.map((cat, i) => (
+          {categories.map((cat) => (
             <button
               key={cat}
+              onClick={() => setActiveCategory(cat)}
               className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                i === 0
+                activeCategory === cat
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
@@ -59,10 +83,9 @@ const MusicPage = () => {
           ))}
         </div>
 
-        {/* Songs Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-          {allSongs.map((song) => (
-            <SongCard key={song.title} {...song} />
+          {filtered.map((song) => (
+            <SongCard key={song.title} title={song.title} artist={song.artist} coverUrl={song.coverUrl} plays={song.plays} />
           ))}
         </div>
       </div>
