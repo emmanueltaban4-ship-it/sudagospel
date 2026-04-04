@@ -1,4 +1,4 @@
-import { Search, Upload, Menu, X } from "lucide-react";
+import { Search, Upload, Menu, X, Crown } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
