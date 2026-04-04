@@ -20,7 +20,7 @@ const TopBar = () => {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
-            {["Music", "Artists", "News", "Blog"].map((item) => (
+            {["Music", "Artists", "News"].map((item) => (
               <Link
                 key={item}
                 to={`/${item.toLowerCase()}`}
