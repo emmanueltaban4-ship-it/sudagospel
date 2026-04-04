@@ -11,11 +11,13 @@ import AdminArticles from "@/components/admin/AdminArticles";
 import AdminSiteSettings from "@/components/admin/AdminSiteSettings";
 import AdminSongManagement from "@/components/admin/AdminSongManagement";
 import AdminArtistManagement from "@/components/admin/AdminArtistManagement";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2 } from "lucide-react";
+import AdminAds from "@/components/admin/AdminAds";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "settings", label: "Settings", icon: Settings2 },
+  { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
   { id: "artists", label: "Artists", icon: Mic2 },
   { id: "articles", label: "Articles", icon: FileText },
