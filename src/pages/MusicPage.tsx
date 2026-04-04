@@ -3,6 +3,7 @@ import SongCard from "@/components/SongCard";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useSongs } from "@/hooks/use-music-data";
+import { Track } from "@/hooks/use-player";
 import { useState } from "react";
 
 const demoSongs = [
@@ -27,19 +28,34 @@ const MusicPage = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Use real songs if available, else demo
-  const displaySongs = songs && songs.length > 0
+  const hasRealSongs = songs && songs.length > 0;
+
+  const realSongCards = hasRealSongs
     ? songs.map((s) => ({
+        id: s.id,
         title: s.title,
         artist: (s.artists as any)?.name || "Unknown",
         plays: `${s.play_count || 0}`,
         coverUrl: s.cover_url || "",
         fileUrl: s.file_url,
       }))
-    : demoSongs.map((s) => ({ ...s, coverUrl: "", fileUrl: "" }));
+    : [];
+
+  const queue: Track[] = realSongCards.map((s) => ({
+    id: s.id,
+    title: s.title,
+    artist: s.artist,
+    fileUrl: s.fileUrl,
+    coverUrl: s.coverUrl,
+  }));
+
+  const displaySongs = hasRealSongs
+    ? realSongCards
+    : demoSongs.map((s) => ({ ...s, id: undefined as string | undefined, coverUrl: "", fileUrl: "" }));
 
   const filtered = displaySongs.filter((s) => {
-    const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) ||
+    const matchSearch =
+      s.title.toLowerCase().includes(search.toLowerCase()) ||
       s.artist.toLowerCase().includes(search.toLowerCase());
     return matchSearch;
   });
@@ -85,7 +101,16 @@ const MusicPage = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {filtered.map((song) => (
-            <SongCard key={song.title} title={song.title} artist={song.artist} coverUrl={song.coverUrl} plays={song.plays} />
+            <SongCard
+              key={song.id || song.title}
+              id={song.id}
+              title={song.title}
+              artist={song.artist}
+              coverUrl={song.coverUrl}
+              plays={song.plays}
+              fileUrl={song.fileUrl}
+              queue={queue}
+            />
           ))}
         </div>
       </div>

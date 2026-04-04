@@ -1,24 +1,62 @@
-import { Play, Heart, Download, Share2 } from "lucide-react";
+import { Play, Pause, Heart, Download, Share2 } from "lucide-react";
+import { usePlayer, Track } from "@/hooks/use-player";
+import { Link } from "react-router-dom";
 
 interface SongCardProps {
+  id?: string;
   title: string;
   artist: string;
   coverUrl: string;
   plays: string;
+  fileUrl?: string;
+  queue?: Track[];
 }
 
-const SongCard = ({ title, artist, coverUrl, plays }: SongCardProps) => {
-  return (
+const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCardProps) => {
+  const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
+
+  const isCurrentTrack = currentTrack?.id === id;
+
+  const handlePlay = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!id || !fileUrl) return;
+    if (isCurrentTrack) {
+      togglePlay();
+    } else {
+      play({ id, title, artist, fileUrl, coverUrl }, queue);
+    }
+  };
+
+  const cardContent = (
     <div className="group flex flex-col rounded-lg bg-card border border-border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <div className="relative aspect-square overflow-hidden">
-        <div className="absolute inset-0 bg-gospel-dark/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-          <button className="rounded-full bg-primary p-3 text-primary-foreground shadow-lg hover:scale-110 transition-transform">
-            <Play className="h-6 w-6" fill="currentColor" />
-          </button>
-        </div>
-        <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-3xl font-heading font-bold text-primary-foreground">
-          {title[0]}
-        </div>
+        {fileUrl && (
+          <div className="absolute inset-0 bg-gospel-dark/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <button
+              onClick={handlePlay}
+              className="rounded-full bg-primary p-3 text-primary-foreground shadow-lg hover:scale-110 transition-transform"
+            >
+              {isCurrentTrack && isPlaying ? (
+                <Pause className="h-6 w-6" />
+              ) : (
+                <Play className="h-6 w-6" fill="currentColor" />
+              )}
+            </button>
+          </div>
+        )}
+        {coverUrl ? (
+          <img src={coverUrl} alt={title} className="h-full w-full object-cover" loading="lazy" />
+        ) : (
+          <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-3xl font-heading font-bold text-primary-foreground">
+            {title[0]}
+          </div>
+        )}
+        {isCurrentTrack && (
+          <div className="absolute bottom-1 left-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+            {isPlaying ? "Playing" : "Paused"}
+          </div>
+        )}
       </div>
       <div className="p-3">
         <h3 className="font-heading font-semibold text-sm truncate text-card-foreground">
@@ -42,6 +80,12 @@ const SongCard = ({ title, artist, coverUrl, plays }: SongCardProps) => {
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/song/${id}`}>{cardContent}</Link>;
+  }
+
+  return cardContent;
 };
 
 export default SongCard;
