@@ -105,17 +105,10 @@ const AdminArticles = () => {
               ))}
             </div>
           </div>
-          <div>
-            <label className="text-xs font-semibold text-muted-foreground mb-1 block">Cover Image URL</label>
-            <Input
-              value={form.cover_url}
-              onChange={(e) => setForm({ ...form, cover_url: e.target.value })}
-              placeholder="https://..."
-            />
-            {form.cover_url && (
-              <img src={form.cover_url} alt="Cover preview" className="mt-2 h-32 w-full object-cover rounded-lg" />
-            )}
-          </div>
+          <CoverImageUpload
+            coverUrl={form.cover_url}
+            onCoverChange={(url) => setForm({ ...form, cover_url: url })}
+          />
           <div>
             <label className="text-xs font-semibold text-muted-foreground mb-1 block">Excerpt</label>
             <Textarea
