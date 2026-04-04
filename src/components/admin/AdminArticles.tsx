@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAllArticles, useCreateArticle, useUpdateArticle, useDeleteArticle, Article } from "@/hooks/use-articles";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit2, Trash2, Eye, EyeOff, FileText, ArrowLeft } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, FileText, ArrowLeft, Upload, X, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
