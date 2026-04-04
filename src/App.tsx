@@ -12,6 +12,7 @@ import NewsPage from "./pages/NewsPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import UploadPage from "./pages/UploadPage.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
 import SongDetailPage from "./pages/SongDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
