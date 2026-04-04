@@ -1,13 +1,20 @@
-import { Bell, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, Upload, Menu, X } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import ThemeToggle from "./ThemeToggle";
 import SearchOverlay from "./SearchOverlay";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
+const navLinks = [
+  { to: "/", label: "DISCOVER" },
+  { to: "/playlists", label: "PLAYLISTS" },
+  { to: "/news", label: "NEWS" },
+];
+
 const TopBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: settings } = useSiteSettings();
 
   const siteName = settings?.site_name || "Sudagospel";
@@ -15,39 +22,61 @@ const TopBar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-lg">
-        <div className="container flex h-14 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logoUrl || logo} alt={siteName} className="h-8 w-8 rounded object-contain" />
-            <span className="font-heading text-lg font-bold text-gradient-brand">
+      <header className="sticky top-0 z-50 bg-background border-b border-border">
+        <div className="container flex h-14 items-center justify-between gap-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+            <img src={logoUrl || logo} alt={siteName} className="h-7 w-7 rounded object-contain" />
+            <span className="font-heading text-lg font-extrabold text-primary hidden sm:block">
               {siteName}
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            {["Music", "Artists", "News"].map((item) => (
-              <Link
-                key={item}
-                to={`/${item.toLowerCase()}`}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          {/* Search bar - desktop */}
+          <div className="hidden md:flex flex-1 max-w-md mx-4">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="w-full flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm text-muted-foreground hover:bg-muted/80 transition-colors"
+            >
+              <Search className="h-4 w-4" />
+              <span>Search for artists, songs, albums!</span>
+            </button>
+          </div>
+
+          {/* Desktop nav links */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === "/"}
+                className={({ isActive }) =>
+                  `px-3 py-1.5 text-xs font-bold tracking-wide transition-colors ${
+                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`
+                }
               >
-                {item}
-              </Link>
+                {item.label}
+              </NavLink>
             ))}
           </nav>
 
+          {/* Right actions */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => setSearchOpen(true)}
-              className="rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors"
+              className="md:hidden rounded-full p-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Search className="h-5 w-5" />
             </button>
             <ThemeToggle />
-            <button className="rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary" />
-            </button>
+            <Link
+              to="/upload"
+              className="hidden sm:inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs rounded-full px-4 py-2 transition-colors"
+            >
+              <Upload className="h-3.5 w-3.5" />
+              UPLOAD
+            </Link>
           </div>
         </div>
       </header>

@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Plus Jakarta Sans', 'sans-serif'],
-        body: ['DM Sans', 'sans-serif'],
+        heading: ['Inter', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -50,12 +50,6 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        gospel: {
-          red: "hsl(var(--gospel-red))",
-          green: "hsl(var(--gospel-green))",
-          dark: "hsl(var(--gospel-dark))",
-          gold: "hsl(var(--gospel-gold))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
