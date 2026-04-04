@@ -1,15 +1,85 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAllArticles, useCreateArticle, useUpdateArticle, useDeleteArticle, Article } from "@/hooks/use-articles";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit2, Trash2, Eye, EyeOff, FileText, ArrowLeft } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, FileText, ArrowLeft, Upload, X, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 const slugify = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 const CATEGORIES = ["News", "Events", "Music", "Inspiration", "Announcements"];
+
+const CoverImageUpload = ({ coverUrl, onCoverChange }: { coverUrl: string; onCoverChange: (url: string) => void }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from("blog-covers").upload(fileName, file);
+    if (error) {
+      toast.error("Upload failed: " + error.message);
+      setUploading(false);
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("blog-covers").getPublicUrl(fileName);
+    onCoverChange(urlData.publicUrl);
+    setUploading(false);
+    toast.success("Cover image uploaded");
+  };
+
+  return (
+    <div>
+      <label className="text-xs font-semibold text-muted-foreground mb-1 block">Cover Image</label>
+      {coverUrl ? (
+        <div className="relative">
+          <img src={coverUrl} alt="Cover preview" className="h-40 w-full object-cover rounded-lg" />
+          <button
+            onClick={() => onCoverChange("")}
+            className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="w-full h-32 rounded-lg border-2 border-dashed border-border hover:border-primary/50 flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {uploading ? (
+            <>
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span className="text-xs">Uploading...</span>
+            </>
+          ) : (
+            <>
+              <Upload className="h-6 w-6" />
+              <span className="text-xs font-medium">Click to upload cover image</span>
+              <span className="text-[10px]">JPG, PNG, WebP · Max 5MB</span>
+            </>
+          )}
+        </button>
+      )}
+      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+    </div>
+  );
+};
 
 const AdminArticles = () => {
   const { data: articles, isLoading } = useAllArticles();
@@ -103,17 +173,10 @@ const AdminArticles = () => {
               ))}
             </div>
           </div>
-          <div>
-            <label className="text-xs font-semibold text-muted-foreground mb-1 block">Cover Image URL</label>
-            <Input
-              value={form.cover_url}
-              onChange={(e) => setForm({ ...form, cover_url: e.target.value })}
-              placeholder="https://..."
-            />
-            {form.cover_url && (
-              <img src={form.cover_url} alt="Cover preview" className="mt-2 h-32 w-full object-cover rounded-lg" />
-            )}
-          </div>
+          <CoverImageUpload
+            coverUrl={form.cover_url}
+            onCoverChange={(url) => setForm({ ...form, cover_url: url })}
+          />
           <div>
             <label className="text-xs font-semibold text-muted-foreground mb-1 block">Excerpt</label>
             <Textarea
