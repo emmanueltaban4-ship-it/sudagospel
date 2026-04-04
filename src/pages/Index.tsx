@@ -73,6 +73,11 @@ const Index = () => {
     <Layout>
       <HeroSection />
 
+      {/* Top Ad Banner */}
+      <div className="px-4 lg:px-6 py-4">
+        <AdBanner position="homepage_top" />
+      </div>
+
       {/* Trending Songs */}
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
