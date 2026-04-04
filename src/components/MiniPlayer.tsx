@@ -18,10 +18,10 @@ const MiniPlayer = () => {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border">
-      {/* Progress bar on top */}
+    <div className="fixed bottom-[52px] md:bottom-0 left-0 right-0 z-40 bg-card border-t border-border">
+      {/* Progress bar */}
       <div
-        className="h-1 bg-muted cursor-pointer"
+        className="h-0.5 bg-muted cursor-pointer"
         onClick={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           const pct = (e.clientX - rect.left) / rect.width;
@@ -34,12 +34,14 @@ const MiniPlayer = () => {
       <div className="container flex items-center gap-3 px-4 py-2">
         <button
           onClick={() => navigate(`/song/${currentTrack.id}`)}
-          className="h-10 w-10 rounded-md bg-gradient-brand flex-shrink-0 flex items-center justify-center text-primary-foreground font-heading font-bold text-sm overflow-hidden"
+          className="h-10 w-10 rounded flex-shrink-0 overflow-hidden bg-muted"
         >
           {currentTrack.coverUrl ? (
             <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover" />
           ) : (
-            currentTrack.title[0]
+            <div className="h-full w-full flex items-center justify-center text-sm font-bold text-muted-foreground">
+              {currentTrack.title[0]}
+            </div>
           )}
         </button>
 
@@ -64,7 +66,7 @@ const MiniPlayer = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-2 flex-1">
-          <span className="text-xs text-muted-foreground w-10 text-right">{formatTime(currentTime)}</span>
+          <span className="text-xs text-muted-foreground w-10 text-right tabular-nums">{formatTime(currentTime)}</span>
           <div
             className="flex-1 h-1 rounded-full bg-muted cursor-pointer"
             onClick={(e) => {
@@ -75,7 +77,7 @@ const MiniPlayer = () => {
           >
             <div className="h-full rounded-full bg-primary transition-all duration-150" style={{ width: `${progress}%` }} />
           </div>
-          <span className="text-xs text-muted-foreground w-10">{formatTime(duration)}</span>
+          <span className="text-xs text-muted-foreground w-10 tabular-nums">{formatTime(duration)}</span>
         </div>
       </div>
     </div>

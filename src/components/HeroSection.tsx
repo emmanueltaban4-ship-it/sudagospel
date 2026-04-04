@@ -32,7 +32,7 @@ const HeroSection = () => {
   }, [featuredSongs]);
 
   const activeSong = featuredSongs?.[activeIndex];
-  const artist = (activeSong?.artists as any);
+  const artist = activeSong?.artists as any;
 
   const handlePlay = () => {
     if (!activeSong) return;
@@ -52,57 +52,75 @@ const HeroSection = () => {
 
   const isCurrent = currentTrack?.id === activeSong?.id;
 
+  if (!activeSong) {
+    return (
+      <section className="relative bg-background py-12 md:py-20">
+        <div className="container text-center">
+          <h1 className="font-heading text-3xl md:text-5xl font-black text-foreground mb-3">
+            The music platform <span className="text-primary">empowering artists.</span>
+          </h1>
+          <p className="text-muted-foreground text-sm md:text-base max-w-lg mx-auto mb-6">
+            Sudagospel is an artist-first platform that helps musicians reach and engage fans across the world.
+          </p>
+          <Link
+            to="/upload"
+            className="inline-flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold text-sm rounded-full px-8 py-3 transition-all"
+          >
+            Upload your music for FREE
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="relative overflow-hidden bg-gospel-dark">
-      {/* Background image with parallax effect */}
-      <div className="absolute inset-0 transition-all duration-1000 ease-in-out">
-        {activeSong?.cover_url && (
+    <section className="relative overflow-hidden bg-background">
+      {/* Subtle background glow */}
+      <div className="absolute inset-0">
+        {activeSong.cover_url && (
           <img
             src={activeSong.cover_url}
             alt=""
-            className="h-full w-full object-cover scale-110 blur-sm opacity-40"
+            className="h-full w-full object-cover scale-125 blur-3xl opacity-15"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-transparent to-background/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background" />
       </div>
 
-      <div className="container relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-10 py-10 md:py-16 min-h-[300px] md:min-h-[380px]">
+      <div className="container relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-10 py-8 md:py-14">
         {/* Cover art */}
-        {activeSong && (
-          <button
-            onClick={handlePlay}
-            className="relative group flex-shrink-0 w-40 h-40 md:w-52 md:h-52 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 transition-transform hover:scale-[1.03]"
-          >
-            {activeSong.cover_url ? (
-              <img src={activeSong.cover_url} alt={activeSong.title} className="h-full w-full object-cover" />
-            ) : (
-              <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-4xl font-heading font-bold text-primary-foreground">
-                {activeSong.title[0]}
-              </div>
-            )}
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              {isCurrent && isPlaying ? (
-                <Pause className="h-12 w-12 text-white drop-shadow-lg" />
-              ) : (
-                <Play className="h-12 w-12 text-white drop-shadow-lg" fill="white" />
-              )}
+        <button
+          onClick={handlePlay}
+          className="relative group flex-shrink-0 w-40 h-40 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-2xl transition-transform hover:scale-[1.02]"
+        >
+          {activeSong.cover_url ? (
+            <img src={activeSong.cover_url} alt={activeSong.title} className="h-full w-full object-cover" />
+          ) : (
+            <div className="h-full w-full bg-muted flex items-center justify-center text-5xl font-heading font-black text-muted-foreground">
+              {activeSong.title[0]}
             </div>
-            {isCurrent && (
-              <div className="absolute bottom-2 left-2 rounded-full bg-primary px-2.5 py-0.5 text-[10px] font-bold text-primary-foreground animate-pulse">
-                {isPlaying ? "♫ NOW PLAYING" : "⏸ PAUSED"}
-              </div>
+          )}
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {isCurrent && isPlaying ? (
+              <Pause className="h-14 w-14 text-white drop-shadow-lg" />
+            ) : (
+              <Play className="h-14 w-14 text-white drop-shadow-lg" fill="white" />
             )}
-          </button>
-        )}
+          </div>
+          {isCurrent && (
+            <div className="absolute bottom-2 left-2 rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-primary-foreground">
+              {isPlaying ? "NOW PLAYING" : "PAUSED"}
+            </div>
+          )}
+        </button>
 
         {/* Song info */}
         <div className="flex-1 text-center md:text-left">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2">
-            ★ FEATURED TRACK
+            ★ FEATURED
           </p>
-          <h1 className="font-heading text-2xl md:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight mb-1 line-clamp-2">
-            {activeSong?.title || "Sudagospel"}
+          <h1 className="font-heading text-2xl md:text-4xl lg:text-5xl font-black text-foreground leading-tight mb-2 line-clamp-2">
+            {activeSong.title}
           </h1>
           {artist && (
             <Link
@@ -110,21 +128,21 @@ const HeroSection = () => {
               className="inline-flex items-center gap-2 mt-1 mb-4 group"
             >
               {artist.avatar_url && (
-                <img src={artist.avatar_url} alt={artist.name} className="w-6 h-6 rounded-full object-cover ring-1 ring-white/20" />
+                <img src={artist.avatar_url} alt={artist.name} className="w-6 h-6 rounded-full object-cover" />
               )}
               <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors font-medium">
                 {artist.name}
               </span>
             </Link>
           )}
-          <p className="text-muted-foreground text-sm mb-5 max-w-md mx-auto md:mx-0">
-            {activeSong?.genre || "Gospel"} · {(activeSong?.play_count || 0).toLocaleString()} plays
+          <p className="text-muted-foreground text-sm mb-5">
+            {activeSong.genre || "Gospel"} · {(activeSong.play_count || 0).toLocaleString()} plays
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
             <button
               onClick={handlePlay}
-              className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-full px-7 py-2.5 transition-colors shadow-lg shadow-primary/25"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-full px-7 py-2.5 transition-colors"
             >
               {isCurrent && isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" fill="currentColor" />}
               {isCurrent && isPlaying ? "Pause" : "Play Now"}
@@ -141,7 +159,7 @@ const HeroSection = () => {
 
       {/* Carousel dots */}
       {featuredSongs && featuredSongs.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
           {featuredSongs.map((_, i) => (
             <button
               key={i}
