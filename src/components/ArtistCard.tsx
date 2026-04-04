@@ -4,15 +4,25 @@ interface ArtistCardProps {
   name: string;
   genre: string;
   songs: number;
+  avatarUrl?: string | null;
 }
 
-const ArtistCard = ({ name, genre, songs }: ArtistCardProps) => {
+const ArtistCard = ({ name, genre, songs, avatarUrl }: ArtistCardProps) => {
   return (
     <div className="flex flex-col items-center gap-2 group cursor-pointer">
       <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-full overflow-hidden ring-2 ring-border group-hover:ring-primary transition-all duration-300">
-        <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-2xl font-heading font-bold text-primary-foreground">
-          {name[0]}
-        </div>
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={name}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-2xl font-heading font-bold text-primary-foreground">
+            {name[0]}
+          </div>
+        )}
       </div>
       <div className="text-center">
         <h3 className="font-heading font-semibold text-sm text-foreground">{name}</h3>
