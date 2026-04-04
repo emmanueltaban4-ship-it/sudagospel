@@ -63,6 +63,18 @@ const SongDetailPage = () => {
   const postComment = usePostComment(id!);
   const deleteComment = useDeleteComment();
 
+  const artist = (song as any)?.artists;
+  const artistName = artist?.name || "Unknown Artist";
+
+  useDocumentMeta({
+    title: song ? `${song.title} by ${artistName}` : undefined,
+    description: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    ogTitle: song ? `${song.title} by ${artistName}` : undefined,
+    ogDescription: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    ogImage: song?.cover_url || undefined,
+    ogType: "music.song",
+  });
+
   if (isLoading) {
     return (
       <Layout>
@@ -84,20 +96,9 @@ const SongDetailPage = () => {
     );
   }
 
-  const artist = song.artists as any;
-  const artistName = artist?.name || "Unknown Artist";
   const isCurrentTrack = currentTrack?.id === song.id;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const ogShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${song.id}`;
-
-  useDocumentMeta({
-    title: `${song.title} by ${artistName}`,
-    description: song.description || `Listen to ${song.title} by ${artistName} on Sudagospel.`,
-    ogTitle: `${song.title} by ${artistName}`,
-    ogDescription: song.description || `Listen to ${song.title} by ${artistName} on Sudagospel.`,
-    ogImage: song.cover_url || undefined,
-    ogType: "music.song",
-  });
 
   const formatTime = (s: number) => {
     if (!s || isNaN(s)) return "0:00";
