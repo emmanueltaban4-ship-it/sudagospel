@@ -78,6 +78,12 @@ const ArtistDetailPage = () => {
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
 
+  useDocumentMeta({
+    title: artist?.name || "Artist",
+    description: artist?.bio || `Listen to ${artist?.name || "this artist"}'s music on Sudagospel.`,
+    ogImage: artist?.avatar_url || undefined,
+  });
+
   const handlePlayAll = () => {
     if (queue.length === 0) return;
     play(queue[0], queue);
