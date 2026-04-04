@@ -220,6 +220,14 @@ const ArtistDetailPage = () => {
               <Shuffle className="h-5 w-5" />
             </Button>
             <Button
+              onClick={() => toggleFollow()}
+              variant={isFollowing ? "outline" : "default"}
+              className={`rounded-full gap-2 text-sm ${isFollowing ? "border-primary/30 text-primary" : "bg-primary text-primary-foreground"}`}
+            >
+              {isFollowing ? <UserCheck className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+              {isFollowing ? "Following" : "Follow"}
+            </Button>
+            <Button
               onClick={handleShare}
               variant="ghost"
               size="icon"

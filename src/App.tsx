@@ -51,6 +51,7 @@ const App = () => (
               <Route path="/playlists" element={<PlaylistsPage />} />
               <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
               <Route path="/subscription" element={<SubscriptionPage />} />
+              <Route path="/artist-dashboard" element={<ArtistDashboardPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
