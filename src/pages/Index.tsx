@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Star, Headphones } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,11 +64,8 @@ const Index = () => {
       fileUrl: song.file_url,
       coverUrl: song.cover_url || undefined,
     };
-    if (currentTrack?.id === song.id) {
-      togglePlay();
-    } else {
-      play(track);
-    }
+    if (currentTrack?.id === song.id) togglePlay();
+    else play(track);
   };
 
   return (
@@ -79,10 +76,10 @@ const Index = () => {
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
           <div className="px-4 lg:px-6">
-            <SectionHeader title="TRENDING SONGS" linkTo="/music" />
+            <SectionHeader title="Trending Now" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
           </div>
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4">
+            <div className="flex gap-4 pb-1">
               {trendingSongs.map((song) => (
                 <SongTile key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
               ))}
@@ -95,14 +92,14 @@ const Index = () => {
       {topArtists && topArtists.length > 0 && (
         <section className="py-6">
           <div className="px-4 lg:px-6">
-            <SectionHeader title="ACCOUNTS FOR YOU" linkTo="/artists" />
+            <SectionHeader title="Popular Artists" linkTo="/artists" />
           </div>
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
-            <div className="flex gap-5">
+            <div className="flex gap-5 pb-1">
               {topArtists.map((artist) => (
                 <Link key={artist.id} to={`/artist/${artist.id}`} className="flex-shrink-0 group">
-                  <div className="w-28 md:w-36 flex flex-col items-center gap-2">
-                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary transition-all duration-300">
+                  <div className="w-28 md:w-36 flex flex-col items-center gap-2.5">
+                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 shadow-md">
                       {artist.avatar_url ? (
                         <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                       ) : (
@@ -111,10 +108,10 @@ const Index = () => {
                         </div>
                       )}
                     </div>
-                    <p className="text-xs font-semibold text-foreground text-center truncate w-full group-hover:text-primary transition-colors">{artist.name}</p>
-                    <p className="text-[10px] text-muted-foreground">
-                      {(artist.songs as any)?.[0]?.count || 0} songs
-                    </p>
+                    <div className="text-center">
+                      <p className="text-xs font-semibold text-foreground truncate w-full group-hover:text-primary transition-colors">{artist.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{(artist.songs as any)?.[0]?.count || 0} songs</p>
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -127,10 +124,10 @@ const Index = () => {
       {recentSongs && recentSongs.length > 0 && (
         <section className="py-6">
           <div className="px-4 lg:px-6">
-            <SectionHeader title="RECENTLY ADDED" linkTo="/music" />
+            <SectionHeader title="Fresh Releases" icon={<Clock className="h-5 w-5 text-secondary" />} linkTo="/music" />
           </div>
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4">
+            <div className="flex gap-4 pb-1">
               {recentSongs.map((song) => (
                 <SongTile key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
               ))}
@@ -139,12 +136,12 @@ const Index = () => {
         </section>
       )}
 
-      {/* Top 10 Chart */}
+      {/* Top Chart */}
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
           <div className="px-4 lg:px-6">
-            <SectionHeader title="TOP SONGS" linkTo="/music" />
-            <div className="rounded-lg overflow-hidden">
+            <SectionHeader title="Top Chart" linkTo="/music" />
+            <div className="rounded-xl overflow-hidden border border-border bg-card/50">
               {trendingSongs.slice(0, 10).map((song, idx) => (
                 <ChartRow key={song.id} song={song} rank={idx + 1} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} isLast={idx === Math.min(9, trendingSongs.length - 1)} />
               ))}
@@ -153,19 +150,19 @@ const Index = () => {
         </section>
       )}
 
-      {/* CTA */}
+      {/* Upload CTA */}
       <section className="px-4 lg:px-6 py-8">
-        <div className="rounded-lg bg-card border border-border p-8 md:p-12 text-center">
-          <Headphones className="h-8 w-8 text-primary mx-auto mb-3" />
-          <h3 className="font-heading text-lg md:text-2xl font-black text-foreground mb-2">
-            Upload your music for FREE
+        <div className="rounded-2xl bg-gradient-to-br from-primary/10 via-card to-secondary/10 border border-border p-8 md:p-12 text-center">
+          <Headphones className="h-10 w-10 text-primary mx-auto mb-4" />
+          <h3 className="font-heading text-xl md:text-2xl font-extrabold text-foreground mb-2 tracking-tight">
+            Share Your Music with the World
           </h3>
-          <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-            Reach fans across South Sudan and beyond.
+          <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+            Upload your gospel music for free and reach fans across South Sudan and beyond.
           </p>
           <Link
             to="/upload"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-full px-8 py-3 transition-colors"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-full px-8 py-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/20"
           >
             Start Uploading <ArrowRight className="h-4 w-4" />
           </Link>
@@ -173,9 +170,9 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-6">
+      <footer className="border-t border-border py-8">
         <div className="px-4 lg:px-6 text-center">
-          <p className="font-heading font-bold text-primary text-base mb-1">{siteSettings?.site_name || "Sudagospel"}</p>
+          <p className="font-heading font-bold text-foreground text-base mb-1">{siteSettings?.site_name || "Sudagospel"}</p>
           <p className="text-xs text-muted-foreground">{siteSettings?.tagline || "South Sudan's premier gospel music platform."}</p>
           <p className="text-[10px] text-muted-foreground mt-3">{siteSettings?.footer_text || "© 2026 Sudagospel.net. All rights reserved."}</p>
         </div>
@@ -188,13 +185,16 @@ const Index = () => {
 
 /* ─── Sub-components ─── */
 
-const SectionHeader = ({ title, linkTo }: { title: string; linkTo: string }) => (
-  <div className="flex items-center justify-between mb-4">
-    <h2 className="font-heading text-sm md:text-base font-black text-foreground tracking-wide">
-      {title}
-    </h2>
-    <Link to={linkTo} className="text-xs font-bold text-primary hover:underline uppercase tracking-wider">
-      VIEW ALL
+const SectionHeader = ({ title, icon, linkTo }: { title: string; icon?: React.ReactNode; linkTo: string }) => (
+  <div className="flex items-center justify-between mb-5">
+    <div className="flex items-center gap-2.5">
+      {icon}
+      <h2 className="font-heading text-lg md:text-xl font-extrabold text-foreground tracking-tight">
+        {title}
+      </h2>
+    </div>
+    <Link to={linkTo} className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors">
+      Show all
     </Link>
   </div>
 );
@@ -207,18 +207,18 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
   return (
     <div className="flex-shrink-0 w-36 md:w-44 group cursor-pointer">
       <div
-        className="relative aspect-square rounded-lg overflow-hidden mb-2 bg-muted"
+        className="relative aspect-square rounded-lg overflow-hidden mb-2.5 bg-muted shadow-sm"
         onClick={() => onPlay(song)}
       >
         {song.cover_url ? (
-          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" loading="lazy" />
+          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
           <div className="h-full w-full bg-muted flex items-center justify-center">
             <Music className="h-8 w-8 text-muted-foreground" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <div className="w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/30">
             {isCurrent && isPlaying ? (
               <Pause className="h-4 w-4 text-primary-foreground" />
             ) : (
@@ -227,15 +227,20 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
           </div>
         </div>
         {isCurrent && (
-          <div className="absolute bottom-1.5 left-1.5 rounded bg-primary px-2 py-0.5 text-[9px] font-bold text-primary-foreground">
+          <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-primary-foreground">
+            <span className="flex gap-[1px]">
+              <span className="w-[2px] h-1.5 bg-primary-foreground rounded-full animate-eq-bar" />
+              <span className="w-[2px] h-2 bg-primary-foreground rounded-full animate-eq-bar [animation-delay:150ms]" />
+              <span className="w-[2px] h-1 bg-primary-foreground rounded-full animate-eq-bar [animation-delay:300ms]" />
+            </span>
             {isPlaying ? "Playing" : "Paused"}
           </div>
         )}
       </div>
-      <Link to={`/song/${song.id}`} className="text-xs font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
+      <Link to={`/song/${song.id}`} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
         {song.title}
       </Link>
-      <Link to={`/artist/${artist?.id}`} className="text-[11px] text-muted-foreground hover:text-primary transition-colors truncate block">
+      <Link to={`/artist/${artist?.id}`} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block mt-0.5">
         {artistName}
       </Link>
     </div>
@@ -249,13 +254,13 @@ const ChartRow = ({ song, rank, onPlay, currentTrack, isPlaying, isLast }: any) 
 
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-3 group hover:bg-muted/50 transition-colors cursor-pointer ${isCurrent ? "bg-primary/5" : ""} ${!isLast ? "border-b border-border" : ""}`}
+      className={`flex items-center gap-3 px-4 py-3 group hover:bg-muted/40 transition-colors cursor-pointer ${isCurrent ? "bg-primary/5" : ""} ${!isLast ? "border-b border-border" : ""}`}
       onClick={() => onPlay(song)}
     >
-      <span className={`text-lg font-heading font-black w-7 text-center tabular-nums ${rank <= 3 ? "text-primary" : "text-muted-foreground/60"}`}>
+      <span className={`text-base font-heading font-extrabold w-8 text-center tabular-nums ${rank <= 3 ? "text-primary" : "text-muted-foreground/50"}`}>
         {rank}
       </span>
-      <div className="relative h-10 w-10 rounded overflow-hidden flex-shrink-0 bg-muted">
+      <div className="relative h-11 w-11 rounded-md overflow-hidden flex-shrink-0 bg-muted shadow-sm">
         {song.cover_url ? (
           <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" loading="lazy" />
         ) : (
@@ -278,12 +283,12 @@ const ChartRow = ({ song, rank, onPlay, currentTrack, isPlaying, isLast }: any) 
         <Link
           to={`/artist/${artist?.id}`}
           onClick={(e) => e.stopPropagation()}
-          className="text-[11px] text-muted-foreground hover:text-primary transition-colors truncate block"
+          className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block"
         >
           {artistName}
         </Link>
       </div>
-      <span className="text-[10px] text-muted-foreground tabular-nums">
+      <span className="text-xs text-muted-foreground tabular-nums">
         {(song.play_count || 0) >= 1000
           ? `${(song.play_count / 1000).toFixed(1)}K`
           : song.play_count || 0}
