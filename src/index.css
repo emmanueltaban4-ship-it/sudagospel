@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,10 +6,10 @@
 
 @layer base {
   :root {
-    --font-heading: 'Plus Jakarta Sans', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
 
-    --background: 0 0% 98%;
+    --background: 0 0% 97%;
     --foreground: 0 0% 8%;
 
     --card: 0 0% 100%;
@@ -18,79 +18,74 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 8%;
 
-    --primary: 0 78% 50%;
+    --primary: 32 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 55% 30%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 15%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 140 55% 30%;
+    --accent: 32 100% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 78% 50%;
+    --input: 0 0% 88%;
+    --ring: 32 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --gospel-red: 0 78% 50%;
-    --gospel-green: 140 55% 30%;
-    --gospel-dark: 0 0% 10%;
-    --gospel-gold: 42 90% 55%;
-
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 0 0% 8%;
-    --sidebar-primary: 0 78% 50%;
+    --sidebar-primary: 32 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 140 55% 30%;
-    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 8%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 78% 50%;
+    --sidebar-ring: 32 100% 50%;
   }
 
   .dark {
-    --background: 0 0% 6%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 95%;
 
-    --card: 0 0% 9%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 9%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 78% 50%;
+    --primary: 32 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 55% 35%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 140 55% 35%;
+    --accent: 32 100% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 0 78% 50%;
+    --border: 0 0% 14%;
+    --input: 0 0% 14%;
+    --ring: 32 100% 50%;
 
-    --sidebar-background: 0 0% 8%;
+    --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 78% 50%;
+    --sidebar-primary: 32 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 0 78% 50%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 32 100% 50%;
   }
 }
 
@@ -109,13 +104,13 @@
 @layer utilities {
   .text-gradient-brand {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gospel-green)));
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(32 100% 60%));
   }
   .bg-gradient-brand {
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gospel-green)));
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(32 100% 60%));
   }
   .bg-gradient-hero {
-    background-image: linear-gradient(180deg, hsl(var(--gospel-dark)) 0%, hsl(var(--gospel-dark) / 0.8) 100%);
+    background-image: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 0% 5% / 0.85) 100%);
   }
   .scrollbar-hide {
     -ms-overflow-style: none;
