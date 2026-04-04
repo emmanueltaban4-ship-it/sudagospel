@@ -510,6 +510,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_ad_click: { Args: { ad_id: string }; Returns: undefined }
+      increment_ad_impression: { Args: { ad_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
