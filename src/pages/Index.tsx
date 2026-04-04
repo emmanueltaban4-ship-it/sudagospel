@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import MiniPlayer from "@/components/MiniPlayer";
+import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
