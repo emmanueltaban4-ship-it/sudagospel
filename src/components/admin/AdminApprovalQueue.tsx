@@ -56,7 +56,7 @@ const AdminApprovalQueue = () => {
       <div className="space-y-3">
         {songs.map((song) => {
           const artistName = (song.artists as any)?.name || "Unknown";
-          const uploaderName = (song.profiles as any)?.display_name || "Unknown";
+          const uploaderName = "User";
 
           return (
             <div
