@@ -54,7 +54,7 @@ export const usePendingSongs = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(name), profiles!songs_uploaded_by_fkey(display_name)")
+        .select("*, artists(name)")
         .eq("is_approved", false)
         .order("created_at", { ascending: true });
       if (error) throw error;
