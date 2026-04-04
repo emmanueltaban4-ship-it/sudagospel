@@ -107,6 +107,15 @@ const ProfilePage = () => {
             <Upload className="h-5 w-5 text-primary" />
             <span className="flex-1 text-left text-sm font-medium text-foreground">Upload Song</span>
           </button>
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="flex w-full items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3 hover:bg-primary/10 transition-colors"
+            >
+              <Shield className="h-5 w-5 text-primary" />
+              <span className="flex-1 text-left text-sm font-medium text-primary">Admin Dashboard</span>
+            </button>
+          )}
           {[
             { icon: Music, label: "My Uploads", count: `${mySongs?.length ?? 0} songs` },
             { icon: Heart, label: "Liked Songs", count: `${myLikes ?? 0} songs` },
