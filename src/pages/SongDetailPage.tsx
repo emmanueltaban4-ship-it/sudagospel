@@ -144,12 +144,14 @@ const SongDetailPage = () => {
   };
 
   const handleShare = async () => {
-    const url = window.location.href;
+    // Use the OG share URL so social platforms see proper meta tags
+    const shareUrl = ogShareUrl;
+    const shareText = `Listen to ${song.title} by ${artistName} on Sudagospel`;
     if (navigator.share) {
-      await navigator.share({ title: song.title, text: `Listen to ${song.title} by ${artistName}`, url });
+      await navigator.share({ title: song.title, text: shareText, url: shareUrl });
     } else {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied!");
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Share link copied!");
     }
   };
 
