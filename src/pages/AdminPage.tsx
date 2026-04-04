@@ -101,6 +101,7 @@ const AdminPage = () => {
 
         {/* Tab content */}
         {activeTab === "analytics" && <AdminAnalytics />}
+        {activeTab === "articles" && <AdminArticles />}
         {activeTab === "approvals" && <AdminApprovalQueue />}
         {activeTab === "users" && <AdminUserManagement />}
         {activeTab === "moderation" && <AdminModeration />}
