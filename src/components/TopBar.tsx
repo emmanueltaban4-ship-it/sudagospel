@@ -71,6 +71,13 @@ const TopBar = () => {
             </button>
             <ThemeToggle />
             <Link
+              to="/subscription"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-primary/30 text-primary hover:bg-primary/10 font-bold text-xs rounded-full px-3 py-2 transition-colors"
+            >
+              <Crown className="h-3.5 w-3.5" />
+              PREMIUM
+            </Link>
+            <Link
               to="/upload"
               className="hidden sm:inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs rounded-full px-4 py-2 transition-colors"
             >
