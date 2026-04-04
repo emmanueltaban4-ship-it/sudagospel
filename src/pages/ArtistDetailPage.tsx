@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,12 @@ const ArtistDetailPage = () => {
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
+
+  useDocumentMeta({
+    title: artist?.name || "Artist",
+    description: artist?.bio || `Listen to ${artist?.name || "this artist"}'s music on Sudagospel.`,
+    ogImage: artist?.avatar_url || undefined,
+  });
 
   const handlePlayAll = () => {
     if (queue.length === 0) return;

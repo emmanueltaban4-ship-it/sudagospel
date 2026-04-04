@@ -5,6 +5,7 @@ import { useSongComments } from "@/hooks/use-music-data";
 import { useLikeSong, usePostComment, useDeleteComment } from "@/hooks/use-engagement";
 import { usePlayer } from "@/hooks/use-player";
 import { useAuth } from "@/hooks/use-auth";
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
@@ -88,6 +89,17 @@ const SongDetailPage = () => {
   const isCurrentTrack = currentTrack?.id === song.id;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  const ogShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${song.id}`;
+
+  useDocumentMeta({
+    title: `${song.title} by ${artistName}`,
+    description: song.description || `Listen to ${song.title} by ${artistName} on Sudagospel.`,
+    ogTitle: `${song.title} by ${artistName}`,
+    ogDescription: song.description || `Listen to ${song.title} by ${artistName} on Sudagospel.`,
+    ogImage: song.cover_url || undefined,
+    ogType: "music.song",
+  });
+
   const formatTime = (s: number) => {
     if (!s || isNaN(s)) return "0:00";
     const m = Math.floor(s / 60);
@@ -132,12 +144,14 @@ const SongDetailPage = () => {
   };
 
   const handleShare = async () => {
-    const url = window.location.href;
+    // Use the OG share URL so social platforms see proper meta tags
+    const shareUrl = ogShareUrl;
+    const shareText = `Listen to ${song.title} by ${artistName} on Sudagospel`;
     if (navigator.share) {
-      await navigator.share({ title: song.title, text: `Listen to ${song.title} by ${artistName}`, url });
+      await navigator.share({ title: song.title, text: shareText, url: shareUrl });
     } else {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied!");
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Share link copied!");
     }
   };
 
