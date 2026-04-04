@@ -1,0 +1,3 @@
+ALTER TABLE songs DROP CONSTRAINT IF EXISTS songs_uploaded_by_fkey;
+ALTER TABLE songs ALTER COLUMN uploaded_by DROP NOT NULL;
+ALTER TABLE songs ALTER COLUMN uploaded_by SET DEFAULT NULL;

@@ -191,7 +191,7 @@ export type Database = {
           play_count: number | null
           title: string
           updated_at: string
-          uploaded_by: string
+          uploaded_by: string | null
         }
         Insert: {
           artist_id: string
@@ -207,7 +207,7 @@ export type Database = {
           play_count?: number | null
           title: string
           updated_at?: string
-          uploaded_by: string
+          uploaded_by?: string | null
         }
         Update: {
           artist_id?: string
@@ -223,7 +223,7 @@ export type Database = {
           play_count?: number | null
           title?: string
           updated_at?: string
-          uploaded_by?: string
+          uploaded_by?: string | null
         }
         Relationships: [
           {
