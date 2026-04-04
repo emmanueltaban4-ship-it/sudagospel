@@ -21,6 +21,7 @@ import PlaylistDetailPage from "./pages/PlaylistDetailPage.tsx";
 import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import SubscriptionPage from "./pages/SubscriptionPage.tsx";
+import ArtistDashboardPage from "./pages/ArtistDashboardPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
