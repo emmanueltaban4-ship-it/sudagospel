@@ -12,6 +12,7 @@ import NewsPage from "./pages/NewsPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import UploadPage from "./pages/UploadPage.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
 import SongDetailPage from "./pages/SongDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -33,7 +34,8 @@ const App = () => (
               <Route path="/blog" element={<NewsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/upload" element={<UploadPage />} />
+            <Route path="/upload" element={<UploadPage />} />
+            <Route path="/admin" element={<AdminPage />} />
               <Route path="/song/:id" element={<SongDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

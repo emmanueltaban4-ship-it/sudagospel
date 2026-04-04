@@ -2,13 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useIsAdmin } from "@/hooks/use-admin";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { LogIn, UserPlus, Music, Heart, Download, Settings, Upload, LogOut } from "lucide-react";
+import { LogIn, UserPlus, Music, Heart, Download, Settings, Upload, LogOut, Shield } from "lucide-react";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -105,6 +107,15 @@ const ProfilePage = () => {
             <Upload className="h-5 w-5 text-primary" />
             <span className="flex-1 text-left text-sm font-medium text-foreground">Upload Song</span>
           </button>
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="flex w-full items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3 hover:bg-primary/10 transition-colors"
+            >
+              <Shield className="h-5 w-5 text-primary" />
+              <span className="flex-1 text-left text-sm font-medium text-primary">Admin Dashboard</span>
+            </button>
+          )}
           {[
             { icon: Music, label: "My Uploads", count: `${mySongs?.length ?? 0} songs` },
             { icon: Heart, label: "Liked Songs", count: `${myLikes ?? 0} songs` },
