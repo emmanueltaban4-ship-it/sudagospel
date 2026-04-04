@@ -8,10 +8,16 @@ import AdminUserManagement from "@/components/admin/AdminUserManagement";
 import AdminModeration from "@/components/admin/AdminModeration";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminArticles from "@/components/admin/AdminArticles";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText } from "lucide-react";
+import AdminSiteSettings from "@/components/admin/AdminSiteSettings";
+import AdminSongManagement from "@/components/admin/AdminSongManagement";
+import AdminArtistManagement from "@/components/admin/AdminArtistManagement";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2 } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
+  { id: "settings", label: "Settings", icon: Settings2 },
+  { id: "songs", label: "Songs", icon: Music },
+  { id: "artists", label: "Artists", icon: Mic2 },
   { id: "articles", label: "Articles", icon: FileText },
   { id: "approvals", label: "Approvals", icon: CheckSquare },
   { id: "users", label: "Users", icon: Users },
@@ -101,6 +107,9 @@ const AdminPage = () => {
 
         {/* Tab content */}
         {activeTab === "analytics" && <AdminAnalytics />}
+        {activeTab === "settings" && <AdminSiteSettings />}
+        {activeTab === "songs" && <AdminSongManagement />}
+        {activeTab === "artists" && <AdminArtistManagement />}
         {activeTab === "articles" && <AdminArticles />}
         {activeTab === "approvals" && <AdminApprovalQueue />}
         {activeTab === "users" && <AdminUserManagement />}
