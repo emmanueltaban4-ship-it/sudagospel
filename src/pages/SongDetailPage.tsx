@@ -96,13 +96,9 @@ const SongDetailPage = () => {
     );
   }
 
-  const artist = song.artists as any;
-  const artistName = artist?.name || "Unknown Artist";
   const isCurrentTrack = currentTrack?.id === song.id;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const ogShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${song.id}`;
-
-  useDocumentMeta({
     title: `${song.title} by ${artistName}`,
     description: song.description || `Listen to ${song.title} by ${artistName} on Sudagospel.`,
     ogTitle: `${song.title} by ${artistName}`,
