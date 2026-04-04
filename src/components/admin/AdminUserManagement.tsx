@@ -62,7 +62,7 @@ const AdminUserManagement = () => {
 
       <div className="space-y-2">
         {filtered?.map((user) => {
-          const roles = (user.user_roles as any[]) || [];
+          const roles = (user as any).roles || [];
           const isAdmin = roles.some((r: any) => r.role === "admin");
 
           return (
