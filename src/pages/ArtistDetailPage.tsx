@@ -8,8 +8,9 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Clock, TrendingUp, Disc3
+  Download, Share2, Clock, TrendingUp, Disc3, UserPlus, UserCheck
 } from "lucide-react";
+import { useFollowArtist } from "@/hooks/use-follows";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
@@ -75,6 +76,7 @@ const ArtistDetailPage = () => {
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
+  const { isFollowing, followerCount, toggleFollow } = useFollowArtist(id!);
 
   useDocumentMeta({
     title: artist?.name || "Artist",
@@ -190,6 +192,7 @@ const ArtistDetailPage = () => {
                 <div className="flex items-center gap-4 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
                   {artist.genre && <span>{artist.genre}</span>}
                   <span>{songs?.length || 0} songs</span>
+                  <span>{followerCount.toLocaleString()} followers</span>
                   <span>{totalPlays.toLocaleString()} plays</span>
                 </div>
               </div>
@@ -215,6 +218,14 @@ const ArtistDetailPage = () => {
               disabled={queue.length === 0}
             >
               <Shuffle className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={() => toggleFollow()}
+              variant={isFollowing ? "outline" : "default"}
+              className={`rounded-full gap-2 text-sm ${isFollowing ? "border-primary/30 text-primary" : "bg-primary text-primary-foreground"}`}
+            >
+              {isFollowing ? <UserCheck className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+              {isFollowing ? "Following" : "Follow"}
             </Button>
             <Button
               onClick={handleShare}

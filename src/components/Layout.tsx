@@ -23,6 +23,7 @@ const sidebarLinks = [
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
     { to: "/news", icon: Newspaper, label: "News" },
     { to: "/subscription", icon: Crown, label: "Premium" },
+    { to: "/artist-dashboard", icon: Upload, label: "Artist Studio" },
   ]},
 ];
 
