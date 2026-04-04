@@ -18,6 +18,7 @@ import SongDetailPage from "./pages/SongDetailPage.tsx";
 import ArtistDetailPage from "./pages/ArtistDetailPage.tsx";
 import PlaylistsPage from "./pages/PlaylistsPage.tsx";
 import PlaylistDetailPage from "./pages/PlaylistDetailPage.tsx";
+import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
