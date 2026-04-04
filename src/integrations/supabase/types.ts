@@ -95,6 +95,30 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_content: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          position: number
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          position?: number
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          position?: number
+        }
+        Relationships: []
+      }
       playlist_songs: {
         Row: {
           added_at: string
@@ -194,6 +218,27 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string | null
         }
         Relationships: []
       }
