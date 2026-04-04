@@ -11,6 +11,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { data: siteSettings } = useSiteSettings();
 
   const { data: trendingSongs } = useQuery({
     queryKey: ["trending-songs"],
