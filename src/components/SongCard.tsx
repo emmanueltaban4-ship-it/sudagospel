@@ -96,6 +96,11 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
             >
               <Download className="h-3.5 w-3.5" />
             </button>
+            {id && (
+              <span onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                <AddToPlaylistDialog songId={id} />
+              </span>
+            )}
             <button className="rounded-full p-1 text-muted-foreground hover:text-foreground transition-colors">
               <Share2 className="h-3.5 w-3.5" />
             </button>
