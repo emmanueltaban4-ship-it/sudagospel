@@ -1,68 +1,45 @@
-import { Search, Upload, Menu, X, Crown } from "lucide-react";
+import { Search, Upload, Crown } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import logo from "@/assets/logo.png";
 import ThemeToggle from "./ThemeToggle";
 import SearchOverlay from "./SearchOverlay";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-
-const navLinks = [
-  { to: "/", label: "DISCOVER" },
-  { to: "/playlists", label: "PLAYLISTS" },
-  { to: "/news", label: "NEWS" },
-];
+import { useAuth } from "@/hooks/use-auth";
 
 const TopBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: settings } = useSiteSettings();
+  const { user } = useAuth();
 
   const siteName = settings?.site_name || "Sudagospel";
-  const logoUrl = settings?.logo_url || "";
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="container flex h-14 items-center justify-between gap-4">
+      <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="flex h-full items-center justify-between gap-4 px-4 lg:px-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <img src={logoUrl || logo} alt={siteName} className="h-7 w-7 rounded object-contain" />
-            <span className="font-heading text-lg font-extrabold text-primary hidden sm:block">
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-heading font-extrabold text-sm">SG</span>
+            </div>
+            <span className="font-heading text-lg font-extrabold text-foreground hidden sm:block tracking-tight">
               {siteName}
             </span>
           </Link>
 
-          {/* Search bar - desktop */}
+          {/* Center search — desktop */}
           <div className="hidden md:flex flex-1 max-w-md mx-4">
             <button
               onClick={() => setSearchOpen(true)}
-              className="w-full flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm text-muted-foreground hover:bg-muted/80 transition-colors"
+              className="w-full flex items-center gap-2 rounded-full bg-muted/60 border border-border px-4 py-2 text-sm text-muted-foreground hover:bg-muted hover:border-muted-foreground/20 transition-all"
             >
               <Search className="h-4 w-4" />
-              <span>Search for artists, songs, albums!</span>
+              <span>Search songs, artists...</span>
             </button>
           </div>
 
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === "/"}
-                className={({ isActive }) =>
-                  `px-3 py-1.5 text-xs font-bold tracking-wide transition-colors ${
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-
           {/* Right actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setSearchOpen(true)}
               className="md:hidden rounded-full p-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -72,18 +49,26 @@ const TopBar = () => {
             <ThemeToggle />
             <Link
               to="/subscription"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-primary/30 text-primary hover:bg-primary/10 font-bold text-xs rounded-full px-3 py-2 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors px-3 py-1.5"
             >
               <Crown className="h-3.5 w-3.5" />
-              PREMIUM
+              Premium
             </Link>
-            <Link
-              to="/upload"
-              className="hidden sm:inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs rounded-full px-4 py-2 transition-colors"
-            >
-              <Upload className="h-3.5 w-3.5" />
-              UPLOAD
-            </Link>
+            {user ? (
+              <Link
+                to="/profile"
+                className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-semibold text-xs hover:bg-primary/20 transition-colors"
+              >
+                {user.email?.[0]?.toUpperCase() || "U"}
+              </Link>
+            ) : (
+              <Link
+                to="/auth"
+                className="text-sm font-semibold text-foreground hover:text-primary transition-colors px-3 py-1.5"
+              >
+                Log in
+              </Link>
+            )}
           </div>
         </div>
       </header>
