@@ -126,6 +126,11 @@ const Index = () => {
         </section>
       )}
 
+      {/* Mid-section Ad */}
+      <div className="px-4 lg:px-6 py-2">
+        <AdBanner position="homepage_mid" />
+      </div>
+
       {/* Recently Added */}
       {recentSongs && recentSongs.length > 0 && (
         <section className="py-6">
