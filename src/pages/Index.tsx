@@ -7,9 +7,11 @@ import HeroSection from "@/components/HeroSection";
 import MiniPlayer from "@/components/MiniPlayer";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { data: siteSettings } = useSiteSettings();
 
   const { data: trendingSongs } = useQuery({
     queryKey: ["trending-songs"],
@@ -246,18 +248,20 @@ const Index = () => {
       <section className="container py-4 md:py-6">
         <div className="text-center py-6 border-t border-border">
           <p className="font-heading text-sm md:text-base font-semibold text-foreground/80 italic max-w-lg mx-auto">
-            "Make a joyful noise unto the Lord, all the earth."
+            {siteSettings?.hero_quote ? siteSettings.hero_quote.split("—")[0]?.trim() : '"Make a joyful noise unto the Lord, all the earth."'}
           </p>
-          <p className="mt-1.5 text-muted-foreground text-[11px] font-medium">— Psalm 98:4</p>
+          <p className="mt-1.5 text-muted-foreground text-[11px] font-medium">
+            {siteSettings?.hero_quote?.includes("—") ? `—${siteSettings.hero_quote.split("—")[1]}` : "— Psalm 98:4"}
+          </p>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-border bg-card py-6">
         <div className="container text-center">
-          <p className="font-heading font-bold text-primary text-base mb-1">Sudagospel</p>
-          <p className="text-xs text-muted-foreground">South Sudan's premier gospel music platform.</p>
-          <p className="text-[10px] text-muted-foreground mt-3">© 2026 Sudagospel.net. All rights reserved.</p>
+          <p className="font-heading font-bold text-primary text-base mb-1">{siteSettings?.site_name || "Sudagospel"}</p>
+          <p className="text-xs text-muted-foreground">{siteSettings?.tagline || "South Sudan's premier gospel music platform."}</p>
+          <p className="text-[10px] text-muted-foreground mt-3">{siteSettings?.footer_text || "© 2026 Sudagospel.net. All rights reserved."}</p>
         </div>
       </footer>
 

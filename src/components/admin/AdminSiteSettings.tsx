@@ -1,26 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, Upload, Loader2, Settings2 } from "lucide-react";
 import { toast } from "sonner";
-
-const useSiteSettings = () => {
-  return useQuery({
-    queryKey: ["site-settings"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("*");
-      if (error) throw error;
-      const map: Record<string, string> = {};
-      data?.forEach((s: any) => { map[s.key] = s.value || ""; });
-      return map;
-    },
-  });
-};
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const AdminSiteSettings = () => {
   const { data: settings, isLoading } = useSiteSettings();

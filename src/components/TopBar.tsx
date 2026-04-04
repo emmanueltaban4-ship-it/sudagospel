@@ -4,18 +4,23 @@ import { useState } from "react";
 import logo from "@/assets/logo.png";
 import ThemeToggle from "./ThemeToggle";
 import SearchOverlay from "./SearchOverlay";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const TopBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { data: settings } = useSiteSettings();
+
+  const siteName = settings?.site_name || "Sudagospel";
+  const logoUrl = settings?.logo_url || "";
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-lg">
         <div className="container flex h-14 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Sudagospel" className="h-8 w-8" />
+            <img src={logoUrl || logo} alt={siteName} className="h-8 w-8 rounded object-contain" />
             <span className="font-heading text-lg font-bold text-gradient-brand">
-              Sudagospel
+              {siteName}
             </span>
           </Link>
 
