@@ -8,8 +8,9 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Clock, TrendingUp, Disc3
+  Download, Share2, Clock, TrendingUp, Disc3, UserPlus, UserCheck
 } from "lucide-react";
+import { useFollowArtist } from "@/hooks/use-follows";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
