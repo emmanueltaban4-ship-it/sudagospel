@@ -61,7 +61,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
       fileUrl: song.file_url,
       coverUrl: song.cover_url || "",
     };
-    playTrack(track);
+    play(track);
     onClose();
   };
 
