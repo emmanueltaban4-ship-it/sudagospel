@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
+import AdBanner from "@/components/AdBanner";
 import { Search, CheckCircle, Users, ChevronRight, Play } from "lucide-react";
 import { useArtists } from "@/hooks/use-music-data";
 import { useState, useMemo } from "react";

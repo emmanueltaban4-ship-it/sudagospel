@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import SongCard from "@/components/SongCard";
 import MiniPlayer from "@/components/MiniPlayer";
+import AdBanner from "@/components/AdBanner";
 import { Search, TrendingUp, Clock, Music, Play, Pause } from "lucide-react";
 import { useSongs } from "@/hooks/use-music-data";
 import { usePlayer, Track } from "@/hooks/use-player";
