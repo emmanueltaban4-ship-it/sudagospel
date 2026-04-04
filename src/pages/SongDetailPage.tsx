@@ -98,6 +98,7 @@ const SongDetailPage = () => {
 
   const isCurrentTrack = currentTrack?.id === song.id;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const ogShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${song.id}`;
 
   const formatTime = (s: number) => {
     if (!s || isNaN(s)) return "0:00";
