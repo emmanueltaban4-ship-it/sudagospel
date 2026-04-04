@@ -1,7 +1,8 @@
-import { Play, Pause, Heart, Download, Share2 } from "lucide-react";
+import { Play, Pause, Heart, Download, Share2, ListPlus } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import AddToPlaylistDialog from "@/components/AddToPlaylistDialog";
 
 interface SongCardProps {
   id?: string;
