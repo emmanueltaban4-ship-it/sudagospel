@@ -63,6 +63,18 @@ const SongDetailPage = () => {
   const postComment = usePostComment(id!);
   const deleteComment = useDeleteComment();
 
+  const artist = (song as any)?.artists;
+  const artistName = artist?.name || "Unknown Artist";
+
+  useDocumentMeta({
+    title: song ? `${song.title} by ${artistName}` : undefined,
+    description: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    ogTitle: song ? `${song.title} by ${artistName}` : undefined,
+    ogDescription: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    ogImage: song?.cover_url || undefined,
+    ogType: "music.song",
+  });
+
   if (isLoading) {
     return (
       <Layout>
