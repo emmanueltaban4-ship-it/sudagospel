@@ -3,9 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, HeadphonesIcon } from "lucide-react";
+import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, Headphones, Music2, Disc3 } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 type AuthView = "options" | "email-login" | "email-signup" | "phone-login" | "phone-signup";
@@ -36,20 +35,12 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-
-        // Update profile with account type after signup
         if (data.user) {
           await supabase.from("profiles").update({ account_type: accountType }).eq("user_id", data.user.id);
-
-          // If artist, create artist profile
           if (accountType === "artist") {
-            await supabase.from("artists").insert({
-              name: displayName,
-              user_id: data.user.id,
-            });
+            await supabase.from("artists").insert({ name: displayName, user_id: data.user.id });
           }
         }
-
         toast.success("Check your email to confirm your account!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -75,14 +66,12 @@ const AuthPage = () => {
           options: { data: { display_name: displayName, account_type: accountType } },
         });
         if (error) throw error;
-
         if (data.user) {
           await supabase.from("profiles").update({ account_type: accountType }).eq("user_id", data.user.id);
           if (accountType === "artist") {
             await supabase.from("artists").insert({ name: displayName, user_id: data.user.id });
           }
         }
-
         toast.success("Account created!");
         navigate("/");
       } else {
@@ -107,35 +96,99 @@ const AuthPage = () => {
     else toast.success("Password reset email sent!");
   };
 
-  // Options screen
+  const isEmailView = view === "email-login" || view === "email-signup";
+  const isSignup = view === "email-signup" || view === "phone-signup";
+
+  // === OPTIONS SCREEN ===
   if (view === "options") {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <div className="p-4">
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-20 -left-20 w-72 h-72 bg-primary/8 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 -right-20 w-96 h-96 bg-secondary/6 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-[120px]" />
+        </div>
+
+        {/* Floating music icons */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <Music2 className="absolute top-[15%] left-[10%] h-6 w-6 text-primary/10 animate-bounce" style={{ animationDuration: "3s" }} />
+          <Disc3 className="absolute top-[25%] right-[15%] h-8 w-8 text-primary/8 animate-spin" style={{ animationDuration: "8s" }} />
+          <Headphones className="absolute bottom-[30%] left-[20%] h-7 w-7 text-secondary/10 animate-bounce" style={{ animationDuration: "4s", animationDelay: "0.5s" }} />
+          <Music2 className="absolute bottom-[20%] right-[10%] h-5 w-5 text-primary/8 animate-bounce" style={{ animationDuration: "3.5s", animationDelay: "1s" }} />
+        </div>
+
+        {/* Back button */}
+        <div className="relative z-10 p-4">
           <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
         </div>
-        <div className="flex-1 flex items-center justify-center px-4 pb-16">
+
+        {/* Content */}
+        <div className="relative z-10 flex-1 flex items-center justify-center px-4 pb-16 pt-8">
           <div className="w-full max-w-sm">
-            <div className="text-center mb-8">
-              <img src={logo} alt="Sudagospel" className="h-12 w-12 mx-auto mb-4" />
-              <h1 className="font-heading text-sm font-bold text-foreground uppercase tracking-widest">
-                SIGN UP OR LOGIN TO SUDAGOSPEL
+            {/* Logo & branding */}
+            <div className="text-center mb-10">
+              <div className="relative inline-block mb-5">
+                <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl scale-150" />
+                <img src={logo} alt="Sudagospel" className="relative h-16 w-16 mx-auto rounded-2xl shadow-2xl" />
+              </div>
+              <h1 className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
+                Sudagospel
               </h1>
+              <p className="text-sm text-muted-foreground mt-2 max-w-[260px] mx-auto">
+                Stream, discover & share the best gospel music from South Sudan
+              </p>
             </div>
+
+            {/* Auth options */}
             <div className="space-y-3">
-              <button onClick={() => setView("email-login")} className="w-full flex items-center justify-center gap-3 rounded-lg border border-border bg-card hover:bg-muted px-4 py-3.5 text-sm font-medium text-foreground transition-colors">
-                <Mail className="h-5 w-5 text-primary" /> Continue with Email
+              <button
+                onClick={() => setView("email-login")}
+                className="w-full flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 px-5 py-4 text-sm font-semibold text-foreground transition-all group"
+              >
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Mail className="h-5 w-5 text-primary" />
+                </div>
+                <span className="flex-1 text-left">Continue with Email</span>
+                <ArrowLeft className="h-4 w-4 text-muted-foreground rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
-              <button onClick={() => setView("phone-login")} className="w-full flex items-center justify-center gap-3 rounded-lg border border-border bg-card hover:bg-muted px-4 py-3.5 text-sm font-medium text-foreground transition-colors">
-                <Phone className="h-5 w-5 text-secondary" /> Continue with Phone
+
+              <button
+                onClick={() => setView("phone-login")}
+                className="w-full flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card hover:border-secondary/30 hover:shadow-lg hover:shadow-secondary/5 px-5 py-4 text-sm font-semibold text-foreground transition-all group"
+              >
+                <div className="h-10 w-10 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                  <Phone className="h-5 w-5 text-secondary" />
+                </div>
+                <span className="flex-1 text-left">Continue with Phone</span>
+                <ArrowLeft className="h-4 w-4 text-muted-foreground rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             </div>
-            <p className="mt-8 text-center text-[11px] text-muted-foreground leading-relaxed">
-              By signing into Sudagospel, you agree to our{" "}
-              <span className="text-primary cursor-pointer hover:underline">Terms of Service</span> and{" "}
-              <span className="text-primary cursor-pointer hover:underline">Privacy Policy</span>.
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-8">
+              <div className="flex-1 h-px bg-border/60" />
+              <span className="text-[11px] text-muted-foreground uppercase tracking-widest font-medium">or</span>
+              <div className="flex-1 h-px bg-border/60" />
+            </div>
+
+            {/* Guest CTA */}
+            <button
+              onClick={() => navigate("/")}
+              className="w-full text-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Continue as Guest →
+            </button>
+
+            {/* Terms */}
+            <p className="mt-10 text-center text-[11px] text-muted-foreground/70 leading-relaxed">
+              By signing in, you agree to our{" "}
+              <span className="text-foreground/60 hover:text-primary cursor-pointer transition-colors">Terms</span>{" "}
+              and{" "}
+              <span className="text-foreground/60 hover:text-primary cursor-pointer transition-colors">Privacy Policy</span>
             </p>
           </div>
         </div>
@@ -143,130 +196,204 @@ const AuthPage = () => {
     );
   }
 
-  const isEmailView = view === "email-login" || view === "email-signup";
-  const isSignup = view === "email-signup" || view === "phone-signup";
-
+  // === LOGIN / SIGNUP FORM ===
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="p-4">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+      <div className="absolute inset-0">
+        <div className="absolute top-10 -right-20 w-64 h-64 bg-primary/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 -left-20 w-80 h-80 bg-secondary/6 rounded-full blur-3xl" />
+      </div>
+
+      {/* Back button */}
+      <div className="relative z-10 p-4">
         <button onClick={() => setView("options")} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
       </div>
-      <div className="flex-1 flex items-center justify-center px-4 pb-16">
+
+      {/* Form */}
+      <div className="relative z-10 flex items-center justify-center px-4 pb-16 pt-4">
         <div className="w-full max-w-sm">
-          <div className="text-center mb-6">
-            <div className="h-10 w-10 rounded-full bg-card border border-border flex items-center justify-center mx-auto mb-4">
-              {isEmailView ? <Mail className="h-5 w-5 text-primary" /> : <Phone className="h-5 w-5 text-secondary" />}
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/20">
+              {isEmailView ? <Mail className="h-5 w-5 text-primary-foreground" /> : <Phone className="h-5 w-5 text-primary-foreground" />}
             </div>
-            <h1 className="font-heading text-sm font-bold text-foreground uppercase tracking-widest">
-              {isSignup ? "CREATE YOUR ACCOUNT" : "WELCOME BACK"}
+            <h1 className="font-heading text-2xl font-extrabold text-foreground tracking-tight">
+              {isSignup ? "Create Account" : "Welcome Back"}
             </h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              {isSignup ? "Join the Sudagospel community" : `Sign in with your ${isEmailView ? "email" : "phone"}`}
+            <p className="text-sm text-muted-foreground mt-1.5">
+              {isSignup ? "Join millions of gospel music fans" : `Sign in with your ${isEmailView ? "email" : "phone"}`}
             </p>
           </div>
 
-          <form onSubmit={isEmailView ? handleEmailAuth : handlePhoneAuth} className="space-y-4">
-            {isSignup && (
-              <>
-                {/* Account type selector */}
+          {/* Form card */}
+          <div className="rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm p-6 shadow-xl shadow-black/5">
+            <form onSubmit={isEmailView ? handleEmailAuth : handlePhoneAuth} className="space-y-4">
+              {isSignup && (
+                <>
+                  {/* Account type */}
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">I am a</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setAccountType("fan")}
+                        className={`flex items-center gap-2.5 rounded-xl border-2 p-3.5 transition-all ${
+                          accountType === "fan"
+                            ? "border-primary bg-primary/10 shadow-sm shadow-primary/10"
+                            : "border-border/60 bg-background/50 hover:border-border"
+                        }`}
+                      >
+                        <Headphones className={`h-5 w-5 ${accountType === "fan" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className="text-left">
+                          <p className={`text-xs font-bold ${accountType === "fan" ? "text-primary" : "text-foreground"}`}>Listener</p>
+                          <p className="text-[10px] text-muted-foreground">Stream & discover</p>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAccountType("artist")}
+                        className={`flex items-center gap-2.5 rounded-xl border-2 p-3.5 transition-all ${
+                          accountType === "artist"
+                            ? "border-primary bg-primary/10 shadow-sm shadow-primary/10"
+                            : "border-border/60 bg-background/50 hover:border-border"
+                        }`}
+                      >
+                        <Mic2 className={`h-5 w-5 ${accountType === "artist" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className="text-left">
+                          <p className={`text-xs font-bold ${accountType === "artist" ? "text-primary" : "text-foreground"}`}>Artist</p>
+                          <p className="text-[10px] text-muted-foreground">Upload & share</p>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Display name */}
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+                      {accountType === "artist" ? "Artist Name" : "Display Name"}
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        placeholder={accountType === "artist" ? "Your artist name" : "Your name"}
+                        required
+                        className="pl-11 bg-background/60 border-border/60 rounded-xl h-12 text-sm focus:border-primary/50 focus:ring-primary/20"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Email or Phone */}
+              {isEmailView ? (
                 <div>
-                  <Label className="text-xs text-muted-foreground uppercase tracking-wider">I am a</Label>
-                  <div className="grid grid-cols-2 gap-2 mt-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setAccountType("fan")}
-                      className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all ${
-                        accountType === "fan"
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-card text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      <HeadphonesIcon className="h-5 w-5" />
-                      <span className="text-xs font-semibold">Fan / Listener</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAccountType("artist")}
-                      className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all ${
-                        accountType === "artist"
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-card text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      <Mic2 className="h-5 w-5" />
-                      <span className="text-xs font-semibold">Artist / Creator</span>
-                    </button>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Email</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      className="pl-11 bg-background/60 border-border/60 rounded-xl h-12 text-sm focus:border-primary/50 focus:ring-primary/20"
+                    />
                   </div>
                 </div>
-
+              ) : (
                 <div>
-                  <Label htmlFor="displayName" className="text-xs text-muted-foreground uppercase tracking-wider">
-                    {accountType === "artist" ? "Artist / Stage Name" : "Display Name"}
-                  </Label>
-                  <div className="relative mt-1.5">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={accountType === "artist" ? "Your artist name" : "Your name"} required className="pl-10 bg-card border-border rounded-lg h-11" />
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Phone</label>
+                  <div className="relative">
+                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+211..."
+                      required
+                      className="pl-11 bg-background/60 border-border/60 rounded-xl h-12 text-sm focus:border-primary/50 focus:ring-primary/20"
+                    />
                   </div>
                 </div>
-              </>
-            )}
+              )}
 
-            {isEmailView ? (
+              {/* Password */}
               <div>
-                <Label htmlFor="email" className="text-xs text-muted-foreground uppercase tracking-wider">Email Address</Label>
-                <div className="relative mt-1.5">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className="pl-10 bg-card border-border rounded-lg h-11" />
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Password</label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    className="bg-background/60 border-border/60 rounded-xl h-12 text-sm pr-11 focus:border-primary/50 focus:ring-primary/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
-            ) : (
-              <div>
-                <Label htmlFor="phone" className="text-xs text-muted-foreground uppercase tracking-wider">Phone Number</Label>
-                <div className="relative mt-1.5">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+211..." required className="pl-10 bg-card border-border rounded-lg h-11" />
+
+              {/* Forgot password */}
+              {!isSignup && isEmailView && (
+                <div className="text-right">
+                  <button type="button" onClick={handleForgotPassword} className="text-xs text-primary hover:text-primary/80 font-semibold transition-colors">
+                    Forgot password?
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div>
-              <Label htmlFor="password" className="text-xs text-muted-foreground uppercase tracking-wider">Password</Label>
-              <div className="relative mt-1.5">
-                <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="bg-card border-border rounded-lg h-11 pr-10" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            {!isSignup && isEmailView && (
-              <div className="text-right">
-                <button type="button" onClick={handleForgotPassword} className="text-[11px] text-primary hover:underline font-medium">Forgot password?</button>
-              </div>
-            )}
-
-            <Button type="submit" disabled={loading} className="w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 h-11 font-semibold text-sm">
-              {loading ? "Please wait..." : isSignup ? "Create Account" : "Sign In"}
-            </Button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-border text-center">
-            <p className="text-xs text-muted-foreground">{isSignup ? "Already have an account?" : "Don't have an account?"}</p>
-            <button
-              onClick={() => {
-                if (isEmailView) setView(isSignup ? "email-login" : "email-signup");
-                else setView(isSignup ? "phone-login" : "phone-signup");
-              }}
-              className="mt-1 text-sm font-semibold text-primary hover:underline"
-            >
-              {isSignup ? "Sign In" : "Create an Account"}
-            </button>
+              {/* Submit */}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 h-12 font-bold text-sm shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    Please wait...
+                  </div>
+                ) : isSignup ? (
+                  "Create Account"
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
           </div>
 
-          <p className="mt-4 text-center">
-            <button onClick={() => setView("options")} className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">
+          {/* Toggle login/signup */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              {isSignup ? "Already have an account?" : "Don't have an account?"}
+              <button
+                onClick={() => {
+                  if (isEmailView) setView(isSignup ? "email-login" : "email-signup");
+                  else setView(isSignup ? "phone-login" : "phone-signup");
+                }}
+                className="ml-1.5 font-bold text-primary hover:text-primary/80 transition-colors"
+              >
+                {isSignup ? "Sign In" : "Sign Up"}
+              </button>
+            </p>
+          </div>
+
+          {/* Switch method */}
+          <p className="mt-3 text-center">
+            <button onClick={() => setView("options")} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
               ← Use a different sign-in method
             </button>
           </p>
