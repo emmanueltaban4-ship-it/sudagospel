@@ -452,6 +452,11 @@ const SongDetailPage = () => {
             </div>
           )}
 
+          {/* Ad Space */}
+          <div className="mt-8">
+            <AdBanner position="song_detail" />
+          </div>
+
           {/* === RELATED SONGS === */}
           {relatedSongs && relatedSongs.length > 0 && (
             <div className="mt-10">
