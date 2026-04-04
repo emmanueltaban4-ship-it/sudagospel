@@ -188,6 +188,7 @@ export type Database = {
           genre: string | null
           id: string
           is_approved: boolean | null
+          lyrics: string | null
           play_count: number | null
           title: string
           updated_at: string
@@ -204,6 +205,7 @@ export type Database = {
           genre?: string | null
           id?: string
           is_approved?: boolean | null
+          lyrics?: string | null
           play_count?: number | null
           title: string
           updated_at?: string
@@ -220,6 +222,7 @@ export type Database = {
           genre?: string | null
           id?: string
           is_approved?: boolean | null
+          lyrics?: string | null
           play_count?: number | null
           title?: string
           updated_at?: string
