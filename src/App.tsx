@@ -20,6 +20,7 @@ import PlaylistsPage from "./pages/PlaylistsPage.tsx";
 import PlaylistDetailPage from "./pages/PlaylistDetailPage.tsx";
 import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
+import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/artist/:id" element={<ArtistDetailPage />} />
               <Route path="/playlists" element={<PlaylistsPage />} />
               <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
+              <Route path="/subscription" element={<SubscriptionPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
