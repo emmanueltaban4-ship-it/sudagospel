@@ -1,4 +1,4 @@
-import { Music, Star } from "lucide-react";
+import { Music, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface ArtistCardProps {
@@ -12,13 +12,13 @@ interface ArtistCardProps {
 
 const ArtistCard = ({ id, name, genre, songs, avatarUrl, isVerified }: ArtistCardProps) => {
   const content = (
-    <div className="flex flex-col items-center gap-2 group cursor-pointer">
-      <div className="relative h-24 w-24 md:h-28 md:w-28 rounded-full overflow-hidden ring-2 ring-border group-hover:ring-primary transition-all duration-300">
+    <div className="flex flex-col items-center gap-2.5 group cursor-pointer">
+      <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 shadow-lg">
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={name}
-            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
             loading="lazy"
           />
         ) : (
@@ -27,21 +27,19 @@ const ArtistCard = ({ id, name, genre, songs, avatarUrl, isVerified }: ArtistCar
           </div>
         )}
         {isVerified && (
-          <div className="absolute -bottom-0.5 -right-0.5 h-6 w-6 rounded-full bg-primary flex items-center justify-center ring-2 ring-background">
-            <Star className="h-3 w-3 text-primary-foreground fill-primary-foreground" />
+          <div className="absolute bottom-0 right-0 h-7 w-7 rounded-full bg-primary flex items-center justify-center ring-3 ring-background shadow-md">
+            <CheckCircle className="h-4 w-4 text-primary-foreground" />
           </div>
         )}
       </div>
       <div className="text-center">
         <h3 className="font-heading font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{name}</h3>
-        <p className="text-[10px] text-muted-foreground">{genre} · {songs} songs</p>
+        <p className="text-[11px] text-muted-foreground">{genre} · {songs} songs</p>
       </div>
     </div>
   );
 
-  if (id) {
-    return <Link to={`/artist/${id}`}>{content}</Link>;
-  }
+  if (id) return <Link to={`/artist/${id}`}>{content}</Link>;
   return content;
 };
 

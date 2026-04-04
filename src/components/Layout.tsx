@@ -8,60 +8,78 @@ import {
   Clock,
   Users,
   ListMusic,
-  BarChart3,
   Newspaper,
+  Crown,
+  Upload,
 } from "lucide-react";
 
 const sidebarLinks = [
-  { section: "BROWSE", items: [
+  { section: null, items: [
     { to: "/", icon: Home, label: "Home" },
-    { to: "/music", icon: TrendingUp, label: "Trending Songs" },
-    { to: "/music?sort=recent", icon: Clock, label: "Recently Added" },
+    { to: "/music", icon: TrendingUp, label: "Explore" },
     { to: "/artists", icon: Users, label: "Artists" },
   ]},
-  { section: "LIBRARY", items: [
+  { section: "Your Library", items: [
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
     { to: "/news", icon: Newspaper, label: "News" },
+    { to: "/subscription", icon: Crown, label: "Premium" },
   ]},
 ];
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <TopBar />
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 sticky top-14 h-[calc(100vh-3.5rem)] border-r border-border bg-background overflow-y-auto py-4">
-          {sidebarLinks.map((group) => (
-            <div key={group.section} className="mb-4 px-4">
-              <h3 className="text-[10px] font-bold tracking-widest text-primary mb-2">
-                {group.section}
-              </h3>
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === "/"}
-                    className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                        isActive
-                          ? "bg-muted text-foreground"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                      }`
-                    }
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.label}
-                  </NavLink>
-                ))}
+        <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden">
+          <div className="flex-1 overflow-y-auto py-3 px-2">
+            {sidebarLinks.map((group, gi) => (
+              <div key={gi} className={group.section ? "mt-6" : ""}>
+                {group.section && (
+                  <h3 className="px-3 mb-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground">
+                    {group.section}
+                  </h3>
+                )}
+                <div className="space-y-0.5">
+                  {group.items.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === "/"}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? "bg-primary/10 text-primary font-semibold"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                        }`
+                      }
+                    >
+                      <item.icon className="h-[18px] w-[18px]" />
+                      {item.label}
+                    </NavLink>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Upload CTA */}
+          <div className="p-3 border-t border-border">
+            <Link
+              to="/upload"
+              className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-lg px-4 py-2.5 transition-colors"
+            >
+              <Upload className="h-4 w-4" />
+              Upload Music
+            </Link>
+          </div>
         </aside>
         
         {/* Main content */}
-        <main className="flex-1 min-w-0 pb-20 md:pb-0">{children}</main>
+        <main className="flex-1 min-w-0 pb-20 md:pb-0 overflow-y-auto h-[calc(100vh-3.5rem)]">
+          {children}
+        </main>
       </div>
       <BottomNav />
     </div>
