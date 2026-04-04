@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import MiniPlayer from "@/components/MiniPlayer";
+import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
@@ -72,6 +73,11 @@ const Index = () => {
     <Layout>
       <HeroSection />
 
+      {/* Top Ad Banner */}
+      <div className="px-4 lg:px-6 py-4">
+        <AdBanner position="homepage_top" />
+      </div>
+
       {/* Trending Songs */}
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
@@ -119,6 +125,11 @@ const Index = () => {
           </div>
         </section>
       )}
+
+      {/* Mid-section Ad */}
+      <div className="px-4 lg:px-6 py-2">
+        <AdBanner position="homepage_mid" />
+      </div>
 
       {/* Recently Added */}
       {recentSongs && recentSongs.length > 0 && (

@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import SongCard from "@/components/SongCard";
 import MiniPlayer from "@/components/MiniPlayer";
+import AdBanner from "@/components/AdBanner";
 import { Search, TrendingUp, Clock, Music, Play, Pause } from "lucide-react";
 import { useSongs } from "@/hooks/use-music-data";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -154,6 +155,11 @@ const MusicPage = () => {
             </div>
           </div>
         )}
+
+        {/* Ad Space */}
+        <div className="px-4 lg:px-6 py-2">
+          <AdBanner position="music_page" />
+        </div>
 
         {/* Browse All + Genre Filters */}
         <div className="px-4 lg:px-6 py-5">

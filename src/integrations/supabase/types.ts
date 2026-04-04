@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          click_count: number
+          created_at: string
+          end_date: string | null
+          id: string
+          image_url: string | null
+          impression_count: number
+          is_active: boolean
+          link_url: string | null
+          position: string
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          click_count?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          impression_count?: number
+          is_active?: boolean
+          link_url?: string | null
+          position?: string
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          click_count?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          impression_count?: number
+          is_active?: boolean
+          link_url?: string | null
+          position?: string
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           author_id: string
@@ -465,6 +510,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_ad_click: { Args: { ad_id: string }; Returns: undefined }
+      increment_ad_impression: { Args: { ad_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
