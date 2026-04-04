@@ -95,6 +95,11 @@ const ArtistsPage = () => {
           </div>
         )}
 
+        {/* Ad Space */}
+        <div className="px-4 lg:px-6 py-2">
+          <AdBanner position="artist_page" />
+        </div>
+
         {/* Trending Artists */}
         {trending.length > 0 && !search && (
           <div className="px-4 lg:px-6 py-5">
