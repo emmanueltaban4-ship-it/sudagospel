@@ -192,6 +192,7 @@ const ArtistDetailPage = () => {
                 <div className="flex items-center gap-4 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
                   {artist.genre && <span>{artist.genre}</span>}
                   <span>{songs?.length || 0} songs</span>
+                  <span>{followerCount.toLocaleString()} followers</span>
                   <span>{totalPlays.toLocaleString()} plays</span>
                 </div>
               </div>
