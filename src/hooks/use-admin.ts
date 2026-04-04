@@ -67,12 +67,19 @@ export const useAllUsers = () => {
   return useQuery({
     queryKey: ["admin-all-users"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("*, user_roles(role)")
+        .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+
+      // Fetch roles separately
+      const { data: roles } = await supabase.from("user_roles").select("user_id, role");
+
+      return (profiles || []).map((p) => ({
+        ...p,
+        roles: (roles || []).filter((r) => r.user_id === p.user_id),
+      }));
     },
   });
 };
