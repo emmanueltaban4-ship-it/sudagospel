@@ -15,7 +15,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
   const navigate = useNavigate();
   const { data: songs } = useSongs();
   const { data: artists } = useArtists();
-  const { playTrack } = usePlayer();
+  const { play } = usePlayer();
 
   useEffect(() => {
     if (open) {
