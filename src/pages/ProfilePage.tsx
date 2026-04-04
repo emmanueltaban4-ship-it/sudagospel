@@ -10,6 +10,7 @@ import { LogIn, UserPlus, Music, Heart, Download, Settings, Upload, LogOut, Shie
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
