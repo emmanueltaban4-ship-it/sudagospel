@@ -5,6 +5,7 @@ import { useSongComments } from "@/hooks/use-music-data";
 import { useLikeSong, usePostComment, useDeleteComment } from "@/hooks/use-engagement";
 import { usePlayer } from "@/hooks/use-player";
 import { useAuth } from "@/hooks/use-auth";
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
