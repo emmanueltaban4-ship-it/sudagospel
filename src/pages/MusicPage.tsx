@@ -156,6 +156,11 @@ const MusicPage = () => {
           </div>
         )}
 
+        {/* Ad Space */}
+        <div className="px-4 lg:px-6 py-2">
+          <AdBanner position="music_page" />
+        </div>
+
         {/* Browse All + Genre Filters */}
         <div className="px-4 lg:px-6 py-5">
           <h2 className="font-heading text-lg font-extrabold text-foreground tracking-tight mb-4">
