@@ -1,5 +1,6 @@
 import { Play, Pause, Heart, Download, Share2 } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
 interface SongCardProps {
