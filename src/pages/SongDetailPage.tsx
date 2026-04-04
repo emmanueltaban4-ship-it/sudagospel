@@ -88,22 +88,30 @@ const SongDetailPage = () => {
     }
   };
 
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = song.file_url;
-    a.download = `${song.title} - ${artistName}.mp3`;
-    a.target = "_blank";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleDownload = async () => {
+    toast.info("Preparing download...");
+    try {
+      const response = await fetch(song.file_url);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${song.title} - ${artistName}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
-    if (user) {
-      supabase.from("song_downloads").insert({
-        song_id: song.id,
-        user_id: user.id,
-      }).then(() => {});
+      if (user) {
+        supabase.from("song_downloads").insert({
+          song_id: song.id,
+          user_id: user.id,
+        }).then(() => {});
+      }
+      toast.success("Download started!");
+    } catch {
+      toast.error("Download failed. Please try again.");
     }
-    toast.success("Download started!");
   };
 
   const handleShare = async () => {

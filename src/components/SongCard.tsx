@@ -1,5 +1,6 @@
 import { Play, Pause, Heart, Download, Share2 } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
 interface SongCardProps {
@@ -69,7 +70,29 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
             <button className="rounded-full p-1 text-muted-foreground hover:text-primary transition-colors">
               <Heart className="h-3.5 w-3.5" />
             </button>
-            <button className="rounded-full p-1 text-muted-foreground hover:text-secondary transition-colors">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!fileUrl) return;
+                toast.info("Preparing download...");
+                fetch(fileUrl)
+                  .then(r => r.blob())
+                  .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `${title} - ${artist}.mp3`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    toast.success("Download started!");
+                  })
+                  .catch(() => toast.error("Download failed."));
+              }}
+              className="rounded-full p-1 text-muted-foreground hover:text-secondary transition-colors"
+            >
               <Download className="h-3.5 w-3.5" />
             </button>
             <button className="rounded-full p-1 text-muted-foreground hover:text-foreground transition-colors">
