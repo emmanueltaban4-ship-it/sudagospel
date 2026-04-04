@@ -42,9 +42,10 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-        </PlayerProvider>
-      </AuthProvider>
-    </TooltipProvider>
+          </PlayerProvider>
+        </AuthProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

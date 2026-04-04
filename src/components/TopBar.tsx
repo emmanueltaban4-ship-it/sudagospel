@@ -26,10 +26,11 @@ const TopBar = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button className="rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors">
             <Search className="h-5 w-5" />
           </button>
+          <ThemeToggle />
           <button className="rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors relative">
             <Bell className="h-5 w-5" />
             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary" />
