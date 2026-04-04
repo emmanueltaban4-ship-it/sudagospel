@@ -34,7 +34,8 @@ const App = () => (
               <Route path="/blog" element={<NewsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/upload" element={<UploadPage />} />
+            <Route path="/upload" element={<UploadPage />} />
+            <Route path="/admin" element={<AdminPage />} />
               <Route path="/song/:id" element={<SongDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
