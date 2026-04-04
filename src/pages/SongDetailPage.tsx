@@ -128,7 +128,6 @@ const SongDetailPage = () => {
     document.body.removeChild(a);
     toast.success("Download started!");
   };
-  };
 
   const handleShare = async () => {
     const shareUrl = ogShareUrl;
