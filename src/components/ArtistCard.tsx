@@ -1,14 +1,16 @@
 import { Music } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ArtistCardProps {
+  id?: string;
   name: string;
   genre: string;
   songs: number;
   avatarUrl?: string | null;
 }
 
-const ArtistCard = ({ name, genre, songs, avatarUrl }: ArtistCardProps) => {
-  return (
+const ArtistCard = ({ id, name, genre, songs, avatarUrl }: ArtistCardProps) => {
+  const content = (
     <div className="flex flex-col items-center gap-2 group cursor-pointer">
       <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-full overflow-hidden ring-2 ring-border group-hover:ring-primary transition-all duration-300">
         {avatarUrl ? (
@@ -34,6 +36,11 @@ const ArtistCard = ({ name, genre, songs, avatarUrl }: ArtistCardProps) => {
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/artist/${id}`}>{content}</Link>;
+  }
+  return content;
 };
 
 export default ArtistCard;

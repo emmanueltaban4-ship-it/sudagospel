@@ -15,6 +15,7 @@ import AuthPage from "./pages/AuthPage.tsx";
 import UploadPage from "./pages/UploadPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import SongDetailPage from "./pages/SongDetailPage.tsx";
+import ArtistDetailPage from "./pages/ArtistDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/admin" element={<AdminPage />} />
               <Route path="/song/:id" element={<SongDetailPage />} />
+              <Route path="/artist/:id" element={<ArtistDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
