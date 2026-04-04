@@ -36,6 +36,11 @@ const ArtistCard = ({ id, name, genre, songs, avatarUrl }: ArtistCardProps) => {
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/artist/${id}`}>{content}</Link>;
+  }
+  return content;
 };
 
 export default ArtistCard;

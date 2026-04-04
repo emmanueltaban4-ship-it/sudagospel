@@ -40,6 +40,7 @@ const App = () => (
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/admin" element={<AdminPage />} />
               <Route path="/song/:id" element={<SongDetailPage />} />
+              <Route path="/artist/:id" element={<ArtistDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
