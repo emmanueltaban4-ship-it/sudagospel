@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -6,10 +6,9 @@ import { useDocumentMeta } from "@/hooks/use-document-meta";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Heart, Download, Share2, Clock, TrendingUp, Disc3, ListMusic
+  Download, Share2, Clock, TrendingUp, Disc3
 } from "lucide-react";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
@@ -21,6 +20,7 @@ const ArtistDetailPage = () => {
   const navigate = useNavigate();
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [sortMode, setSortMode] = useState<SortMode>("popular");
+  const [showAllTracks, setShowAllTracks] = useState(false);
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["artist", id],
@@ -55,16 +55,14 @@ const ArtistDetailPage = () => {
     if (!songs) return [];
     const copy = [...songs];
     switch (sortMode) {
-      case "popular":
-        return copy.sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
-      case "newest":
-        return copy.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      case "title":
-        return copy.sort((a, b) => a.title.localeCompare(b.title));
-      default:
-        return copy;
+      case "popular": return copy.sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+      case "newest": return copy.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      case "title": return copy.sort((a, b) => a.title.localeCompare(b.title));
+      default: return copy;
     }
   }, [songs, sortMode]);
+
+  const displayedSongs = showAllTracks ? sortedSongs : sortedSongs.slice(0, 5);
 
   const queue: Track[] = useMemo(() =>
     sortedSongs.map((s) => ({
@@ -116,8 +114,8 @@ const ArtistDetailPage = () => {
   if (isLoading) {
     return (
       <Layout>
-        <div className="container py-16 text-center">
-          <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="flex items-center justify-center h-[60vh]">
+          <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       </Layout>
     );
@@ -126,7 +124,8 @@ const ArtistDetailPage = () => {
   if (!artist) {
     return (
       <Layout>
-        <div className="container py-16 text-center">
+        <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
+          <Music className="h-12 w-12 text-muted-foreground/30" />
           <p className="text-muted-foreground">Artist not found</p>
         </div>
       </Layout>
@@ -135,182 +134,142 @@ const ArtistDetailPage = () => {
 
   return (
     <Layout>
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden">
-        {/* Background blur from avatar */}
-        <div className="absolute inset-0">
-          {artist.avatar_url ? (
-            <img
-              src={artist.avatar_url}
-              alt=""
-              className="h-full w-full object-cover scale-110 blur-3xl opacity-30"
-            />
-          ) : (
-            <div className="h-full w-full bg-gradient-brand opacity-40" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
-        </div>
+      <div className="pb-28">
+        {/* === HERO BANNER === */}
+        <div className="relative overflow-hidden min-h-[280px] md:min-h-[340px]">
+          {/* Background */}
+          <div className="absolute inset-0">
+            {artist.avatar_url ? (
+              <img src={artist.avatar_url} alt="" className="h-full w-full object-cover scale-110 blur-[80px] opacity-60" />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-primary/50 to-secondary/30" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/50 to-background" />
+          </div>
 
-        <div className="relative container max-w-2xl pt-4 pb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors bg-card/50 backdrop-blur-sm rounded-full px-3 py-1.5"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back
-          </button>
+          <div className="relative px-4 lg:px-8 pt-4 pb-8">
+            <button
+              onClick={() => navigate(-1)}
+              className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </button>
 
-          <div className="flex flex-col items-center">
-            {/* Avatar with ring animation */}
-            <div className="relative mb-5">
-              <div className="h-32 w-32 md:h-36 md:w-36 rounded-full overflow-hidden ring-[3px] ring-primary/30 ring-offset-4 ring-offset-background shadow-2xl">
-                {artist.avatar_url ? (
-                  <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-5xl font-heading font-bold text-primary-foreground">
-                    {artist.name[0]}
+            {/* Artist info - horizontal layout */}
+            <div className="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 max-w-4xl mx-auto">
+              {/* Avatar */}
+              <div className="relative flex-shrink-0">
+                <div className="h-40 w-40 md:h-52 md:w-52 rounded-full overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+                  {artist.avatar_url ? (
+                    <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-6xl font-heading font-bold text-primary-foreground">
+                      {artist.name[0]}
+                    </div>
+                  )}
+                </div>
+                {artist.is_verified && (
+                  <div className="absolute bottom-2 right-2 bg-primary rounded-full p-2 shadow-lg border-[3px] border-background">
+                    <CheckCircle className="h-5 w-5 text-primary-foreground" />
                   </div>
                 )}
               </div>
-              {artist.is_verified && (
-                <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1.5 shadow-lg border-2 border-background">
-                  <CheckCircle className="h-4 w-4 text-primary-foreground" />
+
+              {/* Text info */}
+              <div className="flex-1 min-w-0 text-center md:text-left">
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  {artist.is_verified && (
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      Verified Artist
+                    </span>
+                  )}
                 </div>
-              )}
-            </div>
-
-            {/* Name & Genre */}
-            <h1 className="font-heading text-2xl md:text-3xl font-extrabold text-foreground text-center">
-              {artist.name}
-            </h1>
-            <div className="flex items-center gap-2 mt-2">
-              {artist.genre && (
-                <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary border border-primary/20">
-                  {artist.genre}
-                </span>
-              )}
-              {artist.is_verified && (
-                <span className="inline-block rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary border border-secondary/20">
-                  Verified Artist
-                </span>
-              )}
-            </div>
-
-            {artist.bio && (
-              <p className="mt-4 text-sm text-muted-foreground text-center max-w-sm leading-relaxed">
-                {artist.bio}
-              </p>
-            )}
-
-            {/* Stats Bar */}
-            <div className="flex items-center gap-6 mt-5 px-6 py-3 rounded-2xl bg-card/80 backdrop-blur-sm border border-border shadow-sm">
-              <div className="flex flex-col items-center">
-                <span className="font-heading text-lg font-bold text-foreground">{songs?.length || 0}</span>
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Songs</span>
+                <h1 className="font-heading text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground mt-1 leading-tight">
+                  {artist.name}
+                </h1>
+                <div className="flex items-center gap-4 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
+                  {artist.genre && <span>{artist.genre}</span>}
+                  <span>{songs?.length || 0} songs</span>
+                  <span>{totalPlays.toLocaleString()} plays</span>
+                </div>
               </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="flex flex-col items-center">
-                <span className="font-heading text-lg font-bold text-foreground">{totalPlays.toLocaleString()}</span>
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Plays</span>
-              </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="flex flex-col items-center">
-                <span className="font-heading text-lg font-bold text-foreground">{totalDownloads.toLocaleString()}</span>
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Downloads</span>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 mt-5">
-              <Button
-                onClick={handlePlayAll}
-                className="gap-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg px-6"
-                disabled={queue.length === 0}
-              >
-                <Play className="h-4 w-4" fill="currentColor" /> Play All
-              </Button>
-              <Button
-                onClick={handleShuffle}
-                variant="outline"
-                className="gap-2 rounded-full border-primary/30 text-primary hover:bg-primary/10"
-                disabled={queue.length === 0}
-              >
-                <Shuffle className="h-4 w-4" /> Shuffle
-              </Button>
-              <Button
-                onClick={handleShare}
-                variant="outline"
-                size="icon"
-                className="rounded-full border-border text-muted-foreground hover:text-foreground"
-              >
-                <Share2 className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="container max-w-2xl pb-32">
-        <Tabs defaultValue="tracks" className="mt-2">
-          <TabsList className="w-full bg-card border border-border rounded-xl h-11 p-1">
-            <TabsTrigger value="tracks" className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs font-semibold">
-              <ListMusic className="h-3.5 w-3.5" /> Tracks
-            </TabsTrigger>
-            <TabsTrigger value="popular" className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs font-semibold">
-              <TrendingUp className="h-3.5 w-3.5" /> Popular
-            </TabsTrigger>
-            <TabsTrigger value="about" className="flex-1 gap-1.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs font-semibold">
-              <Disc3 className="h-3.5 w-3.5" /> About
-            </TabsTrigger>
-          </TabsList>
+        {/* === CONTROLS === */}
+        <div className="px-4 lg:px-8 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4 py-5">
+            <button
+              onClick={handlePlayAll}
+              className="h-14 w-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:scale-105 hover:bg-primary/90 transition-all flex-shrink-0"
+              disabled={queue.length === 0}
+            >
+              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+            </button>
+            <Button
+              onClick={handleShuffle}
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground rounded-full"
+              disabled={queue.length === 0}
+            >
+              <Shuffle className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleShare}
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground rounded-full"
+            >
+              <Share2 className="h-5 w-5" />
+            </Button>
+          </div>
 
-          {/* All Tracks Tab */}
-          <TabsContent value="tracks" className="mt-4">
-            {/* Sort controls */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs text-muted-foreground">Sort by:</span>
-              {(["popular", "newest", "title"] as SortMode[]).map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => setSortMode(mode)}
-                  className={`text-xs px-3 py-1 rounded-full transition-colors font-medium capitalize ${
-                    sortMode === mode
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
+          {/* Bio */}
+          {artist.bio && (
+            <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-2xl">{artist.bio}</p>
+          )}
+
+          {/* === POPULAR TRACKS === */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-heading text-lg font-bold text-foreground">Popular</h2>
+              <div className="flex items-center gap-1.5">
+                {(["popular", "newest", "title"] as SortMode[]).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setSortMode(mode)}
+                    className={`text-[11px] px-2.5 py-1 rounded-full transition-colors font-medium capitalize ${
+                      sortMode === mode
+                        ? "bg-primary/15 text-primary"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Track list */}
-            <div className="space-y-1">
-              {sortedSongs.map((song, index) => {
+            <div className="space-y-0.5">
+              {displayedSongs.map((song, index) => {
                 const artistName = (song.artists as any)?.name || "Unknown";
                 const isCurrentSong = currentTrack?.id === song.id;
 
                 return (
                   <div
                     key={song.id}
-                    className={`flex items-center gap-3 p-3 rounded-xl transition-all cursor-pointer group ${
-                      isCurrentSong
-                        ? "bg-primary/10 border border-primary/20"
-                        : "hover:bg-card border border-transparent hover:border-border"
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all cursor-pointer group ${
+                      isCurrentSong ? "bg-primary/10" : "hover:bg-card"
                     }`}
                     onClick={() => {
-                      if (isCurrentSong) {
-                        togglePlay();
-                      } else {
-                        play(
-                          { id: song.id, title: song.title, artist: artistName, fileUrl: song.file_url, coverUrl: song.cover_url || undefined },
-                          queue
-                        );
-                      }
+                      if (isCurrentSong) togglePlay();
+                      else play({ id: song.id, title: song.title, artist: artistName, fileUrl: song.file_url, coverUrl: song.cover_url || undefined }, queue);
                     }}
                   >
-                    {/* Track number / play indicator */}
-                    <div className="w-7 flex-shrink-0 text-center">
+                    {/* Number / play indicator */}
+                    <div className="w-6 flex-shrink-0 text-center">
                       {isCurrentSong && isPlaying ? (
                         <div className="flex items-center justify-center gap-[2px]">
                           <span className="inline-block w-[3px] h-3 bg-primary rounded-full animate-pulse" />
@@ -318,175 +277,159 @@ const ArtistDetailPage = () => {
                           <span className="inline-block w-[3px] h-2 bg-primary rounded-full animate-pulse [animation-delay:300ms]" />
                         </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground font-medium group-hover:hidden">
-                          {index + 1}
-                        </span>
-                      )}
-                      {!(isCurrentSong && isPlaying) && (
-                        <Play className="h-3.5 w-3.5 text-primary hidden group-hover:block mx-auto" fill="currentColor" />
+                        <>
+                          <span className="text-sm text-muted-foreground tabular-nums group-hover:hidden">{index + 1}</span>
+                          <Play className="h-4 w-4 text-foreground hidden group-hover:block mx-auto" fill="currentColor" />
+                        </>
                       )}
                     </div>
 
-                    {/* Cover thumbnail */}
-                    <div className="h-11 w-11 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
+                    {/* Cover */}
+                    <div className="h-10 w-10 rounded overflow-hidden flex-shrink-0 bg-muted">
                       {song.cover_url ? (
                         <img src={song.cover_url} alt="" className="h-full w-full object-cover" loading="lazy" />
                       ) : (
-                        <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-xs font-bold text-primary-foreground">
+                        <div className="h-full w-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center text-[10px] font-bold text-primary-foreground">
                           {song.title[0]}
                         </div>
                       )}
                     </div>
 
-                    {/* Song info */}
+                    {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold truncate ${isCurrentSong ? "text-primary" : "text-foreground"}`}>
-                        {song.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {(song.play_count || 0).toLocaleString()} plays
-                      </p>
+                      <Link to={`/song/${song.id}`} onClick={(e) => e.stopPropagation()}>
+                        <p className={`text-sm font-medium truncate hover:underline ${isCurrentSong ? "text-primary" : "text-foreground"}`}>
+                          {song.title}
+                        </p>
+                      </Link>
                     </div>
 
-                    {/* Duration & actions */}
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
-                      <span className="text-xs text-muted-foreground hidden sm:block">
-                        {formatTime(song.duration_seconds)}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toast.info("Preparing download...");
-                          fetch(song.file_url)
-                            .then(r => r.blob())
-                            .then(blob => {
-                              const url = URL.createObjectURL(blob);
-                              const a = document.createElement("a");
-                              a.href = url;
-                              a.download = `${song.title} - ${artistName}.mp3`;
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
-                              URL.revokeObjectURL(url);
-                              toast.success("Download started!");
-                            })
-                            .catch(() => toast.error("Download failed."));
-                        }}
-                        className="p-1.5 rounded-full text-muted-foreground hover:text-secondary opacity-0 group-hover:opacity-100 transition-all"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                    {/* Play count */}
+                    <span className="text-xs text-muted-foreground tabular-nums hidden sm:block">
+                      {(song.play_count || 0).toLocaleString()}
+                    </span>
+
+                    {/* Duration */}
+                    <span className="text-xs text-muted-foreground tabular-nums hidden sm:block w-12 text-right">
+                      {formatTime(song.duration_seconds)}
+                    </span>
+
+                    {/* Download */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast.info("Preparing download...");
+                        fetch(song.file_url)
+                          .then(r => r.blob())
+                          .then(blob => {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `${song.title} - ${artistName}.mp3`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            toast.success("Download started!");
+                          })
+                          .catch(() => toast.error("Download failed."));
+                      }}
+                      className="p-1.5 rounded-full text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
                   </div>
                 );
               })}
             </div>
 
-            {sortedSongs.length === 0 && (
-              <p className="text-center text-sm text-muted-foreground py-12">No songs uploaded yet</p>
+            {sortedSongs.length > 5 && (
+              <button
+                onClick={() => setShowAllTracks(!showAllTracks)}
+                className="mt-3 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showAllTracks ? "Show less" : `See all ${sortedSongs.length} songs`}
+              </button>
             )}
-          </TabsContent>
 
-          {/* Popular Tab - Grid view */}
-          <TabsContent value="popular" className="mt-4">
-            <div className="grid grid-cols-2 gap-3">
-              {songs
-                ?.sort((a, b) => (b.play_count || 0) - (a.play_count || 0))
-                .slice(0, 6)
-                .map((song) => {
-                  const artistName = (song.artists as any)?.name || "Unknown";
+            {sortedSongs.length === 0 && (
+              <div className="flex flex-col items-center py-16 text-center">
+                <Music className="h-10 w-10 text-muted-foreground/20 mb-3" />
+                <p className="text-sm text-muted-foreground">No songs uploaded yet</p>
+              </div>
+            )}
+          </div>
+
+          {/* === DISCOGRAPHY GRID === */}
+          {songs && songs.length > 0 && (
+            <div className="mb-8">
+              <h2 className="font-heading text-lg font-bold text-foreground mb-4">Discography</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {songs.slice(0, 8).map((song) => {
+                  const isCurrentSong = currentTrack?.id === song.id;
                   return (
                     <div
                       key={song.id}
+                      className="group cursor-pointer"
                       onClick={() => navigate(`/song/${song.id}`)}
-                      className="group rounded-xl overflow-hidden bg-card border border-border hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5"
                     >
-                      <div className="relative aspect-square overflow-hidden">
+                      <div className="relative aspect-square rounded-md overflow-hidden mb-2 bg-muted">
                         {song.cover_url ? (
-                          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" loading="lazy" />
+                          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                         ) : (
-                          <div className="h-full w-full bg-gradient-brand flex items-center justify-center text-3xl font-heading font-bold text-primary-foreground">
+                          <div className="h-full w-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center text-2xl font-heading font-bold text-primary-foreground">
                             {song.title[0]}
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                          <div className="flex items-center gap-1 text-white text-xs">
-                            <Play className="h-3 w-3" fill="currentColor" />
-                            {(song.play_count || 0).toLocaleString()}
+                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+                          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center shadow-xl">
+                            {isCurrentSong && isPlaying ? (
+                              <Pause className="h-4 w-4 text-primary-foreground" />
+                            ) : (
+                              <Play className="h-4 w-4 text-primary-foreground fill-primary-foreground ml-0.5" />
+                            )}
                           </div>
                         </div>
                       </div>
-                      <div className="p-3">
-                        <h3 className="font-heading font-semibold text-sm truncate text-card-foreground">{song.title}</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">{(song.play_count || 0).toLocaleString()} plays</p>
-                      </div>
+                      <p className="text-sm font-semibold text-foreground truncate">{song.title}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {(song.play_count || 0).toLocaleString()} plays
+                      </p>
                     </div>
                   );
                 })}
-            </div>
-            {(!songs || songs.length === 0) && (
-              <p className="text-center text-sm text-muted-foreground py-12">No songs yet</p>
-            )}
-          </TabsContent>
-
-          {/* About Tab */}
-          <TabsContent value="about" className="mt-4 space-y-5">
-            <div className="rounded-2xl bg-card border border-border p-5">
-              <h3 className="font-heading font-bold text-foreground mb-3 flex items-center gap-2">
-                <Disc3 className="h-4 w-4 text-primary" /> About {artist.name}
-              </h3>
-              {artist.bio ? (
-                <p className="text-sm text-muted-foreground leading-relaxed">{artist.bio}</p>
-              ) : (
-                <p className="text-sm text-muted-foreground italic">
-                  No bio available yet. This artist hasn't added a description.
-                </p>
-              )}
-            </div>
-
-            <div className="rounded-2xl bg-card border border-border p-5">
-              <h3 className="font-heading font-bold text-foreground mb-4 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" /> Statistics
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-xl bg-muted/50 p-4 text-center">
-                  <Music className="h-5 w-5 text-primary mx-auto mb-1" />
-                  <p className="font-heading text-xl font-bold text-foreground">{songs?.length || 0}</p>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Total Songs</p>
-                </div>
-                <div className="rounded-xl bg-muted/50 p-4 text-center">
-                  <Play className="h-5 w-5 text-primary mx-auto mb-1" />
-                  <p className="font-heading text-xl font-bold text-foreground">{totalPlays.toLocaleString()}</p>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Total Plays</p>
-                </div>
-                <div className="rounded-xl bg-muted/50 p-4 text-center">
-                  <Download className="h-5 w-5 text-secondary mx-auto mb-1" />
-                  <p className="font-heading text-xl font-bold text-foreground">{totalDownloads.toLocaleString()}</p>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Downloads</p>
-                </div>
-                <div className="rounded-xl bg-muted/50 p-4 text-center">
-                  <Clock className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-                  <p className="font-heading text-xl font-bold text-foreground">
-                    {artist.genre || "N/A"}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Genre</p>
-                </div>
               </div>
             </div>
+          )}
 
+          {/* === STATS SECTION === */}
+          <div className="rounded-xl bg-card/50 border border-border p-5">
+            <h2 className="font-heading text-sm font-bold text-foreground mb-4 uppercase tracking-wider">About</h2>
+            {artist.bio && (
+              <p className="text-sm text-muted-foreground leading-relaxed mb-5">{artist.bio}</p>
+            )}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className="font-heading text-2xl font-bold text-foreground">{songs?.length || 0}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Songs</p>
+              </div>
+              <div className="text-center">
+                <p className="font-heading text-2xl font-bold text-foreground">{totalPlays.toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Plays</p>
+              </div>
+              <div className="text-center">
+                <p className="font-heading text-2xl font-bold text-foreground">{totalDownloads.toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Downloads</p>
+              </div>
+            </div>
             {artist.is_verified && (
-              <div className="rounded-2xl bg-primary/5 border border-primary/20 p-4 flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Verified Artist</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    This artist's identity has been verified by the Sudagospel team.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 mt-5 pt-4 border-t border-border">
+                <CheckCircle className="h-4 w-4 text-primary" />
+                <p className="text-xs text-muted-foreground">Verified by Sudagospel</p>
               </div>
             )}
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
 
       <MiniPlayer />
