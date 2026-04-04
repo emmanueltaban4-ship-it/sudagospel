@@ -25,6 +25,7 @@ const ArtistsPage = () => {
 
   const displayArtists = artists && artists.length > 0
     ? artists.map((a) => ({
+        id: a.id,
         name: a.name,
         genre: a.genre || "Gospel",
         songs: (a.songs as any)?.[0]?.count || 0,
