@@ -59,6 +59,35 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_follows: {
+        Row: {
+          artist_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_follows_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artists: {
         Row: {
           avatar_url: string | null
@@ -193,6 +222,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_type: string | null
           avatar_url: string | null
           bio: string | null
           created_at: string
@@ -202,6 +232,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
@@ -211,6 +242,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
