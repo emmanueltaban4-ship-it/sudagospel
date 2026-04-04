@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Inter', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        heading: ['Figtree', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -84,12 +84,17 @@ export default {
           from: { transform: "translateY(20px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
         },
+        "eq-bar": {
+          "0%, 100%": { height: "4px" },
+          "50%": { height: "16px" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "slide-up": "slide-up 0.5s ease-out",
+        "eq-bar": "eq-bar 0.6s ease-in-out infinite",
       },
     },
   },
