@@ -16,6 +16,8 @@ import UploadPage from "./pages/UploadPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import SongDetailPage from "./pages/SongDetailPage.tsx";
 import ArtistDetailPage from "./pages/ArtistDetailPage.tsx";
+import PlaylistsPage from "./pages/PlaylistsPage.tsx";
+import PlaylistDetailPage from "./pages/PlaylistDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
