@@ -7,6 +7,7 @@ import HeroSection from "@/components/HeroSection";
 import MiniPlayer from "@/components/MiniPlayer";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
