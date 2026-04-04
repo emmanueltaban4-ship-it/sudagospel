@@ -1,7 +1,8 @@
-import { Play, Pause, Heart, Download, Share2 } from "lucide-react";
+import { Play, Pause, Heart, Download, Share2, ListPlus } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import AddToPlaylistDialog from "@/components/AddToPlaylistDialog";
 
 interface SongCardProps {
   id?: string;
@@ -95,6 +96,11 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
             >
               <Download className="h-3.5 w-3.5" />
             </button>
+            {id && (
+              <span onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                <AddToPlaylistDialog songId={id} />
+              </span>
+            )}
             <button className="rounded-full p-1 text-muted-foreground hover:text-foreground transition-colors">
               <Share2 className="h-3.5 w-3.5" />
             </button>
