@@ -68,13 +68,33 @@ const SongDetailPage = () => {
   const artist = (song as any)?.artists;
   const artistName = artist?.name || "Unknown Artist";
 
+  const songSeoDescription = song?.description
+    ? `${song.description.slice(0, 140)}${song.description.length > 140 ? "…" : ""}`
+    : song
+      ? `Listen to ${song.title} by ${artistName}. Stream and download free South Sudanese gospel music on Sudagospel.`
+      : undefined;
+  const songCanonicalUrl = song ? `https://sudagospel-vibes.lovable.app/song/${song.id}` : undefined;
+
   useDocumentMeta({
     title: song ? `${song.title} by ${artistName}` : undefined,
-    description: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    description: songSeoDescription,
     ogTitle: song ? `${song.title} by ${artistName}` : undefined,
-    ogDescription: song?.description || (song ? `Listen to ${song.title} by ${artistName} on Sudagospel.` : undefined),
+    ogDescription: songSeoDescription,
     ogImage: song?.cover_url || undefined,
     ogType: "music.song",
+    canonicalUrl: songCanonicalUrl,
+    keywords: song ? `${song.title}, ${artistName}, South Sudan gospel, ${song.genre || "gospel"}, Sudagospel, download` : undefined,
+    jsonLd: song ? {
+      "@context": "https://schema.org",
+      "@type": "MusicRecording",
+      name: song.title,
+      url: songCanonicalUrl,
+      genre: song.genre || "Gospel",
+      image: song.cover_url || undefined,
+      description: songSeoDescription,
+      byArtist: { "@type": "MusicGroup", name: artistName },
+      duration: song.duration_seconds ? `PT${Math.floor(song.duration_seconds / 60)}M${song.duration_seconds % 60}S` : undefined,
+    } : undefined,
   });
 
   if (isLoading) {
