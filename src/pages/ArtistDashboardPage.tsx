@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
-  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle
+  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
