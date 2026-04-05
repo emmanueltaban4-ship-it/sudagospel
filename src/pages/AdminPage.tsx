@@ -18,6 +18,7 @@ import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileTe
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "settings", label: "Settings", icon: Settings2 },
+  { id: "monetization", label: "Monetization", icon: DollarSign },
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
   { id: "artists", label: "Artists", icon: Mic2 },
