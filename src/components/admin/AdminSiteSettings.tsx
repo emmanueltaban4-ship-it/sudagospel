@@ -69,8 +69,10 @@ const AdminSiteSettings = () => {
       return;
     }
     setUploading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { toast.error("Not authenticated"); setUploading(false); return; }
     const ext = file.name.split(".").pop();
-    const fileName = `logo-${Date.now()}.${ext}`;
+    const fileName = `${user.id}/logo-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("avatars").upload(fileName, file);
     if (error) {
       toast.error("Upload failed: " + error.message);
