@@ -144,6 +144,7 @@ export type Database = {
           name: string
           updated_at: string
           user_id: string | null
+          youtube_channel_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -155,6 +156,7 @@ export type Database = {
           name: string
           updated_at?: string
           user_id?: string | null
+          youtube_channel_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -166,6 +168,7 @@ export type Database = {
           name?: string
           updated_at?: string
           user_id?: string | null
+          youtube_channel_url?: string | null
         }
         Relationships: []
       }

@@ -24,6 +24,7 @@ import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import ArtistDashboardPage from "./pages/ArtistDashboardPage.tsx";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsOfServicePage from "./pages/TermsOfServicePage.tsx";
+import VideosPage from "./pages/VideosPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="/videos" element={<VideosPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

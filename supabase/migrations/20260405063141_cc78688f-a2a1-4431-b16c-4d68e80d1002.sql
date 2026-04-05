@@ -1,0 +1,1 @@
+ALTER TABLE public.artists ADD COLUMN youtube_channel_url TEXT DEFAULT NULL;

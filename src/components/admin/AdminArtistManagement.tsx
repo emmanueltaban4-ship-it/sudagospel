@@ -26,7 +26,7 @@ const AdminArtistManagement = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any>(null);
-  const [editForm, setEditForm] = useState({ name: "", bio: "", genre: "" });
+  const [editForm, setEditForm] = useState({ name: "", bio: "", genre: "", youtube_channel_url: "" });
 
   const invalidateAll = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-all-artists"] });
@@ -35,7 +35,7 @@ const AdminArtistManagement = () => {
   };
 
   const updateArtist = useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; name?: string; bio?: string; genre?: string; is_verified?: boolean }) => {
+    mutationFn: async ({ id, ...updates }: { id: string; name?: string; bio?: string; genre?: string; is_verified?: boolean; youtube_channel_url?: string | null }) => {
       const { error } = await supabase.from("artists").update(updates).eq("id", id);
       if (error) throw error;
     },
@@ -83,8 +83,12 @@ const AdminArtistManagement = () => {
             <label className="text-xs font-semibold text-muted-foreground mb-1 block">Bio</label>
             <Textarea value={editForm.bio} onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })} rows={4} />
           </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground mb-1 block">YouTube Channel URL</label>
+            <Input value={editForm.youtube_channel_url} onChange={(e) => setEditForm({ ...editForm, youtube_channel_url: e.target.value })} placeholder="@channelname or full URL" />
+          </div>
           <div className="flex gap-2">
-            <Button onClick={() => updateArtist.mutate({ id: editing.id, name: editForm.name, genre: editForm.genre, bio: editForm.bio })} disabled={updateArtist.isPending}>
+            <Button onClick={() => updateArtist.mutate({ id: editing.id, name: editForm.name, genre: editForm.genre, bio: editForm.bio, youtube_channel_url: editForm.youtube_channel_url || null })} disabled={updateArtist.isPending}>
               <Save className="h-4 w-4 mr-1" /> Save
             </Button>
             <Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
@@ -147,7 +151,7 @@ const AdminArtistManagement = () => {
                 </Button>
                 <Button
                   size="sm" variant="outline" className="h-8 w-8 p-0 rounded-full"
-                  onClick={() => { setEditing(artist); setEditForm({ name: artist.name, bio: artist.bio || "", genre: artist.genre || "" }); }}
+                  onClick={() => { setEditing(artist); setEditForm({ name: artist.name, bio: artist.bio || "", genre: artist.genre || "", youtube_channel_url: artist.youtube_channel_url || "" }); }}
                 >
                   <Edit2 className="h-3.5 w-3.5" />
                 </Button>

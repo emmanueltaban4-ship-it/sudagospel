@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
-  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle
+  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ const ArtistDashboardPage = () => {
   const [editName, setEditName] = useState("");
   const [editBio, setEditBio] = useState("");
   const [editGenre, setEditGenre] = useState("");
+  const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
 
   // Get artist profile linked to current user
   const { data: artist, isLoading } = useQuery({
@@ -71,7 +72,7 @@ const ArtistDashboardPage = () => {
     mutationFn: async () => {
       const { error } = await supabase
         .from("artists")
-        .update({ name: editName, bio: editBio, genre: editGenre })
+        .update({ name: editName, bio: editBio, genre: editGenre, youtube_channel_url: editYoutubeUrl || null })
         .eq("id", artist!.id);
       if (error) throw error;
     },
@@ -132,6 +133,7 @@ const ArtistDashboardPage = () => {
     setEditName(artist.name);
     setEditBio(artist.bio || "");
     setEditGenre(artist.genre || "");
+    setEditYoutubeUrl(artist.youtube_channel_url || "");
     setEditingProfile(true);
   };
 
@@ -167,6 +169,10 @@ const ArtistDashboardPage = () => {
                   <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Artist name" className="bg-background" />
                   <Input value={editGenre} onChange={(e) => setEditGenre(e.target.value)} placeholder="Genre" className="bg-background" />
                   <Textarea value={editBio} onChange={(e) => setEditBio(e.target.value)} placeholder="Bio" rows={3} className="bg-background" />
+                  <div className="relative">
+                    <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-red-500" />
+                    <Input value={editYoutubeUrl} onChange={(e) => setEditYoutubeUrl(e.target.value)} placeholder="YouTube channel URL (e.g. @channelname)" className="bg-background pl-10" />
+                  </div>
                   <div className="flex gap-2">
                     <Button onClick={() => updateProfile.mutate()} size="sm" className="gap-1.5 rounded-full bg-primary text-primary-foreground">
                       <Save className="h-3.5 w-3.5" /> Save
