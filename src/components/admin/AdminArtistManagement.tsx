@@ -151,7 +151,7 @@ const AdminArtistManagement = () => {
                 </Button>
                 <Button
                   size="sm" variant="outline" className="h-8 w-8 p-0 rounded-full"
-                  onClick={() => { setEditing(artist); setEditForm({ name: artist.name, bio: artist.bio || "", genre: artist.genre || "" }); }}
+                  onClick={() => { setEditing(artist); setEditForm({ name: artist.name, bio: artist.bio || "", genre: artist.genre || "", youtube_channel_url: artist.youtube_channel_url || "" }); }}
                 >
                   <Edit2 className="h-3.5 w-3.5" />
                 </Button>
