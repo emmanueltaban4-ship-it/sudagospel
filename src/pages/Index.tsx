@@ -140,6 +140,56 @@ const Index = () => {
         </section>
       )}
 
+      {/* Featured YouTube Videos */}
+      {youtubeArtists && youtubeArtists.length > 0 && (
+        <section className="py-6">
+          <div className="px-4 lg:px-6">
+            <SectionHeader title="Featured Videos" icon={<Youtube className="h-5 w-5 text-red-500" />} linkTo="/videos" />
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {youtubeArtists.map((artist) => {
+                const channelUrl = artist.youtube_channel_url!;
+                const fullUrl = channelUrl.startsWith("http")
+                  ? channelUrl
+                  : `https://www.youtube.com/${channelUrl.startsWith("@") ? channelUrl : `@${channelUrl}`}`;
+                return (
+                  <a
+                    key={artist.id}
+                    href={fullUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 w-52 md:w-64 group cursor-pointer"
+                  >
+                    <div className="relative aspect-video rounded-lg overflow-hidden mb-2.5 bg-muted shadow-sm border border-border">
+                      <div className="h-full w-full bg-gradient-to-br from-red-500/10 to-red-900/20 flex flex-col items-center justify-center gap-2">
+                        {artist.avatar_url ? (
+                          <img src={artist.avatar_url} alt={artist.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-red-500/30" loading="lazy" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-lg font-bold text-muted-foreground">
+                            {artist.name[0]}
+                          </div>
+                        )}
+                        <Youtube className="h-6 w-6 text-red-500" />
+                      </div>
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+                        <div className="w-11 h-11 rounded-full bg-red-600 flex items-center justify-center shadow-xl">
+                          <Play className="h-4 w-4 text-white ml-0.5" fill="currentColor" />
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-red-500 transition-colors">
+                      {artist.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">YouTube Channel</p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Mid-section Ad */}
       <div className="px-4 lg:px-6 py-2">
         <AdBanner position="homepage_mid" />
