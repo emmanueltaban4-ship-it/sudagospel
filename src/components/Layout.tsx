@@ -80,6 +80,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {/* Main content */}
         <main className="flex-1 min-w-0 pb-20 md:pb-0 overflow-y-auto h-[calc(100vh-3.5rem)]">
           {children}
+          <footer className="border-t border-border py-4 px-4 mt-8">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+              <span>© {new Date().getFullYear()} SudaGospel</span>
+              <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            </div>
+          </footer>
         </main>
       </div>
       <BottomNav />
