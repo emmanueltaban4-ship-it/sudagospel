@@ -72,7 +72,7 @@ const ArtistDashboardPage = () => {
     mutationFn: async () => {
       const { error } = await supabase
         .from("artists")
-        .update({ name: editName, bio: editBio, genre: editGenre })
+        .update({ name: editName, bio: editBio, genre: editGenre, youtube_channel_url: editYoutubeUrl || null })
         .eq("id", artist!.id);
       if (error) throw error;
     },
