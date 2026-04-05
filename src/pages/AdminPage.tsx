@@ -12,11 +12,13 @@ import AdminSiteSettings from "@/components/admin/AdminSiteSettings";
 import AdminSongManagement from "@/components/admin/AdminSongManagement";
 import AdminArtistManagement from "@/components/admin/AdminArtistManagement";
 import AdminAds from "@/components/admin/AdminAds";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone } from "lucide-react";
+import AdminMonetization from "@/components/admin/AdminMonetization";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "settings", label: "Settings", icon: Settings2 },
+  { id: "monetization", label: "Monetization", icon: DollarSign },
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
   { id: "artists", label: "Artists", icon: Mic2 },
@@ -110,6 +112,7 @@ const AdminPage = () => {
         {/* Tab content */}
         {activeTab === "analytics" && <AdminAnalytics />}
         {activeTab === "settings" && <AdminSiteSettings />}
+        {activeTab === "monetization" && <AdminMonetization />}
         {activeTab === "ads" && <AdminAds />}
         {activeTab === "songs" && <AdminSongManagement />}
         {activeTab === "artists" && <AdminArtistManagement />}

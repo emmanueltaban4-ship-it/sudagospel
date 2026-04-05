@@ -26,6 +26,8 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsOfServicePage from "./pages/TermsOfServicePage.tsx";
 import VideosPage from "./pages/VideosPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import HallOfFamePage from "./pages/HallOfFamePage.tsx";
+import MostListenedPage from "./pages/MostListenedPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +61,8 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
               <Route path="/videos" element={<VideosPage />} />
+              <Route path="/hall-of-fame" element={<HallOfFamePage />} />
+              <Route path="/most-listened" element={<MostListenedPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
