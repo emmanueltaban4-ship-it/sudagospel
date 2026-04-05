@@ -61,6 +61,8 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
               <Route path="/videos" element={<VideosPage />} />
+              <Route path="/hall-of-fame" element={<HallOfFamePage />} />
+              <Route path="/most-listened" element={<MostListenedPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

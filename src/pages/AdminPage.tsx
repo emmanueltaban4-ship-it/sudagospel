@@ -112,6 +112,7 @@ const AdminPage = () => {
         {/* Tab content */}
         {activeTab === "analytics" && <AdminAnalytics />}
         {activeTab === "settings" && <AdminSiteSettings />}
+        {activeTab === "monetization" && <AdminMonetization />}
         {activeTab === "ads" && <AdminAds />}
         {activeTab === "songs" && <AdminSongManagement />}
         {activeTab === "artists" && <AdminArtistManagement />}

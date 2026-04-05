@@ -20,6 +20,8 @@ const sidebarLinks = [
     { to: "/", icon: Home, label: "Home" },
     { to: "/music", icon: TrendingUp, label: "Explore" },
     { to: "/artists", icon: Users, label: "Artists" },
+    { to: "/most-listened", icon: Headphones, label: "Top Songs" },
+    { to: "/hall-of-fame", icon: Trophy, label: "Hall of Fame" },
   ]},
   { section: "Your Library", items: [
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
