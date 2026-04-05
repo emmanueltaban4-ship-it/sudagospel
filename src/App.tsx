@@ -24,6 +24,7 @@ import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import ArtistDashboardPage from "./pages/ArtistDashboardPage.tsx";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsOfServicePage from "./pages/TermsOfServicePage.tsx";
+import VideosPage from "./pages/VideosPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
