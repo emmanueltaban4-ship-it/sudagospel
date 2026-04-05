@@ -26,7 +26,7 @@ const AdminArtistManagement = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any>(null);
-  const [editForm, setEditForm] = useState({ name: "", bio: "", genre: "" });
+  const [editForm, setEditForm] = useState({ name: "", bio: "", genre: "", youtube_channel_url: "" });
 
   const invalidateAll = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-all-artists"] });
