@@ -26,6 +26,8 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsOfServicePage from "./pages/TermsOfServicePage.tsx";
 import VideosPage from "./pages/VideosPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import HallOfFamePage from "./pages/HallOfFamePage.tsx";
+import MostListenedPage from "./pages/MostListenedPage.tsx";
 
 const queryClient = new QueryClient();
 
