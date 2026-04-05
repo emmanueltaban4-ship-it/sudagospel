@@ -47,7 +47,7 @@ const NewSongsPage = () => {
       id: song.id,
       title: song.title,
       artist: (song.artists as any)?.name || "Unknown",
-      audioUrl: song.file_url,
+      fileUrl: song.file_url,
       coverUrl: song.cover_url || undefined,
     };
     if (currentTrack?.id === song.id) {
