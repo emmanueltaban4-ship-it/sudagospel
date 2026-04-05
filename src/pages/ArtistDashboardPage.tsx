@@ -22,6 +22,7 @@ const ArtistDashboardPage = () => {
   const [editName, setEditName] = useState("");
   const [editBio, setEditBio] = useState("");
   const [editGenre, setEditGenre] = useState("");
+  const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
 
   // Get artist profile linked to current user
   const { data: artist, isLoading } = useQuery({
