@@ -38,7 +38,7 @@ const NewSongsPage = () => {
       id: s.id,
       title: s.title,
       artist: (s.artists as any)?.name || "Unknown",
-      audioUrl: s.file_url,
+      fileUrl: s.file_url,
       coverUrl: s.cover_url || undefined,
     })) || [];
 
