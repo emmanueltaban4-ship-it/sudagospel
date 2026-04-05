@@ -194,7 +194,7 @@ const ArtistDashboardPage = () => {
                   </div>
                   <p className="text-sm text-muted-foreground">{artist.genre || "No genre set"}</p>
                   {artist.bio && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{artist.bio}</p>}
-                  <Link to={`/artist/${artist.id}`} className="text-xs text-primary hover:underline mt-2 inline-flex items-center gap-1">
+                  <Link to={artistPath(artist.name)} className="text-xs text-primary hover:underline mt-2 inline-flex items-center gap-1">
                     <Eye className="h-3 w-3" /> View public profile
                   </Link>
                 </>

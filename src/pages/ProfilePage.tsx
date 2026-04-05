@@ -314,7 +314,7 @@ const ProfilePage = () => {
                   {followedArtists.map((artist: any) => (
                     <Link
                       key={artist.id}
-                      to={`/artist/${artist.id}`}
+                      to={artistPath(artist.name)}
                       className="flex-shrink-0 flex flex-col items-center gap-1.5 w-[68px] group"
                     >
                       <div className="h-14 w-14 rounded-full overflow-hidden bg-muted ring-2 ring-transparent group-hover:ring-primary/50 transition-all shadow-md">
