@@ -83,10 +83,29 @@ const ArtistDetailPage = () => {
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
   const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
+  const canonicalUrl = artist ? `https://sudagospel-vibes.lovable.app/artist/${artistSlug(artist.name)}` : undefined;
+  const songCount = songs?.length || 0;
+  const seoDescription = artist?.bio
+    ? `${artist.bio.slice(0, 140)}${artist.bio.length > 140 ? "…" : ""}`
+    : `Listen to ${artist?.name || "this artist"}'s ${songCount} gospel songs on Sudagospel. Stream and download free South Sudanese gospel music.`;
+
   useDocumentMeta({
     title: artist?.name || "Artist",
-    description: artist?.bio || `Listen to ${artist?.name || "this artist"}'s music on Sudagospel.`,
+    description: seoDescription,
     ogImage: artist?.avatar_url || undefined,
+    ogType: "music.musician",
+    canonicalUrl,
+    keywords: artist ? `${artist.name}, South Sudan gospel, gospel music, ${artist.genre || "gospel"}, Sudagospel` : undefined,
+    jsonLd: artist ? {
+      "@context": "https://schema.org",
+      "@type": "MusicGroup",
+      name: artist.name,
+      url: canonicalUrl,
+      genre: artist.genre || "Gospel",
+      image: artist.avatar_url || undefined,
+      description: seoDescription,
+      numberOfItems: songCount,
+    } : undefined,
   });
 
   const handlePlayAll = () => {
