@@ -40,19 +40,21 @@ const ArtistDetailPage = () => {
     enabled: !!slug,
   });
 
+  const artistId = artist?.id;
+
   const { data: songs } = useQuery({
-    queryKey: ["artist-songs", id],
+    queryKey: ["artist-songs", artistId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
         .select("*, artists(name, avatar_url)")
-        .eq("artist_id", id!)
+        .eq("artist_id", artistId!)
         .eq("is_approved", true)
         .order("play_count", { ascending: false });
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!artistId,
   });
 
   const sortedSongs = useMemo(() => {
