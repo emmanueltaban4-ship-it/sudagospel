@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, X, Music, User, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useSongs, useArtists } from "@/hooks/use-music-data";
 import { usePlayer, Track } from "@/hooks/use-player";
 

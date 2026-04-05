@@ -81,7 +81,7 @@ const ArtistDetailPage = () => {
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
-  const { isFollowing, followerCount, toggleFollow } = useFollowArtist(id!);
+  const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
   useDocumentMeta({
     title: artist?.name || "Artist",
