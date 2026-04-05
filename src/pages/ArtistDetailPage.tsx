@@ -10,6 +10,7 @@ import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
   Download, Share2, Clock, TrendingUp, Disc3, UserPlus, UserCheck
 } from "lucide-react";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
