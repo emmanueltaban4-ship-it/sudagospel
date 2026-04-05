@@ -22,6 +22,8 @@ import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import SubscriptionPage from "./pages/SubscriptionPage.tsx";
 import ArtistDashboardPage from "./pages/ArtistDashboardPage.tsx";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
+import TermsOfServicePage from "./pages/TermsOfServicePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
