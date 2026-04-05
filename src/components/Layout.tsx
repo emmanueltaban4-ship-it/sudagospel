@@ -11,6 +11,8 @@ import {
   Newspaper,
   Crown,
   Upload,
+  Trophy,
+  Headphones,
 } from "lucide-react";
 
 const sidebarLinks = [
