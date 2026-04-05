@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { artistPath } from "@/lib/artist-slug";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
 import { Search, CheckCircle, Users, ChevronRight, Play } from "lucide-react";

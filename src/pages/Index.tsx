@@ -1,5 +1,6 @@
 import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";

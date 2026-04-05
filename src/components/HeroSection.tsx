@@ -126,7 +126,7 @@ const HeroSection = () => {
               {activeSong.title}
             </h1>
             {artist && (
-              <Link to={`/artist/${artist.id}`} className="inline-flex items-center gap-2 mb-4 group">
+              <Link to={artistPath(artist.name)} className="inline-flex items-center gap-2 mb-4 group">
                 {artist.avatar_url && (
                   <img src={artist.avatar_url} alt={artist.name} className="w-7 h-7 rounded-full object-cover ring-2 ring-border" />
                 )}

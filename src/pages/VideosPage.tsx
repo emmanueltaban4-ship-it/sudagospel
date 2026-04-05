@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Youtube, ExternalLink, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 
 const VideosPage = () => {
   useDocumentMeta({
