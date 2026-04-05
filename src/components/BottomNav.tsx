@@ -1,10 +1,10 @@
-import { Home, Music, Users, User, Crown } from "lucide-react";
+import { Home, Music, Users, User, Youtube } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
   { to: "/music", icon: Music, label: "Explore" },
-  { to: "/subscription", icon: Crown, label: "Premium" },
+  { to: "/videos", icon: Youtube, label: "Videos" },
   { to: "/artists", icon: Users, label: "Artists" },
   { to: "/profile", icon: User, label: "You" },
 ];

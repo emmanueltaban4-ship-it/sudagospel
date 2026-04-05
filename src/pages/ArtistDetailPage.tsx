@@ -414,6 +414,11 @@ const ArtistDetailPage = () => {
             </div>
           )}
 
+          {/* === YOUTUBE SECTION === */}
+          {artist.youtube_channel_url && (
+            <YouTubeEmbed channelUrl={artist.youtube_channel_url} artistName={artist.name} />
+          )}
+
           {/* === STATS SECTION === */}
           <div className="rounded-xl bg-card/50 border border-border p-5">
             <h2 className="font-heading text-sm font-bold text-foreground mb-4 uppercase tracking-wider">About</h2>

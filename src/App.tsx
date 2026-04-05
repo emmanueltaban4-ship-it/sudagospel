@@ -58,6 +58,7 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="/videos" element={<VideosPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
