@@ -12,7 +12,8 @@ import AdminSiteSettings from "@/components/admin/AdminSiteSettings";
 import AdminSongManagement from "@/components/admin/AdminSongManagement";
 import AdminArtistManagement from "@/components/admin/AdminArtistManagement";
 import AdminAds from "@/components/admin/AdminAds";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone } from "lucide-react";
+import AdminMonetization from "@/components/admin/AdminMonetization";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
