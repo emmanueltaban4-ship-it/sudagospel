@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { artistPath } from "@/lib/artist-slug";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
 import { Search, CheckCircle, Users, ChevronRight, Play } from "lucide-react";
@@ -68,7 +69,7 @@ const ArtistsPage = () => {
             <h2 className="font-heading text-lg font-extrabold text-foreground tracking-tight mb-4">Featured Artists</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {featured.map((artist) => (
-                <Link key={artist.id} to={`/artist/${artist.id}`} className="group">
+                <Link key={artist.id} to={artistPath(artist.name)} className="group">
                   <div className="relative aspect-square rounded-xl overflow-hidden bg-muted shadow-sm">
                     {artist.avatarUrl ? (
                       <img src={artist.avatarUrl} alt={artist.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
@@ -108,7 +109,7 @@ const ArtistsPage = () => {
               {trending.map((artist, index) => (
                 <Link
                   key={artist.id}
-                  to={`/artist/${artist.id}`}
+                  to={artistPath(artist.name)}
                   className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors group ${index < trending.length - 1 ? "border-b border-border" : ""}`}
                 >
                   <span className="text-sm font-extrabold text-muted-foreground/50 w-7 text-center tabular-nums">{index + 1}</span>
@@ -172,7 +173,7 @@ const ArtistsPage = () => {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
               {filtered.map((artist) => (
-                <Link key={artist.id} to={`/artist/${artist.id}`} className="flex flex-col items-center gap-2 group cursor-pointer">
+                <Link key={artist.id} to={artistPath(artist.name)} className="flex flex-col items-center gap-2 group cursor-pointer">
                   <div className="relative h-20 w-20 md:h-28 md:w-28 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 bg-muted shadow-md">
                     {artist.avatarUrl ? (
                       <img src={artist.avatarUrl} alt={artist.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />

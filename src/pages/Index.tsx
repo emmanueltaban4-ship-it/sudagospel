@@ -1,5 +1,6 @@
 import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
@@ -117,7 +118,7 @@ const Index = () => {
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
             <div className="flex gap-5 pb-1">
               {topArtists.map((artist) => (
-                <Link key={artist.id} to={`/artist/${artist.id}`} className="flex-shrink-0 group">
+                <Link key={artist.id} to={artistPath(artist.name)} className="flex-shrink-0 group">
                   <div className="w-28 md:w-36 flex flex-col items-center gap-2.5">
                     <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 shadow-md">
                       {artist.avatar_url ? (
@@ -315,7 +316,7 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
       <Link to={`/song/${song.id}`} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
         {song.title}
       </Link>
-      <Link to={`/artist/${artist?.id}`} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block mt-0.5">
+      <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block mt-0.5">
         {artistName}
       </Link>
     </div>
@@ -356,7 +357,7 @@ const ChartRow = ({ song, rank, onPlay, currentTrack, isPlaying, isLast }: any) 
           {song.title}
         </p>
         <Link
-          to={`/artist/${artist?.id}`}
+          to={artistPath(artist?.name || '')}
           onClick={(e) => e.stopPropagation()}
           className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block"
         >

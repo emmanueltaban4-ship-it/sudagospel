@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSongComments } from "@/hooks/use-music-data";
@@ -200,7 +201,7 @@ const SongDetailPage = () => {
                 </h1>
                 <div className="flex items-center gap-2 mt-3 justify-center md:justify-start flex-wrap">
                   <Link
-                    to={`/artist/${artist?.id}`}
+                    to={artistPath(artist?.name || '')}
                     className="flex items-center gap-2 hover:underline"
                   >
                     <div className="h-6 w-6 rounded-full overflow-hidden bg-muted flex-shrink-0">
@@ -329,7 +330,7 @@ const SongDetailPage = () => {
 
               {/* Artist card */}
               <Link
-                to={`/artist/${artist?.id}`}
+                to={artistPath(artist?.name || '')}
                 className="flex items-center gap-3 rounded-lg bg-card/60 p-4 hover:bg-card transition-colors group"
               >
                 <div className="h-14 w-14 rounded-full overflow-hidden bg-muted flex-shrink-0">

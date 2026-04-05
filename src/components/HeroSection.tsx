@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Play, Pause } from "lucide-react";
 import { Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -125,7 +126,7 @@ const HeroSection = () => {
               {activeSong.title}
             </h1>
             {artist && (
-              <Link to={`/artist/${artist.id}`} className="inline-flex items-center gap-2 mb-4 group">
+              <Link to={artistPath(artist.name)} className="inline-flex items-center gap-2 mb-4 group">
                 {artist.avatar_url && (
                   <img src={artist.avatar_url} alt={artist.name} className="w-7 h-7 rounded-full object-cover ring-2 ring-border" />
                 )}

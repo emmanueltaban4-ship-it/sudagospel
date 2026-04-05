@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Youtube, ExternalLink, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 
 const VideosPage = () => {
   useDocumentMeta({
@@ -58,7 +59,7 @@ const VideosPage = () => {
               >
                 {/* Artist header */}
                 <Link
-                  to={`/artist/${artist.id}`}
+                  to={artistPath(artist.name)}
                   className="flex items-center gap-3 p-4 hover:bg-muted/30 transition-colors"
                 >
                   <div className="h-12 w-12 rounded-full overflow-hidden bg-muted flex-shrink-0">

@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { artistSlug } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -18,39 +19,42 @@ import { useState, useMemo } from "react";
 type SortMode = "popular" | "newest" | "title";
 
 const ArtistDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [sortMode, setSortMode] = useState<SortMode>("popular");
   const [showAllTracks, setShowAllTracks] = useState(false);
 
   const { data: artist, isLoading } = useQuery({
-    queryKey: ["artist", id],
+    queryKey: ["artist", slug],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("artists")
-        .select("*")
-        .eq("id", id!)
-        .single();
+        .select("*");
       if (error) throw error;
-      return data;
+      // Match by slugified name
+      const match = data?.find((a) => artistSlug(a.name) === slug);
+      if (!match) throw new Error("Artist not found");
+      return match;
     },
-    enabled: !!id,
+    enabled: !!slug,
   });
 
+  const artistId = artist?.id;
+
   const { data: songs } = useQuery({
-    queryKey: ["artist-songs", id],
+    queryKey: ["artist-songs", artistId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
         .select("*, artists(name, avatar_url)")
-        .eq("artist_id", id!)
+        .eq("artist_id", artistId!)
         .eq("is_approved", true)
         .order("play_count", { ascending: false });
       if (error) throw error;
       return data;
     },
-    enabled: !!id,
+    enabled: !!artistId,
   });
 
   const sortedSongs = useMemo(() => {
@@ -77,7 +81,7 @@ const ArtistDetailPage = () => {
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
-  const { isFollowing, followerCount, toggleFollow } = useFollowArtist(id!);
+  const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
   useDocumentMeta({
     title: artist?.name || "Artist",

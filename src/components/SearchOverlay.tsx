@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, X, Music, User, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { artistPath } from "@/lib/artist-slug";
 import { useSongs, useArtists } from "@/hooks/use-music-data";
 import { usePlayer, Track } from "@/hooks/use-player";
 
@@ -70,8 +71,8 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
     onClose();
   };
 
-  const handleViewArtist = (artistId: string) => {
-    navigate(`/artist/${artistId}`);
+  const handleViewArtist = (artistName: string) => {
+    navigate(artistPath(artistName));
     onClose();
   };
 
@@ -123,7 +124,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
                 {filteredArtists.map((artist) => (
                   <button
                     key={artist.id}
-                    onClick={() => handleViewArtist(artist.id)}
+                    onClick={() => handleViewArtist(artist.name)}
                     className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-muted transition-colors text-left"
                   >
                     <div className="h-10 w-10 rounded-full overflow-hidden bg-gradient-brand flex-shrink-0">
