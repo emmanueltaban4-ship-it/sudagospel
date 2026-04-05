@@ -40,7 +40,7 @@ const ArtistCard = ({ id, name, genre, songs, avatarUrl, isVerified }: ArtistCar
     </div>
   );
 
-  if (id) return <Link to={`/artist/${id}`}>{content}</Link>;
+  if (id) return <Link to={artistPath(name)}>{content}</Link>;
   return content;
 };
 

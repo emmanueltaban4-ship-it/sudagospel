@@ -19,24 +19,25 @@ import { useState, useMemo } from "react";
 type SortMode = "popular" | "newest" | "title";
 
 const ArtistDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [sortMode, setSortMode] = useState<SortMode>("popular");
   const [showAllTracks, setShowAllTracks] = useState(false);
 
   const { data: artist, isLoading } = useQuery({
-    queryKey: ["artist", id],
+    queryKey: ["artist", slug],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("artists")
-        .select("*")
-        .eq("id", id!)
-        .single();
+        .select("*");
       if (error) throw error;
-      return data;
+      // Match by slugified name
+      const match = data?.find((a) => artistSlug(a.name) === slug);
+      if (!match) throw new Error("Artist not found");
+      return match;
     },
-    enabled: !!id,
+    enabled: !!slug,
   });
 
   const { data: songs } = useQuery({
