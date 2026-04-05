@@ -56,6 +56,20 @@ const Index = () => {
     },
   });
 
+  const { data: youtubeArtists } = useQuery({
+    queryKey: ["youtube-artists-home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("artists")
+        .select("id, name, avatar_url, youtube_channel_url")
+        .eq("is_verified", true)
+        .not("youtube_channel_url", "is", null)
+        .limit(8);
+      if (error) throw error;
+      return data?.filter((a) => a.youtube_channel_url?.trim()) || [];
+    },
+  });
+
   const playSong = (song: any) => {
     const artistName = (song.artists as any)?.name || "Unknown";
     const track: Track = {
