@@ -83,8 +83,12 @@ const AdminArtistManagement = () => {
             <label className="text-xs font-semibold text-muted-foreground mb-1 block">Bio</label>
             <Textarea value={editForm.bio} onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })} rows={4} />
           </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground mb-1 block">YouTube Channel URL</label>
+            <Input value={editForm.youtube_channel_url} onChange={(e) => setEditForm({ ...editForm, youtube_channel_url: e.target.value })} placeholder="@channelname or full URL" />
+          </div>
           <div className="flex gap-2">
-            <Button onClick={() => updateArtist.mutate({ id: editing.id, name: editForm.name, genre: editForm.genre, bio: editForm.bio })} disabled={updateArtist.isPending}>
+            <Button onClick={() => updateArtist.mutate({ id: editing.id, name: editForm.name, genre: editForm.genre, bio: editForm.bio, youtube_channel_url: editForm.youtube_channel_url || null })} disabled={updateArtist.isPending}>
               <Save className="h-4 w-4 mr-1" /> Save
             </Button>
             <Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
