@@ -70,8 +70,8 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
     onClose();
   };
 
-  const handleViewArtists = () => {
-    navigate("/artists");
+  const handleViewArtist = (artistId: string) => {
+    navigate(`/artist/${artistId}`);
     onClose();
   };
 
