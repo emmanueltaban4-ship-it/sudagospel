@@ -35,7 +35,7 @@ const AdminArtistManagement = () => {
   };
 
   const updateArtist = useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; name?: string; bio?: string; genre?: string; is_verified?: boolean }) => {
+    mutationFn: async ({ id, ...updates }: { id: string; name?: string; bio?: string; genre?: string; is_verified?: boolean; youtube_channel_url?: string | null }) => {
       const { error } = await supabase.from("artists").update(updates).eq("id", id);
       if (error) throw error;
     },
