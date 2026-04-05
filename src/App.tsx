@@ -28,6 +28,7 @@ import VideosPage from "./pages/VideosPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import HallOfFamePage from "./pages/HallOfFamePage.tsx";
 import MostListenedPage from "./pages/MostListenedPage.tsx";
+import NewSongsPage from "./pages/NewSongsPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
               <Route path="/videos" element={<VideosPage />} />
               <Route path="/hall-of-fame" element={<HallOfFamePage />} />
               <Route path="/most-listened" element={<MostListenedPage />} />
+              <Route path="/new-songs" element={<NewSongsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

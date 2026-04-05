@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
-  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube
+  Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
+  Trash2, Camera, Pencil
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 
 const ArtistDashboardPage = () => {
@@ -24,8 +25,16 @@ const ArtistDashboardPage = () => {
   const [editBio, setEditBio] = useState("");
   const [editGenre, setEditGenre] = useState("");
   const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
-  // Get artist profile linked to current user
+  // Song editing state
+  const [editingSongId, setEditingSongId] = useState<string | null>(null);
+  const [editSongTitle, setEditSongTitle] = useState("");
+  const [editSongDescription, setEditSongDescription] = useState("");
+  const [editSongGenre, setEditSongGenre] = useState("");
+  const [editSongLyrics, setEditSongLyrics] = useState("");
+
   const { data: artist, isLoading } = useQuery({
     queryKey: ["my-artist-profile", user?.id],
     queryFn: async () => {
@@ -40,7 +49,6 @@ const ArtistDashboardPage = () => {
     enabled: !!user,
   });
 
-  // Artist's songs
   const { data: songs } = useQuery({
     queryKey: ["artist-dashboard-songs", artist?.id],
     queryFn: async () => {
@@ -55,7 +63,6 @@ const ArtistDashboardPage = () => {
     enabled: !!artist,
   });
 
-  // Follower count
   const { data: followerCount = 0 } = useQuery({
     queryKey: ["artist-followers", artist?.id],
     queryFn: async () => {
@@ -68,7 +75,6 @@ const ArtistDashboardPage = () => {
     enabled: !!artist,
   });
 
-  // Update artist profile
   const updateProfile = useMutation({
     mutationFn: async () => {
       const { error } = await supabase
@@ -84,6 +90,76 @@ const ArtistDashboardPage = () => {
     },
     onError: (err: any) => toast.error(err.message),
   });
+
+  // Avatar upload
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !artist) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    setUploadingAvatar(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${artist.id}/avatar.${ext}`;
+      const { error: uploadErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (uploadErr) throw uploadErr;
+      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+      const avatarUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      const { error: updateErr } = await supabase.from("artists").update({ avatar_url: avatarUrl }).eq("id", artist.id);
+      if (updateErr) throw updateErr;
+      queryClient.invalidateQueries({ queryKey: ["my-artist-profile"] });
+      toast.success("Avatar updated!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to upload avatar");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  // Song update
+  const updateSong = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("songs")
+        .update({
+          title: editSongTitle,
+          description: editSongDescription || null,
+          genre: editSongGenre || null,
+          lyrics: editSongLyrics || null,
+        })
+        .eq("id", editingSongId!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-dashboard-songs"] });
+      setEditingSongId(null);
+      toast.success("Song updated!");
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  // Song delete
+  const deleteSong = useMutation({
+    mutationFn: async (songId: string) => {
+      const { error } = await supabase.from("songs").delete().eq("id", songId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-dashboard-songs"] });
+      toast.success("Song deleted");
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const startEditingSong = (song: any) => {
+    setEditingSongId(song.id);
+    setEditSongTitle(song.title);
+    setEditSongDescription(song.description || "");
+    setEditSongGenre(song.genre || "");
+    setEditSongLyrics(song.lyrics || "");
+  };
 
   if (!user) {
     return (
@@ -138,6 +214,76 @@ const ArtistDashboardPage = () => {
     setEditingProfile(true);
   };
 
+  const renderSongRow = (song: any, options?: { showStatus?: boolean }) => {
+    const isEditing = editingSongId === song.id;
+
+    if (isEditing) {
+      return (
+        <div key={song.id} className="p-4 rounded-lg bg-card border border-border space-y-3">
+          <Input value={editSongTitle} onChange={(e) => setEditSongTitle(e.target.value)} placeholder="Song title" className="bg-background" />
+          <Textarea value={editSongDescription} onChange={(e) => setEditSongDescription(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
+          <Input value={editSongGenre} onChange={(e) => setEditSongGenre(e.target.value)} placeholder="Genre" className="bg-background" />
+          <Textarea value={editSongLyrics} onChange={(e) => setEditSongLyrics(e.target.value)} placeholder="Lyrics" rows={4} className="bg-background" />
+          <div className="flex gap-2">
+            <Button onClick={() => updateSong.mutate()} size="sm" className="gap-1.5 rounded-full bg-primary text-primary-foreground">
+              <Save className="h-3.5 w-3.5" /> Save
+            </Button>
+            <Button onClick={() => setEditingSongId(null)} size="sm" variant="ghost" className="gap-1.5 rounded-full">
+              <X className="h-3.5 w-3.5" /> Cancel
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        key={song.id}
+        className={`flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors ${
+          options?.showStatus ? "bg-yellow-500/5 border border-yellow-500/20" : ""
+        }`}
+      >
+        <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
+          {song.cover_url ? (
+            <img src={song.cover_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <div className="h-full w-full bg-muted flex items-center justify-center">
+              <Music className="h-4 w-4 text-muted-foreground" />
+            </div>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <Link to={`/song/${song.id}`} className="text-sm font-medium text-foreground truncate block hover:underline">
+            {song.title}
+          </Link>
+          <p className="text-[11px] text-muted-foreground">
+            {options?.showStatus
+              ? "Awaiting review"
+              : `${(song.play_count || 0).toLocaleString()} plays · ${(song.download_count || 0).toLocaleString()} downloads`}
+          </p>
+        </div>
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <button
+            onClick={() => startEditingSong(song)}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title="Edit song"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => {
+              if (confirm("Delete this song permanently?")) deleteSong.mutate(song.id);
+            }}
+            className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+            title="Delete song"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 lg:px-8 py-6 pb-28">
@@ -155,15 +301,31 @@ const ArtistDashboardPage = () => {
         {/* Profile Card */}
         <div className="rounded-xl bg-card border border-border p-5 mb-6">
           <div className="flex items-start gap-4">
-            <div className="h-16 w-16 rounded-full overflow-hidden bg-muted flex-shrink-0">
-              {artist.avatar_url ? (
-                <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
-              ) : (
-                <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold text-primary-foreground">
-                  {artist.name[0]}
-                </div>
-              )}
+            {/* Avatar with upload overlay */}
+            <div className="relative group">
+              <div className="h-16 w-16 rounded-full overflow-hidden bg-muted flex-shrink-0">
+                {artist.avatar_url ? (
+                  <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold text-primary-foreground">
+                    {artist.name[0]}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {uploadingAvatar ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera className="h-5 w-5 text-white" />
+                )}
+              </button>
+              <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             </div>
+
             <div className="flex-1 min-w-0">
               {editingProfile ? (
                 <div className="space-y-3">
@@ -228,23 +390,7 @@ const ArtistDashboardPage = () => {
               <Clock className="h-4 w-4 text-yellow-500" /> Pending Approval ({pendingSongs.length})
             </h3>
             <div className="space-y-1">
-              {pendingSongs.map((song) => (
-                <div key={song.id} className="flex items-center gap-3 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/20">
-                  <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
-                    {song.cover_url ? (
-                      <img src={song.cover_url} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="h-full w-full bg-muted flex items-center justify-center">
-                        <Music className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{song.title}</p>
-                    <p className="text-[11px] text-yellow-600 dark:text-yellow-400">Awaiting review</p>
-                  </div>
-                </div>
-              ))}
+              {pendingSongs.map((song) => renderSongRow(song, { showStatus: true }))}
             </div>
           </div>
         )}
@@ -292,35 +438,13 @@ const ArtistDashboardPage = () => {
           )}
         </div>
 
-        {/* All Songs */}
+        {/* All Songs with edit/delete */}
         <div>
           <h3 className="font-heading text-sm font-bold text-foreground mb-3 flex items-center gap-2">
             <Music className="h-4 w-4 text-secondary" /> All Songs ({approvedSongs.length})
           </h3>
           <div className="space-y-1">
-            {approvedSongs.map((song) => (
-              <Link
-                key={song.id}
-                to={`/song/${song.id}`}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors"
-              >
-                <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
-                  {song.cover_url ? (
-                    <img src={song.cover_url} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="h-full w-full bg-muted flex items-center justify-center">
-                      <Music className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{song.title}</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {(song.play_count || 0).toLocaleString()} plays · {(song.download_count || 0).toLocaleString()} downloads
-                  </p>
-                </div>
-              </Link>
-            ))}
+            {approvedSongs.map((song) => renderSongRow(song))}
           </div>
         </div>
       </div>
