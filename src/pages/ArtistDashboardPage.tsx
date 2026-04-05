@@ -133,6 +133,7 @@ const ArtistDashboardPage = () => {
     setEditName(artist.name);
     setEditBio(artist.bio || "");
     setEditGenre(artist.genre || "");
+    setEditYoutubeUrl(artist.youtube_channel_url || "");
     setEditingProfile(true);
   };
 
