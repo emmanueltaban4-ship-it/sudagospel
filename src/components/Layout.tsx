@@ -21,6 +21,7 @@ const sidebarLinks = [
     { to: "/music", icon: TrendingUp, label: "Explore" },
     { to: "/artists", icon: Users, label: "Artists" },
     { to: "/most-listened", icon: Headphones, label: "Top Songs" },
+    { to: "/new-songs", icon: Clock, label: "New Songs" },
     { to: "/hall-of-fame", icon: Trophy, label: "Hall of Fame" },
   ]},
   { section: "Your Library", items: [

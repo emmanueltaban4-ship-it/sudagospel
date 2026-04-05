@@ -64,6 +64,7 @@ const App = () => (
               <Route path="/videos" element={<VideosPage />} />
               <Route path="/hall-of-fame" element={<HallOfFamePage />} />
               <Route path="/most-listened" element={<MostListenedPage />} />
+              <Route path="/new-songs" element={<NewSongsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
