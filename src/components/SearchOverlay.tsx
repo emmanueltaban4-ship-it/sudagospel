@@ -123,7 +123,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
                 {filteredArtists.map((artist) => (
                   <button
                     key={artist.id}
-                    onClick={handleViewArtists}
+                    onClick={() => handleViewArtist(artist.id)}
                     className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-muted transition-colors text-left"
                   >
                     <div className="h-10 w-10 rounded-full overflow-hidden bg-gradient-brand flex-shrink-0">
