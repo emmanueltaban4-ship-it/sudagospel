@@ -1,12 +1,11 @@
-import { Home, Music, Users, User, Youtube } from "lucide-react";
+import { Home, Search, Library, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
-  { to: "/music", icon: Music, label: "Explore" },
-  { to: "/videos", icon: Youtube, label: "Videos" },
-  { to: "/artists", icon: Users, label: "Artists" },
-  { to: "/profile", icon: User, label: "You" },
+  { to: "/music", icon: Search, label: "Search" },
+  { to: "/library", icon: Library, label: "Library" },
+  { to: "/profile", icon: User, label: "Profile" },
 ];
 
 const BottomNav = () => {

@@ -13,6 +13,8 @@ import {
   Upload,
   Trophy,
   Headphones,
+  Download,
+  Library,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -25,7 +27,9 @@ const sidebarLinks = [
     { to: "/hall-of-fame", icon: Trophy, label: "Hall of Fame" },
   ]},
   { section: "Your Library", items: [
+    { to: "/library", icon: Library, label: "Library" },
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
+    { to: "/downloads", icon: Download, label: "Downloads" },
     { to: "/news", icon: Newspaper, label: "News" },
     { to: "/subscription", icon: Crown, label: "Premium" },
     { to: "/artist-dashboard", icon: Upload, label: "Artist Studio" },
