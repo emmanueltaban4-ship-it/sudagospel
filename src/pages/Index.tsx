@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -88,8 +88,31 @@ const Index = () => {
     <Layout>
       <HeroSection />
 
+      {/* Categories */}
+      <section className="px-4 lg:px-6 py-4">
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+          {[
+            { label: "Worship", icon: Mic2, gradient: "from-primary/20 to-primary/5" },
+            { label: "Praise", icon: HandMetal, gradient: "from-secondary/20 to-secondary/5" },
+            { label: "Choir", icon: Users2, gradient: "from-primary/15 to-secondary/10" },
+            { label: "Sermons", icon: BookOpen, gradient: "from-secondary/15 to-primary/10" },
+          ].map((cat) => (
+            <Link
+              key={cat.label}
+              to={`/music?genre=${cat.label}`}
+              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-gradient-to-r border border-border hover:border-primary/30 transition-all group"
+            >
+              <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${cat.gradient} flex items-center justify-center`}>
+                <cat.icon className="h-4 w-4 text-primary" />
+              </div>
+              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{cat.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Top Ad Banner */}
-      <div className="px-4 lg:px-6 py-4">
+      <div className="px-4 lg:px-6 py-2">
         <AdBanner position="homepage_top" />
       </div>
 
