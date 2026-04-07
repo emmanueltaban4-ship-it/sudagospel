@@ -210,6 +210,24 @@ const UploadPage = () => {
             )}
           </div>
 
+          {/* Album selection (optional) */}
+          {artistId && albums && albums.length > 0 && (
+            <div>
+              <Label className="text-foreground">Album (optional)</Label>
+              <Select value={albumId} onValueChange={setAlbumId}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Single (no album)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Single (no album)</SelectItem>
+                  {albums.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           {/* Music file */}
           <div>
             <Label className="text-foreground">Music File * (MP3, WAV)</Label>
