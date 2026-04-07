@@ -107,6 +107,7 @@ const UploadPage = () => {
       artistId,
       musicFile,
       coverFile: coverFile || undefined,
+      albumId: albumId || undefined,
     });
 
     if (result) {
