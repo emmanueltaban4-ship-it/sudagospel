@@ -140,6 +140,64 @@ const Index = () => {
         </section>
       )}
 
+      {/* Weekly Top 10 */}
+      {weeklyTopSongs && weeklyTopSongs.length > 0 && (
+        <section className="py-6">
+          <div className="px-4 lg:px-6">
+            <SectionHeader title="Top 10 This Week" icon={<Trophy className="h-5 w-5 text-secondary" />} linkTo="/most-listened" />
+            <div className="rounded-xl overflow-hidden border border-border bg-card/50">
+              {weeklyTopSongs.map((song: any, idx: number) => (
+                <div
+                  key={song.song_id}
+                  className={`flex items-center gap-3 px-4 py-3 group hover:bg-muted/40 transition-colors cursor-pointer ${
+                    currentTrack?.id === song.song_id ? "bg-primary/5" : ""
+                  } ${idx < weeklyTopSongs.length - 1 ? "border-b border-border" : ""}`}
+                  onClick={() => {
+                    const track: Track = {
+                      id: song.song_id,
+                      title: song.title,
+                      artist: song.artist_name,
+                      fileUrl: song.file_url,
+                      coverUrl: song.cover_url || undefined,
+                    };
+                    if (currentTrack?.id === song.song_id) togglePlay();
+                    else play(track);
+                  }}
+                >
+                  <span className={`text-base font-heading font-extrabold w-8 text-center tabular-nums ${idx < 3 ? "text-primary" : "text-muted-foreground/50"}`}>
+                    {idx + 1}
+                  </span>
+                  <div className="relative h-11 w-11 rounded-md overflow-hidden flex-shrink-0 bg-muted shadow-sm">
+                    {song.cover_url ? (
+                      <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center text-xs font-bold text-muted-foreground">
+                        {song.title[0]}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold truncate ${currentTrack?.id === song.song_id ? "text-primary" : "text-foreground"}`}>
+                      {song.title}
+                    </p>
+                    <Link
+                      to={artistPath(song.artist_name)}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block"
+                    >
+                      {song.artist_name}
+                    </Link>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground tabular-nums hidden sm:block">
+                    {Number(song.total_score)} pts
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Top Artists */}
       {topArtists && topArtists.length > 0 && (
         <section className="py-6">
