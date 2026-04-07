@@ -575,7 +575,7 @@ const AlbumsSection = ({ artistId }: { artistId: string }) => {
       {albums && albums.length > 0 ? (
         <div className="grid grid-cols-2 gap-3">
           {albums.map((album: any) => (
-            <div key={album.id} className="rounded-lg bg-card border border-border p-3 group relative">
+            <Link key={album.id} to={`/album/${album.id}`} className="rounded-lg bg-card border border-border p-3 group relative hover:border-primary/30 transition-colors">
               <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
                 {album.cover_url ? (
                   <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" />
