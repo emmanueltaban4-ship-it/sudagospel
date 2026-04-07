@@ -57,6 +57,14 @@ const Index = () => {
     },
   });
 
+  const { data: weeklyTopSongs } = useQuery({
+    queryKey: ["weekly-top-songs"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_weekly_top_songs", { lim: 10 });
+      if (error) throw error;
+      return data;
+    },
+  });
   const { data: youtubeArtists } = useQuery({
     queryKey: ["youtube-artists-home"],
     queryFn: async () => {
