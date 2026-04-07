@@ -75,7 +75,7 @@ const App = () => {
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {needsOnboarding && !showSplash && (
-                      <Route path="/" element={<OnboardingPage />} />
+                      <Route path="/" element={<OnboardingPage onComplete={handleOnboardingComplete} />} />
                     )}
                     <Route path="/" element={<Index />} />
                     <Route path="/music" element={<MusicPage />} />

@@ -24,12 +24,17 @@ const slides = [
   },
 ];
 
-const OnboardingPage = () => {
+interface OnboardingPageProps {
+  onComplete?: () => void;
+}
+
+const OnboardingPage = ({ onComplete }: OnboardingPageProps) => {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
 
   const finish = () => {
     localStorage.setItem("sudagospel_onboarded", "true");
+    onComplete?.();
     navigate("/", { replace: true });
   };
 
