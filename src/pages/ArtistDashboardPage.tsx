@@ -8,6 +8,15 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import Layout from "@/components/Layout";
+import MiniPlayer from "@/components/MiniPlayer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
   Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
