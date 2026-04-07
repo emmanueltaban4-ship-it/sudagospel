@@ -59,6 +59,50 @@ export type Database = {
         }
         Relationships: []
       }
+      albums: {
+        Row: {
+          artist_id: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          genre: string | null
+          id: string
+          release_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artist_id: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          release_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artist_id?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          release_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "albums_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       articles: {
         Row: {
           author_id: string
@@ -507,6 +551,7 @@ export type Database = {
       }
       songs: {
         Row: {
+          album_id: string | null
           artist_id: string
           cover_url: string | null
           created_at: string
@@ -524,6 +569,7 @@ export type Database = {
           uploaded_by: string | null
         }
         Insert: {
+          album_id?: string | null
           artist_id: string
           cover_url?: string | null
           created_at?: string
@@ -541,6 +587,7 @@ export type Database = {
           uploaded_by?: string | null
         }
         Update: {
+          album_id?: string | null
           artist_id?: string
           cover_url?: string | null
           created_at?: string
@@ -558,6 +605,13 @@ export type Database = {
           uploaded_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "songs_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "songs_artist_id_fkey"
             columns: ["artist_id"]
@@ -624,6 +678,20 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_weekly_top_songs: {
+        Args: { lim?: number }
+        Returns: {
+          artist_id: string
+          artist_name: string
+          cover_url: string
+          file_url: string
+          song_id: string
+          title: string
+          total_score: number
+          weekly_downloads: number
+          weekly_plays: number
+        }[]
       }
       has_role: {
         Args: {

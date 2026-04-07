@@ -66,7 +66,9 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
       </h3>
       <p className="text-xs text-muted-foreground truncate mt-0.5">{artist}</p>
       <div className="mt-1.5 flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground">{plays} plays</span>
+        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <Play className="h-2.5 w-2.5" /> {plays} plays
+        </span>
         <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button className="p-1 text-muted-foreground hover:text-primary transition-colors">
             <Heart className="h-3 w-3" />

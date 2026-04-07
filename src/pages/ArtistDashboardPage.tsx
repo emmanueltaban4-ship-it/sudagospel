@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
   Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
-  Trash2, Camera, Pencil
+  Trash2, Camera, Pencil, Disc3
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
@@ -438,6 +438,9 @@ const ArtistDashboardPage = () => {
           )}
         </div>
 
+        {/* Albums Section */}
+        <AlbumsSection artistId={artist.id} />
+
         {/* All Songs with edit/delete */}
         <div>
           <h3 className="font-heading text-sm font-bold text-foreground mb-3 flex items-center gap-2">
@@ -450,6 +453,112 @@ const ArtistDashboardPage = () => {
       </div>
       <MiniPlayer />
     </Layout>
+  );
+};
+
+/* ─── Albums Section ─── */
+const AlbumsSection = ({ artistId }: { artistId: string }) => {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
+  const [albumTitle, setAlbumTitle] = useState("");
+  const [albumDesc, setAlbumDesc] = useState("");
+  const [albumGenre, setAlbumGenre] = useState("");
+
+  const { data: albums } = useQuery({
+    queryKey: ["artist-albums", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("*, songs(count)")
+        .eq("artist_id", artistId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const createAlbum = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("albums").insert({
+        artist_id: artistId,
+        title: albumTitle,
+        description: albumDesc || null,
+        genre: albumGenre || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-albums"] });
+      setShowForm(false);
+      setAlbumTitle("");
+      setAlbumDesc("");
+      setAlbumGenre("");
+      toast.success("Album created!");
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const deleteAlbum = useMutation({
+    mutationFn: async (albumId: string) => {
+      const { error } = await supabase.from("albums").delete().eq("id", albumId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-albums"] });
+      toast.success("Album deleted");
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  return (
+    <div className="mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+          <Disc3 className="h-4 w-4 text-primary" /> Albums ({albums?.length || 0})
+        </h3>
+        <Button onClick={() => setShowForm(!showForm)} size="sm" variant="outline" className="rounded-full gap-1.5 text-xs">
+          {showForm ? <X className="h-3 w-3" /> : <Upload className="h-3 w-3" />}
+          {showForm ? "Cancel" : "New Album"}
+        </Button>
+      </div>
+
+      {showForm && (
+        <div className="p-4 rounded-lg bg-card border border-border space-y-3 mb-3">
+          <Input value={albumTitle} onChange={(e) => setAlbumTitle(e.target.value)} placeholder="Album title" className="bg-background" />
+          <Textarea value={albumDesc} onChange={(e) => setAlbumDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
+          <Input value={albumGenre} onChange={(e) => setAlbumGenre(e.target.value)} placeholder="Genre" className="bg-background" />
+          <Button onClick={() => createAlbum.mutate()} size="sm" className="rounded-full bg-primary text-primary-foreground gap-1.5" disabled={!albumTitle.trim()}>
+            <Save className="h-3.5 w-3.5" /> Create Album
+          </Button>
+        </div>
+      )}
+
+      {albums && albums.length > 0 ? (
+        <div className="grid grid-cols-2 gap-3">
+          {albums.map((album: any) => (
+            <div key={album.id} className="rounded-lg bg-card border border-border p-3 group relative">
+              <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
+                {album.cover_url ? (
+                  <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" />
+                ) : (
+                  <Disc3 className="h-8 w-8 text-muted-foreground/30" />
+                )}
+              </div>
+              <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
+              <p className="text-[11px] text-muted-foreground">{(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "Gospel"}</p>
+              <button
+                onClick={() => { if (confirm("Delete this album?")) deleteAlbum.mutate(album.id); }}
+                className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : !showForm ? (
+        <p className="text-sm text-muted-foreground text-center py-4">No albums yet. Create your first album!</p>
+      ) : null}
+    </div>
   );
 };
 
