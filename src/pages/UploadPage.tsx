@@ -24,6 +24,7 @@ const UploadPage = () => {
   const [description, setDescription] = useState("");
   const [genre, setGenre] = useState("");
   const [artistId, setArtistId] = useState("");
+  const [albumId, setAlbumId] = useState("");
   const [musicFile, setMusicFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
