@@ -161,6 +161,7 @@ const ArtistDashboardPage = () => {
     setEditSongDescription(song.description || "");
     setEditSongGenre(song.genre || "");
     setEditSongLyrics(song.lyrics || "");
+    setEditSongAlbumId(song.album_id || "");
   };
 
   if (!user) {
