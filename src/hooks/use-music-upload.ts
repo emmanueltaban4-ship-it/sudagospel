@@ -16,6 +16,7 @@ export const useMusicUpload = () => {
     artistId,
     musicFile,
     coverFile,
+    albumId,
   }: {
     title: string;
     description?: string;
@@ -23,6 +24,7 @@ export const useMusicUpload = () => {
     artistId: string;
     musicFile: File;
     coverFile?: File;
+    albumId?: string;
   }) => {
     if (!user) {
       toast.error("You must be signed in to upload.");
