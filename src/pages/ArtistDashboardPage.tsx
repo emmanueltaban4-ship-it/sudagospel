@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
   Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
-  Trash2, Camera, Pencil
+  Trash2, Camera, Pencil, Disc3
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
