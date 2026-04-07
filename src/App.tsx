@@ -33,6 +33,7 @@ const HallOfFamePage = lazy(() => import("./pages/HallOfFamePage.tsx"));
 const MostListenedPage = lazy(() => import("./pages/MostListenedPage.tsx"));
 const NewSongsPage = lazy(() => import("./pages/NewSongsPage.tsx"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
+const AlbumDetailPage = lazy(() => import("./pages/AlbumDetailPage.tsx"));
 const DownloadsPage = lazy(() => import("./pages/DownloadsPage.tsx"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
