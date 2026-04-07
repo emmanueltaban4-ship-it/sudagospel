@@ -68,6 +68,7 @@ export const useMusicUpload = () => {
         uploaded_by: user.id,
         file_url: musicUrlData.publicUrl,
         cover_url: coverUrl || null,
+        album_id: albumId || null,
       }).select().single();
 
       if (error) throw error;
