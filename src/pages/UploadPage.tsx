@@ -45,6 +45,20 @@ const UploadPage = () => {
     enabled: !!user,
   });
 
+  const { data: albums } = useQuery({
+    queryKey: ["my-albums", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("id, title")
+        .eq("artist_id", artistId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
+  });
+
   if (!user) {
     return (
       <Layout>
