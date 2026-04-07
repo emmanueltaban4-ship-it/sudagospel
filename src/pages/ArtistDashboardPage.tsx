@@ -8,6 +8,7 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
   Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
@@ -15,6 +16,39 @@ import {
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
+
+/* ─── Album Selector for Song Edit ─── */
+const AlbumSelectorForEdit = ({ artistId, value, onChange }: { artistId: string; value: string; onChange: (v: string) => void }) => {
+  const { data: albums } = useQuery({
+    queryKey: ["artist-albums-select", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("id, title")
+        .eq("artist_id", artistId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
+  });
+
+  if (!albums || albums.length === 0) return null;
+
+  return (
+    <Select value={value || "none"} onValueChange={(v) => onChange(v === "none" ? "" : v)}>
+      <SelectTrigger className="bg-background">
+        <SelectValue placeholder="Single (no album)" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="none">Single (no album)</SelectItem>
+        {albums.map((a) => (
+          <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
 
 const ArtistDashboardPage = () => {
   const navigate = useNavigate();
@@ -34,6 +68,7 @@ const ArtistDashboardPage = () => {
   const [editSongDescription, setEditSongDescription] = useState("");
   const [editSongGenre, setEditSongGenre] = useState("");
   const [editSongLyrics, setEditSongLyrics] = useState("");
+  const [editSongAlbumId, setEditSongAlbumId] = useState("");
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["my-artist-profile", user?.id],
@@ -128,6 +163,7 @@ const ArtistDashboardPage = () => {
           description: editSongDescription || null,
           genre: editSongGenre || null,
           lyrics: editSongLyrics || null,
+          album_id: editSongAlbumId && editSongAlbumId !== "none" ? editSongAlbumId : null,
         })
         .eq("id", editingSongId!);
       if (error) throw error;
@@ -159,6 +195,7 @@ const ArtistDashboardPage = () => {
     setEditSongDescription(song.description || "");
     setEditSongGenre(song.genre || "");
     setEditSongLyrics(song.lyrics || "");
+    setEditSongAlbumId(song.album_id || "");
   };
 
   if (!user) {
@@ -224,6 +261,8 @@ const ArtistDashboardPage = () => {
           <Textarea value={editSongDescription} onChange={(e) => setEditSongDescription(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
           <Input value={editSongGenre} onChange={(e) => setEditSongGenre(e.target.value)} placeholder="Genre" className="bg-background" />
           <Textarea value={editSongLyrics} onChange={(e) => setEditSongLyrics(e.target.value)} placeholder="Lyrics" rows={4} className="bg-background" />
+          {/* Album selector */}
+          <AlbumSelectorForEdit artistId={artist!.id} value={editSongAlbumId} onChange={setEditSongAlbumId} />
           <div className="flex gap-2">
             <Button onClick={() => updateSong.mutate()} size="sm" className="gap-1.5 rounded-full bg-primary text-primary-foreground">
               <Save className="h-3.5 w-3.5" /> Save
@@ -536,7 +575,7 @@ const AlbumsSection = ({ artistId }: { artistId: string }) => {
       {albums && albums.length > 0 ? (
         <div className="grid grid-cols-2 gap-3">
           {albums.map((album: any) => (
-            <div key={album.id} className="rounded-lg bg-card border border-border p-3 group relative">
+            <Link key={album.id} to={`/album/${album.id}`} className="rounded-lg bg-card border border-border p-3 group relative hover:border-primary/30 transition-colors">
               <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
                 {album.cover_url ? (
                   <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" />
@@ -552,7 +591,7 @@ const AlbumsSection = ({ artistId }: { artistId: string }) => {
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
-            </div>
+            </Link>
           ))}
         </div>
       ) : !showForm ? (

@@ -33,6 +33,7 @@ const HallOfFamePage = lazy(() => import("./pages/HallOfFamePage.tsx"));
 const MostListenedPage = lazy(() => import("./pages/MostListenedPage.tsx"));
 const NewSongsPage = lazy(() => import("./pages/NewSongsPage.tsx"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
+const AlbumDetailPage = lazy(() => import("./pages/AlbumDetailPage.tsx"));
 const DownloadsPage = lazy(() => import("./pages/DownloadsPage.tsx"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -101,6 +102,7 @@ const App = () => {
                     <Route path="/most-listened" element={<MostListenedPage />} />
                     <Route path="/new-songs" element={<NewSongsPage />} />
                     <Route path="/onboarding" element={<OnboardingPage />} />
+                    <Route path="/album/:id" element={<AlbumDetailPage />} />
                     <Route path="/downloads" element={<DownloadsPage />} />
                     <Route path="/library" element={<LibraryPage />} />
                     <Route path="*" element={<NotFound />} />

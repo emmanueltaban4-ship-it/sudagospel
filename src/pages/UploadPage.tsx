@@ -24,6 +24,7 @@ const UploadPage = () => {
   const [description, setDescription] = useState("");
   const [genre, setGenre] = useState("");
   const [artistId, setArtistId] = useState("");
+  const [albumId, setAlbumId] = useState("");
   const [musicFile, setMusicFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
@@ -42,6 +43,20 @@ const UploadPage = () => {
       return data;
     },
     enabled: !!user,
+  });
+
+  const { data: albums } = useQuery({
+    queryKey: ["my-albums", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("id, title")
+        .eq("artist_id", artistId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
   });
 
   if (!user) {
@@ -92,6 +107,7 @@ const UploadPage = () => {
       artistId,
       musicFile,
       coverFile: coverFile || undefined,
+      albumId: albumId || undefined,
     });
 
     if (result) {
@@ -193,6 +209,24 @@ const UploadPage = () => {
               </div>
             )}
           </div>
+
+          {/* Album selection (optional) */}
+          {artistId && albums && albums.length > 0 && (
+            <div>
+              <Label className="text-foreground">Album (optional)</Label>
+              <Select value={albumId} onValueChange={setAlbumId}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Single (no album)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Single (no album)</SelectItem>
+                  {albums.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Music file */}
           <div>
