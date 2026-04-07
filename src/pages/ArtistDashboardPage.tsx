@@ -129,6 +129,7 @@ const ArtistDashboardPage = () => {
           description: editSongDescription || null,
           genre: editSongGenre || null,
           lyrics: editSongLyrics || null,
+          album_id: editSongAlbumId && editSongAlbumId !== "none" ? editSongAlbumId : null,
         })
         .eq("id", editingSongId!);
       if (error) throw error;
