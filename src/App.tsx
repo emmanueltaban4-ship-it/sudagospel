@@ -49,13 +49,18 @@ const App = () => {
   const [showSplash, setShowSplash] = useState(() => {
     return !localStorage.getItem("sudagospel_visited");
   });
+  const [needsOnboarding, setNeedsOnboarding] = useState(() => {
+    return !localStorage.getItem("sudagospel_onboarded");
+  });
 
   const handleSplashComplete = useCallback(() => {
     localStorage.setItem("sudagospel_visited", "true");
     setShowSplash(false);
   }, []);
 
-  const needsOnboarding = !localStorage.getItem("sudagospel_onboarded");
+  const handleOnboardingComplete = useCallback(() => {
+    setNeedsOnboarding(false);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -70,7 +75,7 @@ const App = () => {
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {needsOnboarding && !showSplash && (
-                      <Route path="/" element={<OnboardingPage />} />
+                      <Route path="/" element={<OnboardingPage onComplete={handleOnboardingComplete} />} />
                     )}
                     <Route path="/" element={<Index />} />
                     <Route path="/music" element={<MusicPage />} />
