@@ -236,6 +236,8 @@ const ArtistDashboardPage = () => {
           <Textarea value={editSongDescription} onChange={(e) => setEditSongDescription(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
           <Input value={editSongGenre} onChange={(e) => setEditSongGenre(e.target.value)} placeholder="Genre" className="bg-background" />
           <Textarea value={editSongLyrics} onChange={(e) => setEditSongLyrics(e.target.value)} placeholder="Lyrics" rows={4} className="bg-background" />
+          {/* Album selector */}
+          <AlbumSelectorForEdit artistId={artist!.id} value={editSongAlbumId} onChange={setEditSongAlbumId} />
           <div className="flex gap-2">
             <Button onClick={() => updateSong.mutate()} size="sm" className="gap-1.5 rounded-full bg-primary text-primary-foreground">
               <Save className="h-3.5 w-3.5" /> Save
