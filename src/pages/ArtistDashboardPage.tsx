@@ -34,6 +34,7 @@ const ArtistDashboardPage = () => {
   const [editSongDescription, setEditSongDescription] = useState("");
   const [editSongGenre, setEditSongGenre] = useState("");
   const [editSongLyrics, setEditSongLyrics] = useState("");
+  const [editSongAlbumId, setEditSongAlbumId] = useState("");
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["my-artist-profile", user?.id],
