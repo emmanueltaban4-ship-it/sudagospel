@@ -9,14 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/hooks/use-auth";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import Layout from "@/components/Layout";
-import MiniPlayer from "@/components/MiniPlayer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Music, Upload, TrendingUp, Download, Heart, Users,
   Play, BarChart3, Edit3, Save, X, Eye, Clock, CheckCircle, Youtube,
@@ -24,6 +16,39 @@ import {
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
+
+/* ─── Album Selector for Song Edit ─── */
+const AlbumSelectorForEdit = ({ artistId, value, onChange }: { artistId: string; value: string; onChange: (v: string) => void }) => {
+  const { data: albums } = useQuery({
+    queryKey: ["artist-albums-select", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("id, title")
+        .eq("artist_id", artistId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
+  });
+
+  if (!albums || albums.length === 0) return null;
+
+  return (
+    <Select value={value || "none"} onValueChange={(v) => onChange(v === "none" ? "" : v)}>
+      <SelectTrigger className="bg-background">
+        <SelectValue placeholder="Single (no album)" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="none">Single (no album)</SelectItem>
+        {albums.map((a) => (
+          <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
 
 const ArtistDashboardPage = () => {
   const navigate = useNavigate();
