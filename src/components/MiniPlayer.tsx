@@ -174,7 +174,7 @@ const MiniPlayer = () => {
 
               <div className="flex-1 flex flex-col items-center gap-1.5 max-w-[600px] mx-auto">
                 <div className="flex items-center gap-3">
-                  <button className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+                  <button onClick={toggleShuffle} className={`p-1.5 transition-colors ${shuffle ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
                     <Shuffle className="h-4 w-4" />
                   </button>
                   <button onClick={prev} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
@@ -189,7 +189,7 @@ const MiniPlayer = () => {
                   <button onClick={next} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
                     <SkipForward className="h-4.5 w-4.5" fill="currentColor" />
                   </button>
-                  <button className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+                  <button onClick={cycleRepeat} className={`p-1.5 transition-colors ${repeatMode !== "off" ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
                     <Repeat className="h-4 w-4" />
                   </button>
                 </div>
