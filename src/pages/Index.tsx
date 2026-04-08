@@ -153,15 +153,15 @@ const Index = () => {
       <section className="px-4 lg:px-6 py-4">
         <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
           {[
-            { label: "Worship", icon: Mic2, gradient: "from-primary/20 to-primary/5" },
-            { label: "Praise", icon: HandMetal, gradient: "from-secondary/20 to-secondary/5" },
-            { label: "Choir", icon: Users2, gradient: "from-primary/15 to-secondary/10" },
-            { label: "Sermons", icon: BookOpen, gradient: "from-secondary/15 to-primary/10" },
+            { label: "Worship", icon: Mic2, gradient: "from-accent/20 to-accent/5" },
+            { label: "Praise", icon: HandMetal, gradient: "from-primary/20 to-primary/5" },
+            { label: "Choir", icon: Users2, gradient: "from-accent/15 to-primary/10" },
+            { label: "Sermons", icon: BookOpen, gradient: "from-primary/15 to-accent/10" },
           ].map((cat) => (
             <Link
               key={cat.label}
               to={`/music?genre=${cat.label}`}
-              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-gradient-to-r border border-border hover:border-primary/30 transition-all group"
+              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-card border border-border hover:border-primary/30 hover:glow-gold transition-all group"
             >
               <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${cat.gradient} flex items-center justify-center`}>
                 <cat.icon className="h-4 w-4 text-primary" />
@@ -386,7 +386,7 @@ const Index = () => {
 
       {/* Upload CTA */}
       <section className="px-4 lg:px-6 py-8">
-        <div className="rounded-2xl bg-gradient-to-br from-primary/10 via-card to-secondary/10 border border-border p-8 md:p-12 text-center">
+        <div className="rounded-2xl bg-gradient-to-br from-accent/10 via-card to-primary/10 border border-primary/10 p-8 md:p-12 text-center">
           <Headphones className="h-10 w-10 text-primary mx-auto mb-4" />
           <h3 className="font-heading text-xl md:text-2xl font-extrabold text-foreground mb-2 tracking-tight">
             Share Your Music with the World
@@ -396,7 +396,7 @@ const Index = () => {
           </p>
           <Link
             to="/upload"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-full px-8 py-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/20"
+            className="inline-flex items-center gap-2 bg-gradient-gold hover:opacity-90 text-primary-foreground font-bold text-sm rounded-full px-8 py-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/30"
           >
             Start Uploading <ArrowRight className="h-4 w-4" />
           </Link>
@@ -441,7 +441,7 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
   return (
     <div className="flex-shrink-0 w-36 md:w-44 group cursor-pointer">
       <div
-        className="relative aspect-square rounded-lg overflow-hidden mb-2.5 bg-muted shadow-sm"
+        className="relative aspect-square rounded-xl overflow-hidden mb-2.5 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all"
         onClick={() => onPlay(song)}
       >
         {song.cover_url ? (
@@ -451,8 +451,8 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
             <Music className="h-8 w-8 text-muted-foreground" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
-          <div className="w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/30">
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <div className="w-11 h-11 rounded-full bg-gradient-gold flex items-center justify-center shadow-xl shadow-primary/30">
             {isCurrent && isPlaying ? (
               <Pause className="h-4 w-4 text-primary-foreground" />
             ) : (

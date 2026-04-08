@@ -28,12 +28,12 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
 
   const cardContent = (
     <div className="group flex flex-col">
-      <div className="relative aspect-square rounded-lg overflow-hidden mb-3 bg-muted shadow-sm">
+      <div className="relative aspect-square rounded-xl overflow-hidden mb-3 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all">
         {fileUrl && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
             <button
               onClick={handlePlay}
-              className="rounded-full bg-primary p-3 text-primary-foreground hover:scale-110 transition-transform shadow-xl shadow-primary/30"
+              className="rounded-full bg-gradient-gold p-3 text-primary-foreground hover:scale-110 transition-transform shadow-xl shadow-primary/30"
             >
               {isCurrentTrack && isPlaying ? (
                 <Pause className="h-5 w-5" />
@@ -46,7 +46,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
         {coverUrl ? (
           <img src={coverUrl} alt={title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
-          <div className="h-full w-full bg-muted flex items-center justify-center text-3xl font-heading font-bold text-muted-foreground">
+          <div className="h-full w-full bg-gradient-to-br from-accent/20 to-primary/10 flex items-center justify-center text-3xl font-heading font-bold text-muted-foreground">
             {title[0]}
           </div>
         )}
