@@ -168,6 +168,40 @@ const ProfilePage = () => {
     enabled: !!myArtist,
   });
 
+  const { data: verificationRequest } = useQuery({
+    queryKey: ["verification-request", myArtist?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("verification_requests")
+        .select("*")
+        .eq("artist_id", myArtist!.id)
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!myArtist && !!user,
+  });
+
+  const submitVerification = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("verification_requests").insert({
+        artist_id: myArtist!.id,
+        user_id: user!.id,
+        reason: verificationReason,
+      } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["verification-request"] });
+      setVerificationReason("");
+      toast.success("Verification request submitted!");
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
   // Mutations
   const updateProfile = useMutation({
     mutationFn: async () => {
