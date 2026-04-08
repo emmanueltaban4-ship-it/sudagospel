@@ -18,7 +18,7 @@ const LibraryPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { data: playlists } = usePlaylists();
-  const { play } = usePlayer();
+  const { play, recentlyPlayed } = usePlayer();
   const [tab, setTab] = useState<TabKey>("playlists");
   const downloads = getDownloads();
 
