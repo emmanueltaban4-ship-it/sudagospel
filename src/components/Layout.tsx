@@ -34,12 +34,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <TopBar />
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden border-r border-border bg-card/30">
-          <div className="flex-1 overflow-y-auto py-3 px-2 overscroll-contain">
+        <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden border-r border-border/40 bg-card/20">
+          <div className="flex-1 overflow-y-auto py-4 px-2.5 overscroll-contain scrollbar-hide">
             {sidebarLinks.map((group, gi) => (
-              <div key={gi} className={group.section ? "mt-6" : ""}>
+              <div key={gi} className={group.section ? "mt-7" : ""}>
                 {group.section && (
-                  <h3 className="px-3 mb-2 text-[11px] font-semibold tracking-wider uppercase text-muted-foreground">
+                  <h3 className="px-3 mb-2.5 text-[10px] font-bold tracking-[0.15em] uppercase text-muted-foreground/60">
                     {group.section}
                   </h3>
                 )}
@@ -50,15 +50,19 @@ const Layout = ({ children }: { children: ReactNode }) => {
                       to={item.to}
                       end={item.to === "/"}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                        `flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200 group/link ${
                           isActive
-                            ? "bg-primary/10 text-primary font-semibold"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                            ? "bg-primary/10 text-primary font-semibold shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                         }`
                       }
                     >
-                      <item.icon className="h-[18px] w-[18px]" />
-                      {item.label}
+                      {({ isActive }) => (
+                        <>
+                          <item.icon className={`h-[18px] w-[18px] transition-transform duration-200 group-hover/link:scale-110 ${isActive ? 'text-primary' : ''}`} />
+                          {item.label}
+                        </>
+                      )}
                     </NavLink>
                   ))}
                 </div>
@@ -66,10 +70,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </div>
 
-          <div className="p-3 border-t border-border">
+          <div className="p-3 border-t border-border/30">
             <Link
               to="/upload"
-              className="flex items-center justify-center gap-2 w-full bg-gradient-gold hover:opacity-90 text-primary-foreground font-bold text-sm rounded-xl px-4 py-2.5 transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30"
+              className="flex items-center justify-center gap-2 w-full bg-gradient-gold hover:opacity-90 text-primary-foreground font-bold text-sm rounded-xl px-4 py-3 transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] active:scale-95"
             >
               <Upload className="h-4 w-4" />
               Upload Music
@@ -77,14 +81,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </div>
         </aside>
         
-        {/* Main content — proper bottom padding for mini player + bottom nav on mobile */}
+        {/* Main content */}
         <main className="flex-1 min-w-0 overflow-y-auto h-[calc(100vh-3.5rem)] overscroll-contain scroll-smooth">
           <div className="pb-[140px] md:pb-[80px]">
             <PageTransition key={location.pathname}>
               {children}
             </PageTransition>
-            <footer className="border-t border-border py-4 px-4 mt-8">
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <footer className="border-t border-border/30 py-5 px-4 mt-10">
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] text-muted-foreground/50">
                 <span>© {new Date().getFullYear()} SudaGospel</span>
                 <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
                 <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
