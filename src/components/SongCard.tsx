@@ -90,7 +90,10 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue, isVerifi
       <h3 className="font-heading font-semibold text-sm truncate text-foreground group-hover:text-primary transition-colors leading-snug">
         {title}
       </h3>
-      <p className="text-xs text-muted-foreground truncate mt-0.5">{artist}</p>
+      <p className="text-xs text-muted-foreground truncate mt-0.5 flex items-center gap-1">
+        {artist}
+        {isVerifiedArtist && <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />}
+      </p>
       <span className="text-[10px] text-muted-foreground/60 flex items-center gap-1 mt-1">
         <Play className="h-2.5 w-2.5" /> {plays}
       </span>
