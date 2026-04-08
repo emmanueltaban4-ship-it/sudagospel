@@ -16,8 +16,9 @@ import {
   LogIn, UserPlus, Music, Heart, Download, Upload, LogOut, Shield,
   Users, ListMusic, Mic2, Edit3, Save, X, Camera, Crown, ChevronRight,
   Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle,
-  Eye, Trash2, Pencil, Youtube
+  Eye, Trash2, Pencil, Youtube, Rocket
 } from "lucide-react";
+import BoostSongDialog from "@/components/BoostSongDialog";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
@@ -277,6 +278,9 @@ const ProfilePage = () => {
           <p className="text-[11px] text-muted-foreground">{options?.showStatus ? "Awaiting review" : `${(song.play_count || 0).toLocaleString()} plays · ${(song.download_count || 0).toLocaleString()} downloads`}</p>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
+          <BoostSongDialog songId={song.id} songTitle={song.title}>
+            <button className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors" title="Boost song"><Rocket className="h-3.5 w-3.5" /></button>
+          </BoostSongDialog>
           <button onClick={() => startEditingSong(song)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><Pencil className="h-3.5 w-3.5" /></button>
           <button onClick={() => { if (confirm("Delete this song permanently?")) deleteSong.mutate(song.id); }} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
         </div>
