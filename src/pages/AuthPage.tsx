@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useNavigate, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, Headphones, Music2 } from "lucide-react";
+import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, Headphones, Music2, BadgeCheck, Play, Upload } from "lucide-react";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/auth-hero.jpg";
 
