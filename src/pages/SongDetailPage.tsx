@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
 
 const SongDetailPage = () => {
