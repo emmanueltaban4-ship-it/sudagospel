@@ -1,6 +1,7 @@
 import { Play, Pause, Heart, Download } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/download";
 import { Link } from "react-router-dom";
 import AddToPlaylistDialog from "@/components/AddToPlaylistDialog";
 

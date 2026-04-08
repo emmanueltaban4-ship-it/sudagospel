@@ -54,21 +54,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
       coverUrl: currentTrack.coverUrl,
       downloadedAt: new Date().toISOString(),
     });
-    toast.info("Preparing download...");
-    fetch(currentTrack.fileUrl)
-      .then(r => r.blob())
-      .then(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${currentTrack.title} - ${currentTrack.artist}.mp3`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        toast.success("Downloaded!");
-      })
-      .catch(() => toast.error("Download failed."));
+    downloadFile(currentTrack.fileUrl, `${currentTrack.title} - ${currentTrack.artist}.mp3`);
   };
 
   const handleShare = async () => {
