@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3, Flame, Heart, Star, ChevronRight } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3, Flame, Heart, Star, ChevronRight, Radio } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useAuth } from "@/hooks/use-auth";
 
 const Index = () => {
-  const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { play, currentTrack, isPlaying, togglePlay, recentlyPlayed } = usePlayer();
   const { data: siteSettings } = useSiteSettings();
   const { user } = useAuth();
 
@@ -141,6 +141,54 @@ const Index = () => {
     enabled: !!user,
   });
 
+  // "Because you listened to…" — pick a recently played artist and find similar songs
+  const becauseArtist = useMemo(() => {
+    if (!recentlyPlayed || recentlyPlayed.length === 0) return null;
+    return recentlyPlayed[0];
+  }, [recentlyPlayed]);
+
+  const { data: becauseYouListened } = useQuery({
+    queryKey: ["because-you-listened", becauseArtist?.artist],
+    queryFn: async () => {
+      // Find artist by name, then get other songs by same artist or same genre
+      const { data: artistMatch } = await supabase
+        .from("artists")
+        .select("id, name, genre")
+        .ilike("name", becauseArtist!.artist)
+        .limit(1);
+      
+      if (!artistMatch?.length) return [];
+      const artist = artistMatch[0];
+      
+      // Get songs from same artist (excluding the trigger song)
+      const { data: artistSongs } = await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .eq("artist_id", artist.id)
+        .neq("id", becauseArtist!.id)
+        .order("play_count", { ascending: false })
+        .limit(5);
+
+      // Also get songs from same genre by other artists
+      const genreSongs = artist.genre ? await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .eq("genre", artist.genre)
+        .neq("artist_id", artist.id)
+        .order("play_count", { ascending: false })
+        .limit(5)
+        .then(r => r.data || []) : [];
+
+      const combined = [...(artistSongs || []), ...genreSongs];
+      // Deduplicate
+      const seen = new Set<string>();
+      return combined.filter(s => { if (seen.has(s.id)) return false; seen.add(s.id); return true; }).slice(0, 10);
+    },
+    enabled: !!becauseArtist,
+  });
+
   const playSong = (song: any) => {
     const artistName = (song.artists as any)?.name || "Unknown";
     const track: Track = {
@@ -189,11 +237,38 @@ const Index = () => {
       {/* Trending Songs */}
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
-          <SectionHeader title="Trending Now" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
+          <SectionHeader title="Trending in South Sudan" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1">
               {trendingSongs.map((song, idx) => (
                 <SongCard key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} rank={idx + 1} showRank />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Because you listened to… */}
+      {becauseYouListened && becauseYouListened.length > 0 && becauseArtist && (
+        <section className="py-6">
+          <div className="flex items-center justify-between mb-4 px-4 lg:px-6">
+            <div className="flex items-center gap-2">
+              <Radio className="h-5 w-5 text-secondary" />
+              <div>
+                <h2 className="font-heading text-lg md:text-xl font-black text-foreground tracking-tight">
+                  Because you listened to
+                </h2>
+                <p className="text-xs text-primary font-semibold">{becauseArtist.artist}</p>
+              </div>
+            </div>
+            <Link to="/music" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+              Show all <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {becauseYouListened.map((song: any) => (
+                <SongCard key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
               ))}
             </div>
           </div>
