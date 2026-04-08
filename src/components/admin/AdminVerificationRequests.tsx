@@ -25,7 +25,7 @@ const AdminVerificationRequests = () => {
   });
 
   const handleRequest = useMutation({
-    mutationFn: async ({ id, status, artistId }: { id: string; status: string; artistId: string }) => {
+    mutationFn: async ({ id, status, artistId, userId }: { id: string; status: string; artistId: string; userId: string }) => {
       const notes = adminNotes[id] || null;
       const { error } = await supabase
         .from("verification_requests")
@@ -40,6 +40,17 @@ const AdminVerificationRequests = () => {
           .eq("id", artistId);
         if (artistErr) throw artistErr;
       }
+
+      // Send notification to the artist
+      await supabase.from("notifications").insert({
+        user_id: userId,
+        title: status === "approved" ? "🎉 You're Verified!" : "Verification Update",
+        message: status === "approved"
+          ? "Congratulations! Your artist verification request has been approved. You now have a verified badge."
+          : `Your verification request has been reviewed.${notes ? ` Note: ${notes}` : ""}`,
+        type: status === "approved" ? "success" : "warning",
+        link: "/profile",
+      } as any);
     },
     onSuccess: (_, { status }) => {
       toast.success(status === "approved" ? "Artist verified!" : "Request rejected.");
@@ -107,7 +118,7 @@ const AdminVerificationRequests = () => {
               <Button
                 size="sm"
                 className="gap-1.5 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 flex-1"
-                onClick={() => handleRequest.mutate({ id: req.id, status: "approved", artistId: req.artist_id })}
+                onClick={() => handleRequest.mutate({ id: req.id, status: "approved", artistId: req.artist_id, userId: req.user_id })}
                 disabled={handleRequest.isPending}
               >
                 <Check className="h-3.5 w-3.5" /> Approve & Verify
@@ -116,7 +127,7 @@ const AdminVerificationRequests = () => {
                 size="sm"
                 variant="outline"
                 className="gap-1.5 rounded-full text-destructive border-destructive/30 hover:bg-destructive/10 flex-1"
-                onClick={() => handleRequest.mutate({ id: req.id, status: "rejected", artistId: req.artist_id })}
+                onClick={() => handleRequest.mutate({ id: req.id, status: "rejected", artistId: req.artist_id, userId: req.user_id })}
                 disabled={handleRequest.isPending}
               >
                 <X className="h-3.5 w-3.5" /> Reject

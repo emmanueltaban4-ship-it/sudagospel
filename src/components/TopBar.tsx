@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import SearchOverlay from "./SearchOverlay";
+import NotificationBell from "./NotificationBell";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -45,6 +46,7 @@ const TopBar = () => {
             >
               <Search className="h-[22px] w-[22px]" />
             </button>
+            <NotificationBell />
             <ThemeToggle />
             <Link
               to="/subscription"
