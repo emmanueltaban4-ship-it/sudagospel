@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -10,10 +10,12 @@ import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useAuth } from "@/hooks/use-auth";
 
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const { data: siteSettings } = useSiteSettings();
+  const { user } = useAuth();
 
   const { data: trendingSongs } = useQuery({
     queryKey: ["trending-songs"],
@@ -79,6 +81,57 @@ const Index = () => {
     },
   });
 
+  // Recommended: songs from genres the user has liked
+  const { data: recommendedSongs } = useQuery({
+    queryKey: ["recommended-songs", user?.id],
+    queryFn: async () => {
+      // Get genres the user likes
+      const { data: likedSongs } = await supabase
+        .from("song_likes")
+        .select("song_id")
+        .eq("user_id", user!.id)
+        .limit(50);
+      if (!likedSongs?.length) {
+        // Fallback: random approved songs
+        const { data } = await supabase
+          .from("songs")
+          .select("*, artists(id, name, avatar_url)")
+          .eq("is_approved", true)
+          .order("play_count", { ascending: false })
+          .limit(10);
+        return data || [];
+      }
+      const likedIds = likedSongs.map((l) => l.song_id);
+      // Get genres from liked songs
+      const { data: likedDetails } = await supabase
+        .from("songs")
+        .select("genre")
+        .in("id", likedIds);
+      const genres = [...new Set((likedDetails || []).map((s) => s.genre).filter(Boolean))];
+      if (genres.length === 0) {
+        const { data } = await supabase
+          .from("songs")
+          .select("*, artists(id, name, avatar_url)")
+          .eq("is_approved", true)
+          .not("id", "in", `(${likedIds.join(",")})`)
+          .order("play_count", { ascending: false })
+          .limit(10);
+        return data || [];
+      }
+      // Get songs in those genres that user hasn't liked
+      const { data } = await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .in("genre", genres)
+        .not("id", "in", `(${likedIds.join(",")})`)
+        .order("play_count", { ascending: false })
+        .limit(10);
+      return data || [];
+    },
+    enabled: !!user,
+  });
+
   const playSong = (song: any) => {
     const artistName = (song.artists as any)?.name || "Unknown";
     const track: Track = {
@@ -133,6 +186,22 @@ const Index = () => {
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1">
               {trendingSongs.map((song) => (
+                <SongTile key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Recommended for You */}
+      {recommendedSongs && recommendedSongs.length > 0 && (
+        <section className="py-6">
+          <div className="px-4 lg:px-6">
+            <SectionHeader title="Recommended for You" icon={<Sparkles className="h-5 w-5 text-primary" />} linkTo="/music" />
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {recommendedSongs.map((song: any) => (
                 <SongTile key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
               ))}
             </div>

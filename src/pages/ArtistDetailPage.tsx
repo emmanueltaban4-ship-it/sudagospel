@@ -57,6 +57,20 @@ const ArtistDetailPage = () => {
     enabled: !!artistId,
   });
 
+  const { data: albums } = useQuery({
+    queryKey: ["artist-albums", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("*")
+        .eq("artist_id", artistId!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
+  });
+
   const sortedSongs = useMemo(() => {
     if (!songs) return [];
     const copy = [...songs];
@@ -394,6 +408,36 @@ const ArtistDetailPage = () => {
               </div>
             )}
           </div>
+
+          {/* === ALBUMS === */}
+          {albums && albums.length > 0 && (
+            <div className="mb-8">
+              <h2 className="font-heading text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                <Disc3 className="h-5 w-5 text-primary" /> Albums
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {albums.map((album) => (
+                  <div
+                    key={album.id}
+                    className="group cursor-pointer"
+                    onClick={() => navigate(`/album/${album.id}`)}
+                  >
+                    <div className="relative aspect-square rounded-lg overflow-hidden mb-2 bg-muted shadow-sm">
+                      {album.cover_url ? (
+                        <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center">
+                          <Disc3 className="h-10 w-10 text-primary/40" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{album.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{album.genre || "Album"}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* === DISCOGRAPHY GRID === */}
           {songs && songs.length > 0 && (
