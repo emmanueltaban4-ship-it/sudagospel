@@ -153,6 +153,16 @@ const ProfilePage = () => {
     enabled: !!myArtist,
   });
 
+  const { data: artistVideos } = useQuery({
+    queryKey: ["artist-videos", myArtist?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("videos").select("*").eq("artist_id", myArtist!.id).order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!myArtist,
+  });
+
   // Mutations
   const updateProfile = useMutation({
     mutationFn: async () => {
