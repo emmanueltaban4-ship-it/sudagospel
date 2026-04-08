@@ -131,6 +131,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.play().catch(() => setIsPlaying(false));
       setIsPlaying(true);
     }
+    // Preload next track in queue
+    requestIdleCallback(() => {
+      const q = queueRef.current;
+      const idx = q.findIndex(t => t.id === track.id);
+      const next = q[idx + 1];
+      if (next) preloadAudio(next.fileUrl);
+    });
   }, []);
 
   const play = useCallback((track: Track, newQueue?: Track[]) => {
