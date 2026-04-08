@@ -141,4 +141,21 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+}
+
+/* Global mobile smoothness */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
 }

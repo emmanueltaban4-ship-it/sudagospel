@@ -3,18 +3,8 @@ import { NavLink, Link } from "react-router-dom";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
 import {
-  Home,
-  TrendingUp,
-  Clock,
-  Users,
-  ListMusic,
-  Newspaper,
-  Crown,
-  Upload,
-  Trophy,
-  Headphones,
-  Download,
-  Library,
+  Home, TrendingUp, Clock, Users, ListMusic, Newspaper, Crown,
+  Upload, Trophy, Headphones, Download, Library,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -43,7 +33,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop sidebar */}
         <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden border-r border-border bg-card/30">
-          <div className="flex-1 overflow-y-auto py-3 px-2">
+          <div className="flex-1 overflow-y-auto py-3 px-2 overscroll-contain">
             {sidebarLinks.map((group, gi) => (
               <div key={gi} className={group.section ? "mt-6" : ""}>
                 {group.section && (
@@ -74,7 +64,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </div>
 
-          {/* Upload CTA */}
           <div className="p-3 border-t border-border">
             <Link
               to="/upload"
@@ -86,16 +75,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </div>
         </aside>
         
-        {/* Main content */}
-        <main className="flex-1 min-w-0 pb-20 md:pb-0 overflow-y-auto h-[calc(100vh-3.5rem)]">
-          {children}
-          <footer className="border-t border-border py-4 px-4 mt-8">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-              <span>© {new Date().getFullYear()} SudaGospel</span>
-              <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-              <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
-            </div>
-          </footer>
+        {/* Main content — proper bottom padding for mini player + bottom nav on mobile */}
+        <main className="flex-1 min-w-0 overflow-y-auto h-[calc(100vh-3.5rem)] overscroll-contain scroll-smooth">
+          <div className="pb-[140px] md:pb-[80px]">
+            {children}
+            <footer className="border-t border-border py-4 px-4 mt-8">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span>© {new Date().getFullYear()} SudaGospel</span>
+                <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
+              </div>
+            </footer>
+          </div>
         </main>
       </div>
       <BottomNav />

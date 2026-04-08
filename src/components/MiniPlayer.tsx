@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 import { usePlayer } from "@/hooks/use-player";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import FullScreenPlayer from "@/components/FullScreenPlayer";
 
 const formatTime = (s: number) => {
@@ -36,11 +36,12 @@ const MiniPlayer = () => {
 
   const VolumeIcon = volume === 0 ? VolumeX : volume < 0.33 ? Volume : volume < 0.66 ? Volume1 : Volume2;
 
-  const handleProgressInteraction = (e: React.MouseEvent | MouseEvent) => {
+  const handleProgressInteraction = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
     if (!progressRef.current || !duration) return;
     const rect = progressRef.current.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    return pct;
+    const clientX = "touches" in e ? e.touches[0]?.clientX ?? (e as TouchEvent).changedTouches[0]?.clientX : (e as MouseEvent).clientX;
+    if (clientX === undefined) return;
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
   };
 
   const handleVolumeInteraction = (e: React.MouseEvent | MouseEvent) => {
@@ -54,32 +55,58 @@ const MiniPlayer = () => {
     else setVolume(prevVolume || 1);
   };
 
+  // Touch-friendly progress seeking for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDraggingProgress(true);
+    const pct = handleProgressInteraction(e);
+    if (pct !== undefined) setDragProgress(pct * 100);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const pct = handleProgressInteraction(e);
+    if (pct !== undefined) setDragProgress(pct * 100);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const pct = handleProgressInteraction(e);
+    if (pct !== undefined) seek(pct * duration);
+    setIsDraggingProgress(false);
+  };
+
   return (
     <>
       <FullScreenPlayer isOpen={showFullScreen} onClose={() => setShowFullScreen(false)} />
 
-      <div className="fixed bottom-[52px] md:bottom-0 left-0 right-0 z-40">
-        <div className="absolute inset-0 glass-strong border-t border-border" />
+      <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40">
+        <div className="absolute inset-0 glass-strong border-t border-border/50" />
 
         <div className="relative">
           {/* === MOBILE LAYOUT === */}
           <div className="md:hidden">
+            {/* Progress bar — taller touch target */}
             <div
               ref={progressRef}
-              className="h-1 bg-muted/40 cursor-pointer relative group"
+              className="h-[6px] bg-muted/40 cursor-pointer relative group touch-none"
               onClick={(e) => {
                 const pct = handleProgressInteraction(e);
                 if (pct !== undefined) seek(pct * duration);
               }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <div className="h-full bg-gradient-gold transition-[width] duration-100" style={{ width: `${displayProgress}%` }}>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary shadow-lg shadow-primary/50 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity" />
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50 opacity-100 transition-opacity" />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-2">
-              <button onClick={() => setShowFullScreen(true)} className="flex-shrink-0">
-                <div className="h-11 w-11 rounded-lg overflow-hidden bg-muted shadow-md ring-1 ring-primary/10">
+            <div className="flex items-center gap-3 px-3 py-2.5">
+              {/* Cover art — tap to expand */}
+              <button
+                onClick={() => setShowFullScreen(true)}
+                className="flex-shrink-0 active:scale-95 transition-transform"
+              >
+                <div className="h-12 w-12 rounded-xl overflow-hidden bg-muted shadow-md ring-1 ring-primary/10">
                   {currentTrack.coverUrl ? (
                     <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
@@ -90,20 +117,31 @@ const MiniPlayer = () => {
                 </div>
               </button>
 
+              {/* Song info — tap to expand */}
               <button onClick={() => setShowFullScreen(true)} className="flex-1 min-w-0 text-left">
                 <p className="text-sm font-semibold truncate text-foreground leading-tight">{currentTrack.title}</p>
                 <p className="text-[11px] text-muted-foreground truncate">{currentTrack.artist}</p>
               </button>
 
-              <div className="flex items-center gap-0.5">
-                <button onClick={prev} className="p-2 text-muted-foreground active:text-foreground transition-colors">
-                  <SkipBack className="h-4 w-4" />
+              {/* Controls — large touch targets */}
+              <div className="flex items-center gap-0">
+                <button
+                  onClick={prev}
+                  className="h-11 w-10 flex items-center justify-center text-muted-foreground active:text-foreground active:scale-90 transition-all"
+                >
+                  <SkipBack className="h-[18px] w-[18px]" />
                 </button>
-                <button onClick={togglePlay} className="h-10 w-10 rounded-full bg-gradient-gold text-primary-foreground flex items-center justify-center active:scale-95 transition-transform shadow-lg shadow-primary/30">
-                  {isPlaying ? <Pause className="h-4.5 w-4.5" /> : <Play className="h-4.5 w-4.5 ml-0.5" fill="currentColor" />}
+                <button
+                  onClick={togglePlay}
+                  className="h-12 w-12 rounded-full bg-gradient-gold text-primary-foreground flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-primary/30"
+                >
+                  {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" fill="currentColor" />}
                 </button>
-                <button onClick={next} className="p-2 text-muted-foreground active:text-foreground transition-colors">
-                  <SkipForward className="h-4 w-4" />
+                <button
+                  onClick={next}
+                  className="h-11 w-10 flex items-center justify-center text-muted-foreground active:text-foreground active:scale-90 transition-all"
+                >
+                  <SkipForward className="h-[18px] w-[18px]" />
                 </button>
               </div>
             </div>
@@ -198,17 +236,14 @@ const MiniPlayer = () => {
                 <button
                   onClick={() => setShowFullScreen(true)}
                   className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
-                  title="Full screen player"
                 >
                   <Maximize2 className="h-4 w-4" />
                 </button>
-
                 {queue.length > 0 && (
                   <span className="text-[10px] text-muted-foreground tabular-nums">
                     {queueIndex + 1}/{queue.length}
                   </span>
                 )}
-
                 <div className="flex items-center gap-1.5 group/vol">
                   <button onClick={toggleMute} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
                     <VolumeIcon className="h-4 w-4" />
