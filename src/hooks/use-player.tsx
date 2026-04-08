@@ -153,6 +153,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         currentTime,
         volume,
         queue,
+        recentlyPlayed,
         play,
         togglePlay,
         seek,
