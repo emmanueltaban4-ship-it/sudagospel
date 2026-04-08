@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const { data: siteSettings } = useSiteSettings();
+  const { user } = useAuth();
 
   const { data: trendingSongs } = useQuery({
     queryKey: ["trending-songs"],
