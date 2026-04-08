@@ -27,6 +27,7 @@ const tabs = [
   { id: "monetization", label: "Monetization", icon: DollarSign },
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
+  { id: "videos", label: "Videos", icon: Video },
   { id: "artists", label: "Artists", icon: Mic2 },
   { id: "albums", label: "Albums", icon: Disc3 },
   { id: "genres", label: "Genres", icon: Tag },
