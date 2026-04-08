@@ -545,6 +545,22 @@ const ProfilePage = () => {
                       <Input value={albumTitle} onChange={(e) => setAlbumTitle(e.target.value)} placeholder="Album title" className="bg-background" />
                       <Textarea value={albumDesc} onChange={(e) => setAlbumDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
                       <Input value={albumGenre} onChange={(e) => setAlbumGenre(e.target.value)} placeholder="Genre" className="bg-background" />
+                      <Select value={albumType} onValueChange={setAlbumType}>
+                        <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="album">Album</SelectItem>
+                          <SelectItem value="ep">EP</SelectItem>
+                          <SelectItem value="single">Single</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input type="date" value={albumReleaseDate} onChange={(e) => setAlbumReleaseDate(e.target.value)} className="bg-background" placeholder="Release date" />
+                      <div>
+                        <label className="flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border-2 border-dashed border-border bg-background p-3 text-center hover:border-primary transition-colors">
+                          <Camera className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">{albumCoverFile ? albumCoverFile.name : "Upload cover art"}</span>
+                          <input ref={albumCoverInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => setAlbumCoverFile(e.target.files?.[0] || null)} />
+                        </label>
+                      </div>
                       <Button onClick={() => createAlbum.mutate()} size="sm" className="rounded-full bg-primary text-primary-foreground gap-1.5" disabled={!albumTitle.trim()}><Save className="h-3.5 w-3.5" /> Create</Button>
                     </div>
                   )}
