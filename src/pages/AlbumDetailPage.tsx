@@ -7,6 +7,8 @@ import { artistPath } from "@/lib/artist-slug";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { downloadFile } from "@/lib/download";
 import {
   ArrowLeft, Music, Play, Pause, Shuffle, Download, Share2, Disc3, Clock,
 } from "lucide-react";
