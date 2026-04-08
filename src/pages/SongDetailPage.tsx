@@ -122,7 +122,7 @@ const SongDetailPage = () => {
 
   const isCurrentTrack = currentTrack?.id === song.id;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-  const ogShareUrl = `${window.location.origin}/song/${song.id}`;
+  const ogShareUrl = `https://sudagospel.com/song/${song.id}`;
 
   const formatTime = (s: number) => {
     if (!s || isNaN(s)) return "0:00";

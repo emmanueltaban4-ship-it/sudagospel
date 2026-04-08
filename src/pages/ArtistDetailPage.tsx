@@ -116,7 +116,7 @@ const ArtistDetailPage = () => {
     play(shuffled[0], shuffled);
     toast.success("Shuffling songs");
   };
-  const artistShareUrl = `${window.location.origin}/artist/${artist?.id}`;
+  const artistShareUrl = `https://sudagospel.com/artist/${artist?.id}`;
 
   const formatTime = (s: number | null) => {
     if (!s) return "--:--";

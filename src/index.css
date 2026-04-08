@@ -9,44 +9,44 @@
     --font-heading: 'Figtree', sans-serif;
     --font-body: 'DM Sans', sans-serif;
 
-    --background: 270 15% 4%;
-    --foreground: 40 15% 96%;
+    --background: 0 0% 100%;
+    --foreground: 270 15% 10%;
 
-    --card: 270 14% 7%;
-    --card-foreground: 40 15% 96%;
+    --card: 270 10% 97%;
+    --card-foreground: 270 15% 10%;
 
-    --popover: 270 14% 7%;
-    --popover-foreground: 40 15% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 15% 10%;
 
-    --primary: 43 96% 56%;
-    --primary-foreground: 270 30% 6%;
+    --primary: 43 96% 46%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 268 65% 48%;
+    --secondary: 268 55% 55%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 270 12% 11%;
-    --muted-foreground: 260 8% 50%;
+    --muted: 270 8% 93%;
+    --muted-foreground: 260 8% 45%;
 
-    --accent: 268 65% 48%;
+    --accent: 268 55% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 270 12% 13%;
-    --input: 270 12% 13%;
-    --ring: 43 96% 56%;
+    --border: 270 8% 88%;
+    --input: 270 8% 88%;
+    --ring: 43 96% 46%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 270 14% 5%;
-    --sidebar-foreground: 40 15% 96%;
-    --sidebar-primary: 43 96% 56%;
-    --sidebar-primary-foreground: 270 30% 6%;
-    --sidebar-accent: 270 12% 11%;
-    --sidebar-accent-foreground: 40 15% 96%;
-    --sidebar-border: 270 12% 13%;
-    --sidebar-ring: 43 96% 56%;
+    --sidebar-background: 270 10% 97%;
+    --sidebar-foreground: 270 15% 10%;
+    --sidebar-primary: 43 96% 46%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 270 8% 93%;
+    --sidebar-accent-foreground: 270 15% 10%;
+    --sidebar-border: 270 8% 88%;
+    --sidebar-ring: 43 96% 46%;
   }
 
   .dark {
