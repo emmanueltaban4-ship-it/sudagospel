@@ -355,7 +355,28 @@ const AuthPage = () => {
 };
 
 
-const testimonials = [
+const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!target) return;
+    const duration = 1500;
+    const steps = 40;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <>{count}{suffix}</>;
+};
+
   { name: "Gospel Minister", quote: "Sudagospel changed how I share my music with South Sudan." },
   { name: "Worship Leader", quote: "Finally a platform that understands gospel music in our community." },
   { name: "Church Choir", quote: "Our songs reached thousands of listeners we never knew existed." },
