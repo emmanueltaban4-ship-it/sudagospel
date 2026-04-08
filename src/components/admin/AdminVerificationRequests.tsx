@@ -118,7 +118,7 @@ const AdminVerificationRequests = () => {
               <Button
                 size="sm"
                 className="gap-1.5 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 flex-1"
-                onClick={() => handleRequest.mutate({ id: req.id, status: "approved", artistId: req.artist_id })}
+                onClick={() => handleRequest.mutate({ id: req.id, status: "approved", artistId: req.artist_id, userId: req.user_id })}
                 disabled={handleRequest.isPending}
               >
                 <Check className="h-3.5 w-3.5" /> Approve & Verify
