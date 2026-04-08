@@ -15,11 +15,11 @@ const TopBar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-2xl">
-        <div className="flex h-full items-center justify-between gap-4 px-4 lg:px-6">
+      <header className="sticky top-0 z-50 h-14 border-b border-border/50 bg-background/90 backdrop-blur-2xl">
+        <div className="flex h-full items-center justify-between gap-3 px-3 lg:px-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div className="h-8 w-8 rounded-lg bg-gradient-gold flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-shadow">
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0 group active:scale-95 transition-transform">
+            <div className="h-9 w-9 rounded-xl bg-gradient-gold flex items-center justify-center shadow-lg shadow-primary/20">
               <span className="text-primary-foreground font-heading font-extrabold text-sm">SG</span>
             </div>
             <span className="font-heading text-lg font-extrabold text-foreground hidden sm:block tracking-tight">
@@ -38,13 +38,13 @@ const TopBar = () => {
             </button>
           </div>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
+          {/* Right actions — larger touch targets on mobile */}
+          <div className="flex items-center gap-1">
             <button
               onClick={() => setSearchOpen(true)}
-              className="md:hidden rounded-full p-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="md:hidden rounded-full h-10 w-10 flex items-center justify-center text-muted-foreground active:text-foreground active:scale-90 transition-all"
             >
-              <Search className="h-5 w-5" />
+              <Search className="h-[22px] w-[22px]" />
             </button>
             <ThemeToggle />
             <Link
@@ -57,14 +57,14 @@ const TopBar = () => {
             {user ? (
               <Link
                 to="/profile"
-                className="h-8 w-8 rounded-full bg-gradient-gold flex items-center justify-center text-primary-foreground font-bold text-xs hover:glow-gold transition-all"
+                className="h-9 w-9 rounded-full bg-gradient-gold flex items-center justify-center text-primary-foreground font-bold text-xs active:scale-90 transition-all"
               >
                 {user.email?.[0]?.toUpperCase() || "U"}
               </Link>
             ) : (
               <Link
                 to="/auth"
-                className="text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-colors px-4 py-1.5 rounded-full"
+                className="text-sm font-semibold text-primary-foreground bg-primary active:bg-primary/80 active:scale-95 transition-all px-4 py-2 rounded-full"
               >
                 Log in
               </Link>
