@@ -144,6 +144,35 @@
   .touch-manipulation {
     touch-action: manipulation;
   }
+
+  /* Micro-interaction utilities */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 28px -8px hsl(var(--primary) / 0.15),
+                0 4px 12px -4px hsl(0 0% 0% / 0.3);
+  }
+  .card-hover:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 100ms;
+  }
+
+  .icon-btn-pop {
+    @apply transition-all duration-200;
+  }
+  .icon-btn-pop:hover {
+    transform: scale(1.15);
+  }
+  .icon-btn-pop:active {
+    transform: scale(0.9);
+    transition-duration: 100ms;
+  }
+
+  .link-glow:hover {
+    text-shadow: 0 0 12px hsl(var(--primary) / 0.4);
+  }
 }
 
 /* Global mobile smoothness */
