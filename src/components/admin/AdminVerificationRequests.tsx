@@ -25,7 +25,7 @@ const AdminVerificationRequests = () => {
   });
 
   const handleRequest = useMutation({
-    mutationFn: async ({ id, status, artistId }: { id: string; status: string; artistId: string }) => {
+    mutationFn: async ({ id, status, artistId, userId }: { id: string; status: string; artistId: string; userId: string }) => {
       const notes = adminNotes[id] || null;
       const { error } = await supabase
         .from("verification_requests")
@@ -40,6 +40,17 @@ const AdminVerificationRequests = () => {
           .eq("id", artistId);
         if (artistErr) throw artistErr;
       }
+
+      // Send notification to the artist
+      await supabase.from("notifications").insert({
+        user_id: userId,
+        title: status === "approved" ? "🎉 You're Verified!" : "Verification Update",
+        message: status === "approved"
+          ? "Congratulations! Your artist verification request has been approved. You now have a verified badge."
+          : `Your verification request has been reviewed.${notes ? ` Note: ${notes}` : ""}`,
+        type: status === "approved" ? "success" : "warning",
+        link: "/profile",
+      } as any);
     },
     onSuccess: (_, { status }) => {
       toast.success(status === "approved" ? "Artist verified!" : "Request rejected.");
