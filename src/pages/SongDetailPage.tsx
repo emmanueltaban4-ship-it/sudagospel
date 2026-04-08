@@ -143,15 +143,6 @@ const SongDetailPage = () => {
     await downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
   };
 
-  const handleShare = async () => {
-    const shareUrl = ogShareUrl;
-    if (navigator.share) {
-      await navigator.share({ title: song.title, text: `Listen to ${song.title} by ${artistName}`, url: shareUrl });
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied!");
-    }
-  };
 
   const handleSubmitComment = () => {
     if (!commentText.trim()) return;
