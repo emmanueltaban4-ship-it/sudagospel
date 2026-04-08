@@ -17,7 +17,8 @@ const formatTime = (s: number) => {
 const MiniPlayer = () => {
   const {
     currentTrack, isPlaying, togglePlay, next, prev,
-    currentTime, duration, seek, volume, setVolume, queue
+    currentTime, duration, seek, volume, setVolume, queue,
+    shuffle, repeatMode, toggleShuffle, cycleRepeat
   } = usePlayer();
   const navigate = useNavigate();
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
