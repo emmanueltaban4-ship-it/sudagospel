@@ -53,13 +53,33 @@ export const useSongComments = (songId: string) => {
   return useQuery({
     queryKey: ["song-comments", songId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: comments, error: commentsError } = await supabase
         .from("song_comments")
-        .select("*, profiles(display_name, avatar_url)")
+        .select("*")
         .eq("song_id", songId)
         .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+
+      if (commentsError) throw commentsError;
+      if (!comments || comments.length === 0) return [];
+
+      const userIds = [...new Set(comments.map((comment) => comment.user_id).filter(Boolean))];
+
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("user_id, display_name, avatar_url")
+        .in("user_id", userIds);
+
+      if (profilesError) throw profilesError;
+
+      const profilesByUserId = new Map(
+        (profiles ?? []).map((profile) => [profile.user_id, profile])
+      );
+
+      return comments.map((comment) => ({
+        ...comment,
+        profiles: profilesByUserId.get(comment.user_id) ?? null,
+      }));
     },
+    enabled: !!songId,
   });
 };
