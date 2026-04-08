@@ -79,11 +79,11 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
       {/* Blurred background */}
       <div className="absolute inset-0 overflow-hidden">
         {currentTrack.coverUrl ? (
-          <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover scale-150 blur-[80px] opacity-30" />
+          <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover scale-150 blur-[80px] opacity-20" />
         ) : (
-          <div className="h-full w-full bg-gradient-to-b from-primary/20 to-background" />
+          <div className="h-full w-full bg-gradient-to-b from-accent/20 to-background" />
         )}
-        <div className="absolute inset-0 bg-background/70" />
+        <div className="absolute inset-0 bg-background/75" />
       </div>
 
       {/* Content */}
@@ -94,7 +94,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
             <ChevronDown className="h-6 w-6" />
           </button>
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Now Playing</p>
+            <p className="text-[10px] uppercase tracking-widest text-primary font-bold">Now Playing</p>
             {queue.length > 1 && (
               <p className="text-[10px] text-muted-foreground">{queueIndex + 1} of {queue.length}</p>
             )}
@@ -106,12 +106,12 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
 
         {/* Cover art */}
         <div className="flex-1 flex items-center justify-center py-4">
-          <div className="w-full max-w-[320px] aspect-square rounded-2xl overflow-hidden shadow-2xl">
+          <div className="w-full max-w-[320px] aspect-square rounded-2xl overflow-hidden shadow-2xl ring-1 ring-primary/20 glow-gold">
             {currentTrack.coverUrl ? (
               <img src={currentTrack.coverUrl} alt={currentTrack.title} className="h-full w-full object-cover" />
             ) : (
-              <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <Music className="h-20 w-20 text-primary-foreground/60" />
+              <div className="h-full w-full bg-gradient-to-br from-accent to-primary flex items-center justify-center">
+                <Music className="h-20 w-20 text-secondary-foreground/60" />
               </div>
             )}
           </div>
@@ -126,12 +126,12 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
         {/* Progress */}
         <div className="mb-6">
           <div
-            className="h-1.5 rounded-full bg-muted/60 cursor-pointer group"
+            className="h-1.5 rounded-full bg-muted/40 cursor-pointer group"
             onClick={handleSeek}
             onTouchEnd={handleTouchSeek}
           >
-            <div className="h-full rounded-full bg-primary relative transition-[width] duration-100" style={{ width: `${progress}%` }}>
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary shadow-lg" />
+            <div className="h-full rounded-full bg-gradient-gold relative transition-[width] duration-100" style={{ width: `${progress}%` }}>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50" />
             </div>
           </div>
           <div className="flex justify-between mt-2">
@@ -147,7 +147,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
           </button>
           <button
             onClick={togglePlay}
-            className="h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+            className="h-16 w-16 rounded-full bg-gradient-gold text-primary-foreground flex items-center justify-center shadow-xl shadow-primary/40 active:scale-95 transition-transform"
           >
             {isPlaying ? <Pause className="h-7 w-7" /> : <Play className="h-7 w-7 ml-1" fill="currentColor" />}
           </button>

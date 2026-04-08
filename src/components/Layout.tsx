@@ -42,7 +42,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <TopBar />
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden">
+        <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden border-r border-border bg-card/30">
           <div className="flex-1 overflow-y-auto py-3 px-2">
             {sidebarLinks.map((group, gi) => (
               <div key={gi} className={group.section ? "mt-6" : ""}>
@@ -61,7 +61,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                         `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                           isActive
                             ? "bg-primary/10 text-primary font-semibold"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                         }`
                       }
                     >
@@ -78,7 +78,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <div className="p-3 border-t border-border">
             <Link
               to="/upload"
-              className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-lg px-4 py-2.5 transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-gradient-gold hover:opacity-90 text-primary-foreground font-bold text-sm rounded-xl px-4 py-2.5 transition-all shadow-lg shadow-primary/20 hover:shadow-primary/30"
             >
               <Upload className="h-4 w-4" />
               Upload Music
@@ -92,8 +92,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <footer className="border-t border-border py-4 px-4 mt-8">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
               <span>© {new Date().getFullYear()} SudaGospel</span>
-              <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-              <Link to="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</Link>
+              <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
             </div>
           </footer>
         </main>
