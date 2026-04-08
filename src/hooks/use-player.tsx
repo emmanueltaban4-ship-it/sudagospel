@@ -15,6 +15,7 @@ interface PlayerContextType {
   currentTime: number;
   volume: number;
   queue: Track[];
+  recentlyPlayed: Track[];
   play: (track: Track, queue?: Track[]) => void;
   togglePlay: () => void;
   seek: (time: number) => void;
