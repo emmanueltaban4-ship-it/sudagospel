@@ -151,7 +151,7 @@
     touch-action: manipulation;
   }
 
-  /* Micro-interaction utilities */
+  /* ═══ Premium card hover ═══ */
   .card-hover {
     @apply transition-all duration-300 ease-out;
   }
@@ -165,6 +165,7 @@
     transition-duration: 100ms;
   }
 
+  /* ═══ Icon button micro-interaction ═══ */
   .icon-btn-pop {
     @apply transition-all duration-200;
   }
@@ -180,7 +181,7 @@
     text-shadow: 0 0 12px hsl(var(--primary) / 0.4);
   }
 
-  /* Spotify-style hover overlay */
+  /* ═══ Spotify-style hover overlay ═══ */
   .play-overlay {
     @apply absolute inset-0 flex items-center justify-center;
     @apply bg-black/40 opacity-0 transition-all duration-300;
@@ -189,7 +190,7 @@
     @apply opacity-100;
   }
 
-  /* Audiomack-style card surface */
+  /* ═══ Premium surface card ═══ */
   .surface-card {
     @apply bg-card/60 backdrop-blur-sm border border-border/30;
     @apply rounded-2xl overflow-hidden transition-all duration-300;
@@ -198,9 +199,58 @@
     @apply border-primary/20 bg-card/80;
     box-shadow: 0 8px 32px -12px hsl(var(--primary) / 0.12);
   }
+
+  /* ═══ Skeleton shimmer animation ═══ */
+  .skeleton-shimmer {
+    @apply relative overflow-hidden;
+    background: hsl(var(--muted));
+  }
+  .skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--muted-foreground) / 0.06) 40%,
+      hsl(var(--muted-foreground) / 0.12) 50%,
+      hsl(var(--muted-foreground) / 0.06) 60%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ═══ Equalizer bars ═══ */
+  @keyframes eq-bar {
+    0%, 100% { height: 4px; }
+    50% { height: 14px; }
+  }
+  .animate-eq-bar {
+    animation: eq-bar 0.6s ease-in-out infinite;
+  }
+
+  /* ═══ Smooth section reveals ═══ */
+  .section-reveal {
+    animation: section-fade-up 0.5s ease-out both;
+  }
+  @keyframes section-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
-/* Global mobile smoothness */
+/* ═══ Global mobile smoothness ═══ */
 @media (max-width: 768px) {
   * {
     -webkit-tap-highlight-color: transparent;
