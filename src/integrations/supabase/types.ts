@@ -844,6 +844,11 @@ export type Database = {
       }
       increment_ad_click: { Args: { ad_id: string }; Returns: undefined }
       increment_ad_impression: { Args: { ad_id: string }; Returns: undefined }
+      increment_download_count: {
+        Args: { song_uuid: string }
+        Returns: undefined
+      }
+      increment_play_count: { Args: { song_uuid: string }; Returns: undefined }
       move_to_dlq: {
         Args: {
           dlq_name: string
