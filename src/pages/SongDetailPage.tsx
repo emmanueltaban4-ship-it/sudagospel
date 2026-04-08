@@ -21,6 +21,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
+import ShareDialog from "@/components/ShareDialog";
 
 const SongDetailPage = () => {
   const { id } = useParams<{ id: string }>();
