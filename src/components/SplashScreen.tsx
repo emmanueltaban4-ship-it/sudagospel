@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Music } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -24,13 +24,8 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       }}
     >
       <div className="flex flex-col items-center gap-4 animate-slide-up">
-        <div className="h-24 w-24 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-2xl">
-          <Music className="h-12 w-12 text-white" />
-        </div>
-        <h1 className="font-heading text-3xl font-extrabold text-white tracking-tight">
-          SudaGospel
-        </h1>
-        <p className="text-white/70 text-sm font-medium">South Sudan's Gospel Music</p>
+        <img src={logoImg} alt="Sudagospel" className="h-20 object-contain drop-shadow-2xl" />
+        <p className="text-white/70 text-sm font-medium">Home of Gospel Music</p>
       </div>
 
       <div className="absolute bottom-12 flex flex-col items-center gap-3">

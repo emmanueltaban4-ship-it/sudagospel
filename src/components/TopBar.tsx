@@ -1,4 +1,5 @@
 import { Search, Crown } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
@@ -18,13 +19,8 @@ const TopBar = () => {
       <header className="sticky top-0 z-50 h-14 border-b border-border/30 bg-background/80 backdrop-blur-2xl">
         <div className="flex h-full items-center justify-between gap-3 px-3 lg:px-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group active:scale-95 transition-transform">
-            <div className="h-9 w-9 rounded-xl bg-gradient-gold flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-shadow">
-              <span className="text-primary-foreground font-heading font-black text-sm">SG</span>
-            </div>
-            <span className="font-heading text-lg font-extrabold text-foreground hidden sm:block tracking-tight">
-              {siteName}
-            </span>
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0 group active:scale-95 transition-transform">
+            <img src={logoImg} alt="Sudagospel" className="h-9 object-contain" />
           </Link>
 
           {/* Center search — desktop */}
