@@ -39,7 +39,16 @@ const DownloadsPage = lazy(() => import("./pages/DownloadsPage.tsx"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen bg-background">
