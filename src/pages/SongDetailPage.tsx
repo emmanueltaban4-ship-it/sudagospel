@@ -245,6 +245,21 @@ const SongDetailPage = () => {
           </div>
         </div>
 
+        {/* Countdown Timer for scheduled songs */}
+        {(song as any).release_status === "scheduled" && (song as any).scheduled_release_at && (
+          <div className="px-4 lg:px-8 max-w-4xl mx-auto py-6">
+            <div className="rounded-xl bg-card border border-primary/20 p-6 text-center">
+              <p className="text-sm font-bold text-foreground mb-4">Releasing in</p>
+              <div className="flex justify-center">
+                <CountdownTimer targetDate={(song as any).scheduled_release_at} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                This song will be available on {new Date((song as any).scheduled_release_at).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* === CONTROLS BAR === */}
         <div className="px-4 lg:px-8 max-w-4xl mx-auto">
           <div className="flex items-center gap-4 py-5">
