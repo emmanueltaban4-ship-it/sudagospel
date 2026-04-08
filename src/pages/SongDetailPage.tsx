@@ -275,9 +275,13 @@ const SongDetailPage = () => {
             <Button variant="ghost" size="icon" onClick={handleDownload} className="text-muted-foreground hover:text-foreground rounded-full">
               <Download className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleShare} className="text-muted-foreground hover:text-foreground rounded-full">
-              <Share2 className="h-5 w-5" />
-            </Button>
+            <ShareDialog
+              title={song.title}
+              artist={artistName}
+              coverUrl={song.cover_url || undefined}
+              shareUrl={ogShareUrl}
+              type="song"
+            />
           </div>
 
           {/* Progress bar */}
