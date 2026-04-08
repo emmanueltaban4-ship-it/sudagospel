@@ -738,8 +738,9 @@ const SongCard = ({ song, onPlay, currentTrack, isPlaying, rank, showRank }: any
       <Link to={`/song/${song.id}`} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
         {song.title}
       </Link>
-      <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block mt-0.5">
+      <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate mt-0.5 flex items-center gap-1">
         {artistName}
+        {artist?.is_verified && <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />}
       </Link>
     </div>
   );
