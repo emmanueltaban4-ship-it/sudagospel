@@ -31,6 +31,7 @@ const PlayerContext = createContext<PlayerContextType>({
   currentTime: 0,
   volume: 1,
   queue: [],
+  recentlyPlayed: [],
   play: () => {},
   togglePlay: () => {},
   seek: () => {},
