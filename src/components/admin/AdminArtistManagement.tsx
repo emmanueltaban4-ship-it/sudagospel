@@ -99,7 +99,7 @@ const AdminArtistManagement = () => {
 
   const generateEmail = (name: string) => {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.+|\.+$/g, "");
-    return `${slug}@sudagospel.net`;
+    return `${slug}@sudagospel.com`;
   };
 
   const copyToClipboard = (text: string) => {

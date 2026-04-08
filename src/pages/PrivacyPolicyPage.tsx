@@ -82,7 +82,7 @@ const PrivacyPolicyPage = () => {
 
           <div>
             <h2 className="text-xl font-semibold text-foreground mb-2">10. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@sudagospel.net" className="text-primary hover:underline">support@sudagospel.net</a>.</p>
+            <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@sudagospel.com" className="text-primary hover:underline">support@sudagospel.com</a>.</p>
           </div>
         </section>
       </div>

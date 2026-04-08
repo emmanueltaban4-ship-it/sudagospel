@@ -89,7 +89,7 @@ const ArtistDetailPage = () => {
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
   const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
-  const canonicalUrl = artist ? `https://sudagospel.lovable.app/artist/${artistSlug(artist.name)}` : undefined;
+  const canonicalUrl = artist ? `https://sudagospel.com/artist/${artistSlug(artist.name)}` : undefined;
   const songCount = songs?.length || 0;
   const seoDescription = artist?.bio
     ? `${artist.bio.slice(0, 140)}${artist.bio.length > 140 ? "…" : ""}`

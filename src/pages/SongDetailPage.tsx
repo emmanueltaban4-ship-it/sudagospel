@@ -75,7 +75,7 @@ const SongDetailPage = () => {
     : song
       ? `Listen to ${song.title} by ${artistName}. Stream and download free South Sudanese gospel music on Sudagospel.`
       : undefined;
-  const songCanonicalUrl = song ? `https://sudagospel-vibes.lovable.app/song/${song.id}` : undefined;
+  const songCanonicalUrl = song ? `https://sudagospel.com/song/${song.id}` : undefined;
 
   useDocumentMeta({
     title: song ? `${song.title} by ${artistName}` : undefined,
