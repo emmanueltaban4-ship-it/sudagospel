@@ -116,7 +116,7 @@ const ArtistDetailPage = () => {
     play(shuffled[0], shuffled);
     toast.success("Shuffling songs");
   };
-  const artistShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=artist&id=${artist?.id}`;
+  const artistShareUrl = `${window.location.origin}/artist/${artist?.id}`;
 
   const formatTime = (s: number | null) => {
     if (!s) return "--:--";

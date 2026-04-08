@@ -77,7 +77,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     downloadFile(currentTrack.fileUrl, `${currentTrack.title} - ${currentTrack.artist}.mp3`);
   };
 
-  const shareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${currentTrack.id}`;
+  const shareUrl = `${window.location.origin}/song/${currentTrack.id}`;
 
   return (
     <AnimatePresence>
