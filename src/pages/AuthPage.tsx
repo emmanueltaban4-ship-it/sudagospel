@@ -355,6 +355,27 @@ const AuthPage = () => {
 };
 
 
+const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!target) return;
+    const duration = 1500;
+    const steps = 40;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <>{count}{suffix}</>;
+};
 const testimonials = [
   { name: "Gospel Minister", quote: "Sudagospel changed how I share my music with South Sudan." },
   { name: "Worship Leader", quote: "Finally a platform that understands gospel music in our community." },
@@ -419,11 +440,15 @@ const RightPanel = () => {
         <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-5 shadow-2xl">
           <div className="grid grid-cols-2 gap-6 text-center">
             <div>
-              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.artists}+` : "..."}</p>
+              <p className="text-2xl font-heading font-extrabold text-white">
+                {stats ? <AnimatedCounter target={stats.artists} suffix="+" /> : "..."}
+              </p>
               <p className="text-[10px] text-white/50 uppercase tracking-wider">Artists</p>
             </div>
             <div>
-              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.songs}+` : "..."}</p>
+              <p className="text-2xl font-heading font-extrabold text-white">
+                {stats ? <AnimatedCounter target={stats.songs} suffix="+" /> : "..."}
+              </p>
               <p className="text-[10px] text-white/50 uppercase tracking-wider">Songs</p>
             </div>
           </div>
