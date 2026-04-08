@@ -28,6 +28,12 @@ const UploadPage = () => {
   const [musicFile, setMusicFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
+  // Inline album creation
+  const [showNewAlbum, setShowNewAlbum] = useState(false);
+  const [newAlbumTitle, setNewAlbumTitle] = useState("");
+  const [newAlbumType, setNewAlbumType] = useState("album");
+  const [newAlbumCover, setNewAlbumCover] = useState<File | null>(null);
+
   // New artist fields
   const [showNewArtist, setShowNewArtist] = useState(false);
   const [newArtistName, setNewArtistName] = useState("");
