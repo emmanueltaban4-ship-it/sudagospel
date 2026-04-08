@@ -139,6 +139,7 @@ const AdminPage = () => {
         {activeTab === "moderation" && <AdminModeration />}
         {activeTab === "reports" && <AdminReports />}
         {activeTab === "featured" && <AdminFeaturedContent />}
+        {activeTab === "verification" && <AdminVerificationRequests />}
         {activeTab === "emails" && <AdminEmailLogs />}
       </div>
     </Layout>
