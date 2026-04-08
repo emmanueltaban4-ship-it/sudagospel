@@ -443,6 +443,58 @@ const Index = () => {
         </section>
       )}
 
+      {/* ═══ VERIFIED GOSPEL MINISTERS ═══ */}
+      {verifiedArtists && verifiedArtists.length > 0 && (
+        <section className="py-8">
+          <div className="px-4 lg:px-6 mb-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-blue-500 to-primary flex items-center justify-center shadow-lg shadow-blue-500/20">
+                  <CheckCircle className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="font-heading text-xl md:text-2xl font-black text-foreground tracking-tight">
+                    Verified Gospel Ministers
+                  </h2>
+                  <p className="text-xs text-muted-foreground">Authenticated and trusted artists on Sudagospel</p>
+                </div>
+              </div>
+              <Link to="/artists" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                View all <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+          <div className="px-4 lg:px-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {verifiedArtists.map((artist) => (
+                <Link key={artist.id} to={artistPath(artist.name)} className="group">
+                  <div className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                    <div className="relative">
+                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden ring-2 ring-blue-500/30 group-hover:ring-blue-500/60 transition-all duration-300 shadow-lg">
+                        {artist.avatar_url ? (
+                          <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-blue-500/20 to-primary/20 flex items-center justify-center text-xl font-heading font-bold text-muted-foreground">
+                            {artist.name[0]}
+                          </div>
+                        )}
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center ring-2 ring-background shadow-md">
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      </div>
+                    </div>
+                    <div className="text-center w-full">
+                      <p className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">{artist.name}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{artist.genre || "Gospel"}</p>
+                      <p className="text-[10px] text-muted-foreground/60">{(artist.songs as any)?.[0]?.count || 0} songs</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
       {/* Albums */}
       {albums && albums.length > 0 && (
         <section className="py-6">
