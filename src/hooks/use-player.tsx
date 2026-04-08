@@ -56,7 +56,7 @@ const PlayerContext = createContext<PlayerContextType>({
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const getPlayableUrl = (url: string) =>
-  url.includes("sudagospel.net/get-track.php")
+  url.includes("sudagospel.com/get-track.php") || url.includes("sudagospel.net/get-track.php")
     ? `${SUPABASE_URL}/functions/v1/download-proxy?url=${encodeURIComponent(url)}`
     : url;
 

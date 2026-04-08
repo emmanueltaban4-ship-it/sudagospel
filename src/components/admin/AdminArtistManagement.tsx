@@ -99,7 +99,7 @@ const AdminArtistManagement = () => {
 
   const generateEmail = (name: string) => {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.+|\.+$/g, "");
-    return `${slug}@sudagospel.net`;
+    return `${slug}@sudagospel.com`;
   };
 
   const copyToClipboard = (text: string) => {
@@ -359,7 +359,7 @@ const AdminArtistManagement = () => {
                 <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="pl-10" placeholder="artist@sudagospel.net" />
+                  <Input value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="pl-10" placeholder="artist@sudagospel.com" />
                 </div>
               </div>
               <div>
@@ -418,7 +418,7 @@ const AdminArtistManagement = () => {
               <div className="rounded-lg bg-muted p-4 text-sm text-muted-foreground space-y-2">
                 <p>This will create accounts for <strong className="text-foreground">{unlinkedCount} artists</strong>:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Email format: <code>artist.name@sudagospel.net</code></li>
+                  <li>Email format: <code>artist.name@sudagospel.com</code></li>
                   <li>Random 12-character passwords</li>
                   <li>You can download credentials as CSV after</li>
                 </ul>

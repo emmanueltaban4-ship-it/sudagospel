@@ -104,7 +104,7 @@ const ShareDialog = ({ title, artist, coverUrl, shareUrl, type = "song", trigger
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground truncate">{title}</p>
             {artist && <p className="text-xs text-muted-foreground truncate">{artist}</p>}
-            <p className="text-[10px] text-muted-foreground/60 mt-0.5 truncate">sudagospel.lovable.app</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5 truncate">sudagospel.com</p>
           </div>
         </div>
 
