@@ -46,6 +46,7 @@ const LibraryPage = () => {
   const tabs: { key: TabKey; label: string; icon: any; count: number }[] = [
     { key: "playlists", label: "Playlists", icon: ListMusic, count: playlists?.length || 0 },
     { key: "liked", label: "Liked", icon: Heart, count: likedSongs?.length || 0 },
+    { key: "recent", label: "Recent", icon: Clock, count: recentlyPlayed.length },
     { key: "downloads", label: "Downloads", icon: Download, count: downloads.length },
   ];
 
