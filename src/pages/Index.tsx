@@ -451,8 +451,8 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
             <Music className="h-8 w-8 text-muted-foreground" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
-          <div className="w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/30">
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <div className="w-11 h-11 rounded-full bg-gradient-gold flex items-center justify-center shadow-xl shadow-primary/30">
             {isCurrent && isPlaying ? (
               <Pause className="h-4 w-4 text-primary-foreground" />
             ) : (
