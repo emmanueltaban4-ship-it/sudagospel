@@ -6,6 +6,7 @@ import {
   ChevronDown, Music, ListMusic
 } from "lucide-react";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/download";
 
 interface FullScreenPlayerProps {
   isOpen: boolean;
