@@ -117,7 +117,7 @@ const HeroSection = () => {
               )}
               <Link
                 to="/upload"
-                className="inline-flex items-center gap-1.5 border border-border/60 bg-card/50 backdrop-blur-sm text-foreground hover:bg-muted/50 font-semibold text-sm rounded-full px-6 py-3.5 transition-all"
+                className="inline-flex items-center gap-1.5 border border-white/20 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-semibold text-sm rounded-full px-6 py-3.5 transition-all"
               >
                 Upload Music <ChevronRight className="h-4 w-4" />
               </Link>
