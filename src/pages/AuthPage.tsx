@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useNavigate, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, Headphones, Music2 } from "lucide-react";
+import { Mail, Phone, ArrowLeft, Eye, EyeOff, User, Mic2, Headphones, Music2, BadgeCheck, Play, Upload } from "lucide-react";
 import logo from "@/assets/logo.png";
 import heroImg from "@/assets/auth-hero.jpg";
 
@@ -347,46 +348,170 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Right panel — hero image (hidden on mobile) */}
-      <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Feel the music"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/30" />
+      {/* Right panel — hero image with social proof (hidden on mobile) */}
+      <RightPanel />
+    </div>
+  );
+};
 
-        {/* Floating text on image */}
-        <div className="absolute bottom-12 left-10 right-10 z-10">
-          <div className="flex items-center gap-2 mb-3">
-            <Music2 className="h-5 w-5 text-primary" />
-            <span className="text-xs font-bold uppercase tracking-widest text-primary">Now Streaming</span>
-          </div>
-          <h2 className="font-heading text-2xl xl:text-3xl font-extrabold text-white leading-tight">
-            South Sudan's #1<br />Gospel Music Platform
-          </h2>
-          <p className="text-sm text-white/60 mt-2 max-w-xs">
-            10,000+ songs from gospel ministers across the nation
-          </p>
-        </div>
 
-        {/* Stats floating card */}
-        <div className="absolute top-10 right-10 z-10">
-          <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-4 shadow-2xl">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <p className="text-xl font-heading font-extrabold text-white">1K+</p>
-                <p className="text-[10px] text-white/50 uppercase tracking-wider">Artists</p>
-              </div>
-              <div>
-                <p className="text-xl font-heading font-extrabold text-white">10K+</p>
-                <p className="text-[10px] text-white/50 uppercase tracking-wider">Songs</p>
-              </div>
+const testimonials = [
+  { name: "Gospel Minister", quote: "Sudagospel changed how I share my music with South Sudan." },
+  { name: "Worship Leader", quote: "Finally a platform that understands gospel music in our community." },
+  { name: "Church Choir", quote: "Our songs reached thousands of listeners we never knew existed." },
+];
+
+const RightPanel = () => {
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+
+  const { data: verifiedArtists } = useQuery({
+    queryKey: ["auth-verified-artists"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("artists")
+        .select("name, avatar_url")
+        .eq("is_verified", true)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      return data ?? [];
+    },
+  });
+
+  const { data: recentSongs } = useQuery({
+    queryKey: ["auth-recent-songs"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("songs")
+        .select("title, cover_url, artists(name)")
+        .eq("is_approved", true)
+        .order("created_at", { ascending: false })
+        .limit(4);
+      return data ?? [];
+    },
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["auth-stats"],
+    queryFn: async () => {
+      const [artists, songs] = await Promise.all([
+        supabase.from("artists").select("*", { count: "exact", head: true }),
+        supabase.from("songs").select("*", { count: "exact", head: true }).eq("is_approved", true),
+      ]);
+      return { artists: artists.count ?? 0, songs: songs.count ?? 0 };
+    },
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTestimonialIdx((i) => (i + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative overflow-hidden">
+      <img src={heroImg} alt="Feel the music" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-background/40" />
+
+      {/* Stats floating card */}
+      <div className="absolute top-8 right-8 z-10">
+        <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-5 shadow-2xl">
+          <div className="grid grid-cols-2 gap-6 text-center">
+            <div>
+              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.artists}+` : "..."}</p>
+              <p className="text-[10px] text-white/50 uppercase tracking-wider">Artists</p>
+            </div>
+            <div>
+              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.songs}+` : "..."}</p>
+              <p className="text-[10px] text-white/50 uppercase tracking-wider">Songs</p>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Verified artists avatars */}
+      {verifiedArtists && verifiedArtists.length > 0 && (
+        <div className="absolute top-8 left-8 z-10">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-3">
+              <BadgeCheck className="h-4 w-4 text-blue-400" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Verified Artists</span>
+            </div>
+            <div className="flex -space-x-2">
+              {verifiedArtists.map((artist, i) => (
+                <div key={i} className="h-9 w-9 rounded-full border-2 border-white/20 overflow-hidden bg-white/10">
+                  {artist.avatar_url ? (
+                    <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-white/60 text-xs font-bold">
+                      {artist.name?.[0]}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-white/50 mt-2">
+              {verifiedArtists.map(a => a.name).slice(0, 3).join(", ")}
+              {verifiedArtists.length > 3 && ` +${verifiedArtists.length - 3} more`}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Recent uploads */}
+      {recentSongs && recentSongs.length > 0 && (
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-10 w-56">
+          <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-4 shadow-2xl">
+            <div className="flex items-center gap-2 mb-3">
+              <Upload className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Recently Added</span>
+            </div>
+            <div className="space-y-2.5">
+              {recentSongs.map((song, i) => (
+                <div key={i} className="flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
+                    {song.cover_url ? (
+                      <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center">
+                        <Play className="h-3 w-3 text-white/40" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-white truncate">{song.title}</p>
+                    <p className="text-[10px] text-white/50 truncate">{(song as any).artists?.name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom section — testimonial + heading */}
+      <div className="absolute bottom-10 left-8 right-8 z-10">
+        {/* Rotating testimonial */}
+        <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-4 mb-5 shadow-2xl max-w-sm transition-all duration-500">
+          <p className="text-sm text-white/80 italic leading-relaxed">
+            "{testimonials[testimonialIdx].quote}"
+          </p>
+          <p className="text-[11px] text-white/50 mt-2 font-semibold">— {testimonials[testimonialIdx].name}</p>
+          <div className="flex gap-1 mt-3">
+            {testimonials.map((_, i) => (
+              <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === testimonialIdx ? "w-5 bg-primary" : "w-1.5 bg-white/20"}`} />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mb-2">
+          <Music2 className="h-5 w-5 text-primary" />
+          <span className="text-xs font-bold uppercase tracking-widest text-primary">Now Streaming</span>
+        </div>
+        <h2 className="font-heading text-2xl xl:text-3xl font-extrabold text-white leading-tight">
+          South Sudan's #1<br />Gospel Music Platform
+        </h2>
       </div>
     </div>
   );
