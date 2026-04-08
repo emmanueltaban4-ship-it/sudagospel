@@ -38,6 +38,7 @@ const tabs = [
   { id: "moderation", label: "Moderation", icon: MessageCircle },
   { id: "reports", label: "Reports", icon: Flag },
   { id: "featured", label: "Featured", icon: Star },
+  { id: "verification", label: "Verification", icon: BadgeCheck },
   { id: "emails", label: "Emails", icon: Mail },
 ] as const;
 
