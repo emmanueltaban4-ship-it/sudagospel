@@ -441,7 +441,7 @@ const SongTile = ({ song, onPlay, currentTrack, isPlaying }: any) => {
   return (
     <div className="flex-shrink-0 w-36 md:w-44 group cursor-pointer">
       <div
-        className="relative aspect-square rounded-lg overflow-hidden mb-2.5 bg-muted shadow-sm"
+        className="relative aspect-square rounded-xl overflow-hidden mb-2.5 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all"
         onClick={() => onPlay(song)}
       >
         {song.cover_url ? (
