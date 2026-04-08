@@ -86,7 +86,7 @@ const HeroSection = () => {
               </span>
             </div>
 
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-4 tracking-tight leading-[1.05]">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight leading-[1.05]">
               {currentSlide.headline[0]}
               <br />
               {currentSlide.headline[1]}
