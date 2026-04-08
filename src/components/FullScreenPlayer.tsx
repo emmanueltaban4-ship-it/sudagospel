@@ -2,7 +2,7 @@ import { usePlayer, Track } from "@/hooks/use-player";
 import { useLikeSong } from "@/hooks/use-engagement";
 import { addDownload } from "@/pages/DownloadsPage";
 import {
-  Play, Pause, SkipForward, SkipBack, Heart, Download,
+  Play, Pause, SkipForward, SkipBack, Heart, Download, Share2,
   ChevronDown, Music, ListMusic, Shuffle, Repeat, Repeat1,
   Volume, Volume1, Volume2, VolumeX, X, Trash2
 } from "lucide-react";
