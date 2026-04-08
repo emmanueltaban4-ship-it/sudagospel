@@ -77,7 +77,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     downloadFile(currentTrack.fileUrl, `${currentTrack.title} - ${currentTrack.artist}.mp3`);
   };
 
-  const shareUrl = `${window.location.origin}/song/${currentTrack.id}`;
+  const shareUrl = `https://sudagospel.com/song/${currentTrack.id}`;
 
   return (
     <AnimatePresence>

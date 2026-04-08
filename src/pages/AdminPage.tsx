@@ -18,7 +18,8 @@ import AdminAlbumManagement from "@/components/admin/AdminAlbumManagement";
 import AdminReports from "@/components/admin/AdminReports";
 import AdminFeaturedContent from "@/components/admin/AdminFeaturedContent";
 import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail } from "lucide-react";
+import AdminVideoManagement from "@/components/admin/AdminVideoManagement";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -26,6 +27,7 @@ const tabs = [
   { id: "monetization", label: "Monetization", icon: DollarSign },
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
+  { id: "videos", label: "Videos", icon: Video },
   { id: "artists", label: "Artists", icon: Mic2 },
   { id: "albums", label: "Albums", icon: Disc3 },
   { id: "genres", label: "Genres", icon: Tag },
@@ -126,6 +128,7 @@ const AdminPage = () => {
         {activeTab === "ads" && <AdminAds />}
         {activeTab === "songs" && <AdminSongManagement />}
         {activeTab === "artists" && <AdminArtistManagement />}
+        {activeTab === "videos" && <AdminVideoManagement />}
         {activeTab === "albums" && <AdminAlbumManagement />}
         {activeTab === "genres" && <AdminGenreManagement />}
         {activeTab === "articles" && <AdminArticles />}
