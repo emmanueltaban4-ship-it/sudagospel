@@ -2,12 +2,13 @@ import { usePlayer, Track } from "@/hooks/use-player";
 import { useLikeSong } from "@/hooks/use-engagement";
 import { addDownload } from "@/pages/DownloadsPage";
 import {
-  Play, Pause, SkipForward, SkipBack, Heart, Download, Share2,
+  Play, Pause, SkipForward, SkipBack, Heart, Download,
   ChevronDown, Music, ListMusic, Shuffle, Repeat, Repeat1,
   Volume, Volume1, Volume2, VolumeX, X, Trash2
 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
+import ShareDialog from "@/components/ShareDialog";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
