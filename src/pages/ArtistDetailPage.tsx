@@ -57,6 +57,20 @@ const ArtistDetailPage = () => {
     enabled: !!artistId,
   });
 
+  const { data: albums } = useQuery({
+    queryKey: ["artist-albums", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("*")
+        .eq("artist_id", artistId!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!artistId,
+  });
+
   const sortedSongs = useMemo(() => {
     if (!songs) return [];
     const copy = [...songs];
