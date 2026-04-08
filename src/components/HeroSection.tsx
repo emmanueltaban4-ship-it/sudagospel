@@ -136,7 +136,7 @@ const HeroSection = () => {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-foreground truncate max-w-[200px]">
+                  <p className="text-xs font-bold text-white truncate max-w-[200px]">
                     {isCurrent && (
                       <span className="inline-flex gap-[2px] mr-1.5 align-middle">
                         <span className="w-[2px] h-2 bg-primary rounded-full inline-block animate-eq-bar" />
