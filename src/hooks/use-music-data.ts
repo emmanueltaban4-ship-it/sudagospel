@@ -7,7 +7,7 @@ export const useSongs = (approvedOnly = true) => {
     queryFn: async () => {
       let query = supabase
         .from("songs")
-        .select("*, artists(name, avatar_url)")
+        .select("*, artists(name, avatar_url, is_verified)")
         .order("created_at", { ascending: false });
 
       if (approvedOnly) {
