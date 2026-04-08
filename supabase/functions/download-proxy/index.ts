@@ -6,6 +6,29 @@ const corsHeaders = {
 
 const SUDAGOSPEL_ORIGIN = 'https://sudagospel.net'
 
+// In-memory URL resolution cache (TTL: 30 minutes)
+const urlCache = new Map<string, { url: string; expiry: number }>()
+const CACHE_TTL = 30 * 60 * 1000
+
+const getCachedUrl = (key: string): string | null => {
+  const entry = urlCache.get(key)
+  if (!entry) return null
+  if (Date.now() > entry.expiry) {
+    urlCache.delete(key)
+    return null
+  }
+  return entry.url
+}
+
+const setCachedUrl = (key: string, url: string) => {
+  // Evict oldest entries if cache grows too large
+  if (urlCache.size > 500) {
+    const oldest = urlCache.keys().next().value
+    if (oldest) urlCache.delete(oldest)
+  }
+  urlCache.set(key, { url, expiry: Date.now() + CACHE_TTL })
+}
+
 const resolveSudagospelTrackUrl = async (rawUrl: string) => {
   const parsedUrl = new URL(rawUrl)
 
@@ -14,9 +37,11 @@ const resolveSudagospelTrackUrl = async (rawUrl: string) => {
   }
 
   const trackId = parsedUrl.searchParams.get('id')
-  if (!trackId) {
-    throw new Error('Missing track id')
-  }
+  if (!trackId) throw new Error('Missing track id')
+
+  // Check cache first
+  const cached = getCachedUrl(trackId)
+  if (cached) return cached
 
   const trackPageResponse = await fetch(`${SUDAGOSPEL_ORIGIN}/track/${trackId}`, {
     headers: {
@@ -32,11 +57,13 @@ const resolveSudagospelTrackUrl = async (rawUrl: string) => {
   const html = await trackPageResponse.text()
   const contentUrlMatch = html.match(/"contentUrl"\s*:\s*"([^"]+\.mp3[^"]*)"/i)
   if (contentUrlMatch?.[1]) {
+    setCachedUrl(trackId, contentUrlMatch[1])
     return contentUrlMatch[1]
   }
 
   const uploadMatch = html.match(/https:\/\/sudagospel\.net\/upload\/audio\/[^\s"'<>]+\.mp3[^\s"'<>]*/i)
   if (uploadMatch?.[0]) {
+    setCachedUrl(trackId, uploadMatch[0])
     return uploadMatch[0]
   }
 
@@ -79,9 +106,11 @@ Deno.serve(async (req) => {
     }
 
     const headers = new Headers(corsHeaders)
-    headers.set('Content-Type', response.headers.get('content-type') || 'application/octet-stream')
+    headers.set('Content-Type', response.headers.get('content-type') || 'audio/mpeg')
+    headers.set('Accept-Ranges', 'bytes')
+    headers.set('Cache-Control', 'public, max-age=86400, immutable')
 
-    const passthroughHeaders = ['content-length', 'content-range', 'accept-ranges']
+    const passthroughHeaders = ['content-length', 'content-range']
     for (const header of passthroughHeaders) {
       const value = response.headers.get(header)
       if (value) headers.set(header, value)
