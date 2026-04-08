@@ -84,6 +84,12 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const play = useCallback((track: Track, newQueue?: Track[]) => {
     if (newQueue) setQueue(newQueue);
     setCurrentTrack(track);
+    setRecentlyPlayed(prev => {
+      const filtered = prev.filter(t => t.id !== track.id);
+      const updated = [track, ...filtered].slice(0, 30);
+      localStorage.setItem("sudagospel_recently_played", JSON.stringify(updated));
+      return updated;
+    });
     if (audioRef.current) {
       audioRef.current.src = getPlayableUrl(track.fileUrl);
       audioRef.current.play().catch(() => {
