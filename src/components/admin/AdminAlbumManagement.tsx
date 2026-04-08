@@ -77,9 +77,14 @@ const AdminAlbumManagement = () => {
               {album.cover_url ? <img src={album.cover_url} alt="" className="h-full w-full object-cover" /> : <Disc3 className="h-5 w-5 text-muted-foreground" />}
             </div>
             {editingId === album.id ? (
-              <div className="flex-1 flex items-center gap-2">
+              <div className="flex-1 flex items-center gap-2 flex-wrap">
                 <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className="h-8 text-sm" />
                 <Input value={editGenre} onChange={(e) => setEditGenre(e.target.value)} placeholder="Genre" className="h-8 text-sm max-w-[120px]" />
+                <select value={editAlbumType} onChange={(e) => setEditAlbumType(e.target.value)} className="h-8 text-sm rounded border border-border bg-background px-2">
+                  <option value="album">Album</option>
+                  <option value="ep">EP</option>
+                  <option value="single">Single</option>
+                </select>
                 <button onClick={() => updateAlbum.mutate()} className="text-primary"><Save className="h-4 w-4" /></button>
                 <button onClick={() => setEditingId(null)} className="text-muted-foreground"><X className="h-4 w-4" /></button>
               </div>
