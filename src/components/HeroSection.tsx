@@ -94,7 +94,7 @@ const HeroSection = () => {
               <span className="text-gradient-brand">{currentSlide.headline[2]}</span>
             </h1>
 
-            <p className="text-muted-foreground text-sm md:text-base max-w-md mb-8 leading-relaxed mx-auto md:mx-0">
+            <p className="text-white/60 text-sm md:text-base max-w-md mb-8 leading-relaxed mx-auto md:mx-0">
               Stream thousands of gospel hits, discover new artists, and let worship move your soul — anytime, anywhere.
             </p>
 
