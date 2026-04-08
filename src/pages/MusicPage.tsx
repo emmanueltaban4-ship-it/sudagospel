@@ -28,6 +28,7 @@ const MusicPage = () => {
       title: s.title,
       artist: (s.artists as any)?.name || "Unknown",
       artistId: (s.artists as any)?.id,
+      isVerifiedArtist: (s.artists as any)?.is_verified || false,
       plays: s.play_count || 0,
       coverUrl: s.cover_url || "",
       fileUrl: s.file_url,
