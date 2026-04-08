@@ -272,6 +272,24 @@ const ProfilePage = () => {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const extractYouTubeId = (url: string): string | null => {
+    if (!url) return null;
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+      /^([a-zA-Z0-9_-]{11})$/,
+    ];
+    for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
+    return null;
+  };
+
+  const handleVideoUrlChange = (url: string) => {
+    setVideoUrl(url);
+    const id = extractYouTubeId(url);
+    if (id && (!videoThumbnail || videoThumbnail.includes("img.youtube.com"))) {
+      setVideoThumbnail(`https://img.youtube.com/vi/${id}/hqdefault.jpg`);
+    }
+  };
+
   const resetVideoForm = () => {
     setVideoTitle(""); setVideoUrl(""); setVideoDesc(""); setVideoType("music_video"); setVideoThumbnail(""); setEditingVideoId(null); setShowVideoForm(false);
   };
@@ -629,11 +647,36 @@ const ProfilePage = () => {
                   </div>
 
                   {showVideoForm && (
-                    <div className="p-4 rounded-lg bg-card border border-border space-y-3">
+                    <div className="p-4 rounded-xl bg-card border border-border space-y-3">
                       <Input value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} placeholder="Video title" className="bg-background" />
-                      <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="YouTube or video URL" className="bg-background" />
-                      <Textarea value={videoDesc} onChange={(e) => setVideoDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
-                      <Input value={videoThumbnail} onChange={(e) => setVideoThumbnail(e.target.value)} placeholder="Thumbnail URL (optional)" className="bg-background" />
+                      <div>
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Youtube className="h-3.5 w-3.5 text-red-500" />
+                          <span className="text-xs font-medium text-muted-foreground">YouTube URL</span>
+                        </div>
+                        <Input value={videoUrl} onChange={(e) => handleVideoUrlChange(e.target.value)} placeholder="https://youtube.com/watch?v=... or https://youtu.be/..." className="bg-background" />
+                        {videoUrl && !extractYouTubeId(videoUrl) && (
+                          <p className="text-[11px] text-destructive mt-1">Could not detect a YouTube video from this URL</p>
+                        )}
+                      </div>
+                      {/* YouTube Preview */}
+                      {extractYouTubeId(videoUrl) && (
+                        <div className="rounded-xl overflow-hidden border border-border bg-muted">
+                          <div className="aspect-video">
+                            <iframe
+                              src={`https://www.youtube.com/embed/${extractYouTubeId(videoUrl)}`}
+                              className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title="YouTube Preview"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <Textarea value={videoDesc} onChange={(e) => setVideoDesc(e.target.value)} placeholder="Description (optional)" rows={2} className="bg-background" />
+                      {videoThumbnail && (
+                        <img src={videoThumbnail} alt="Thumbnail" className="h-16 rounded-lg object-cover border border-border" />
+                      )}
                       <Select value={videoType} onValueChange={setVideoType}>
                         <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
                         <SelectContent>
