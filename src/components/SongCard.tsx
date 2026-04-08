@@ -34,7 +34,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
             <button
               onClick={handlePlay}
-              className="rounded-full bg-gradient-gold p-3 text-primary-foreground hover:scale-110 transition-transform shadow-xl shadow-primary/30"
+              className="rounded-full bg-gradient-gold p-3 text-primary-foreground icon-btn-pop shadow-xl shadow-primary/30"
             >
               {isCurrentTrack && isPlaying ? (
                 <Pause className="h-5 w-5" />
