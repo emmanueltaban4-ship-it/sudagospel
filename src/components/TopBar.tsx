@@ -46,6 +46,7 @@ const TopBar = () => {
             >
               <Search className="h-[22px] w-[22px]" />
             </button>
+            <NotificationBell />
             <ThemeToggle />
             <Link
               to="/subscription"
