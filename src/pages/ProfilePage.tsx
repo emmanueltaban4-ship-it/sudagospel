@@ -215,6 +215,36 @@ const ProfilePage = () => {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const resetVideoForm = () => {
+    setVideoTitle(""); setVideoUrl(""); setVideoDesc(""); setVideoType("music_video"); setVideoThumbnail(""); setEditingVideoId(null); setShowVideoForm(false);
+  };
+
+  const saveVideo = useMutation({
+    mutationFn: async () => {
+      if (editingVideoId) {
+        const { error } = await supabase.from("videos").update({ title: videoTitle, video_url: videoUrl, description: videoDesc || null, video_type: videoType, thumbnail_url: videoThumbnail || null }).eq("id", editingVideoId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("videos").insert({ title: videoTitle, video_url: videoUrl, description: videoDesc || null, video_type: videoType, thumbnail_url: videoThumbnail || null, artist_id: myArtist!.id, uploaded_by: user!.id });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-videos"] }); resetVideoForm(); toast.success(editingVideoId ? "Video updated!" : "Video added!"); },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const deleteVideo = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from("videos").delete().eq("id", id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-videos"] }); toast.success("Video deleted"); },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const startEditingVideo = (video: any) => {
+    setEditingVideoId(video.id); setVideoTitle(video.title); setVideoUrl(video.video_url);
+    setVideoDesc(video.description || ""); setVideoType(video.video_type); setVideoThumbnail(video.thumbnail_url || "");
+    setShowVideoForm(true);
+  };
+
   const handleAvatarUpload = async (file: File) => {
     const ext = file.name.split(".").pop();
     const path = `${user!.id}/avatar.${ext}`;
