@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useRef } from "react";
+import { useSubscription, TIERS } from "@/hooks/use-subscription";
 
 interface AdBannerProps {
   position: string;
@@ -20,6 +21,7 @@ interface Ad {
 
 const AdBanner = ({ position, className = "" }: AdBannerProps) => {
   const impressionLogged = useRef(false);
+  const { subscribed } = useSubscription();
 
   const { data: ad } = useQuery({
     queryKey: ["ads", position],
@@ -38,6 +40,7 @@ const AdBanner = ({ position, className = "" }: AdBannerProps) => {
       return data as Ad | null;
     },
     staleTime: 60_000,
+    enabled: !subscribed,
   });
 
   const impressionMutation = useMutation({
@@ -59,6 +62,8 @@ const AdBanner = ({ position, className = "" }: AdBannerProps) => {
     }
   }, [ad?.id]);
 
+  // Hide ads for premium subscribers
+  if (subscribed) return null;
   if (!ad || !ad.image_url) return null;
 
   const handleClick = () => {

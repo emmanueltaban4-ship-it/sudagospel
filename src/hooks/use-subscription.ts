@@ -26,6 +26,9 @@ export const TIERS = {
   },
 } as const;
 
+export const BOOST_PRICE_ID = "price_1TK2XYFQfq7mqNL4ugUIkP5k";
+export const BOOST_PRODUCT_ID = "prod_UIdptNOAR2UoHF";
+
 export const DONATION_PRICE_ID = "price_1TIb63FQfq7mqNL4373KjfGE";
 
 interface SubscriptionState {
