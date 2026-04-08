@@ -77,15 +77,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     downloadFile(currentTrack.fileUrl, `${currentTrack.title} - ${currentTrack.artist}.mp3`);
   };
 
-  const handleShare = async () => {
-    const url = `${window.location.origin}/song/${currentTrack.id}`;
-    if (navigator.share) {
-      await navigator.share({ title: currentTrack.title, text: `Listen to ${currentTrack.title} by ${currentTrack.artist}`, url });
-    } else {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied!");
-    }
-  };
+  const shareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${currentTrack.id}`;
 
   return (
     <AnimatePresence>
