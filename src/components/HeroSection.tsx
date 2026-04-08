@@ -70,9 +70,9 @@ const HeroSection = () => {
 
   return (
     <section className="relative px-4 lg:px-6 pt-4 pb-3">
-      <div className="relative rounded-3xl overflow-hidden min-h-[360px] md:min-h-[440px]">
+      <div className="relative rounded-3xl overflow-hidden min-h-[360px] md:min-h-[440px] bg-[hsl(270,15%,6%)]">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 via-background to-primary/15" />
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 via-[hsl(270,15%,6%)] to-primary/15" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/8 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-secondary/12 rounded-full blur-[100px] animate-pulse [animation-delay:1.5s]" />
 
@@ -86,7 +86,7 @@ const HeroSection = () => {
               </span>
             </div>
 
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-4 tracking-tight leading-[1.05]">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight leading-[1.05]">
               {currentSlide.headline[0]}
               <br />
               {currentSlide.headline[1]}
@@ -94,7 +94,7 @@ const HeroSection = () => {
               <span className="text-gradient-brand">{currentSlide.headline[2]}</span>
             </h1>
 
-            <p className="text-muted-foreground text-sm md:text-base max-w-md mb-8 leading-relaxed mx-auto md:mx-0">
+            <p className="text-white/60 text-sm md:text-base max-w-md mb-8 leading-relaxed mx-auto md:mx-0">
               Stream thousands of gospel hits, discover new artists, and let worship move your soul — anytime, anywhere.
             </p>
 
@@ -117,7 +117,7 @@ const HeroSection = () => {
               )}
               <Link
                 to="/upload"
-                className="inline-flex items-center gap-1.5 border border-border/60 bg-card/50 backdrop-blur-sm text-foreground hover:bg-muted/50 font-semibold text-sm rounded-full px-6 py-3.5 transition-all"
+                className="inline-flex items-center gap-1.5 border border-white/20 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-semibold text-sm rounded-full px-6 py-3.5 transition-all"
               >
                 Upload Music <ChevronRight className="h-4 w-4" />
               </Link>
@@ -136,7 +136,7 @@ const HeroSection = () => {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-foreground truncate max-w-[200px]">
+                  <p className="text-xs font-bold text-white truncate max-w-[200px]">
                     {isCurrent && (
                       <span className="inline-flex gap-[2px] mr-1.5 align-middle">
                         <span className="w-[2px] h-2 bg-primary rounded-full inline-block animate-eq-bar" />
@@ -146,7 +146,7 @@ const HeroSection = () => {
                     )}
                     {activeSong.title}
                   </p>
-                  <Link to={artistPath(artist?.name || '')} className="text-[11px] text-muted-foreground hover:text-primary transition-colors">
+                  <Link to={artistPath(artist?.name || '')} className="text-[11px] text-white/50 hover:text-primary transition-colors">
                     {artist?.name || "Unknown"} • {activeSong.genre || "Gospel"}
                   </Link>
                 </div>
