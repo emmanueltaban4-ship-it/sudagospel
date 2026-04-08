@@ -28,6 +28,7 @@ const sidebarLinks = [
 ];
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <TopBar />
