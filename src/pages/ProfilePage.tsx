@@ -76,6 +76,15 @@ const ProfilePage = () => {
   const [albumDesc, setAlbumDesc] = useState("");
   const [albumGenre, setAlbumGenre] = useState("");
 
+  // Video form
+  const [showVideoForm, setShowVideoForm] = useState(false);
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoDesc, setVideoDesc] = useState("");
+  const [videoType, setVideoType] = useState("music_video");
+  const [videoThumbnail, setVideoThumbnail] = useState("");
+
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
