@@ -8,7 +8,7 @@ import { usePlayer, Track } from "@/hooks/use-player";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const genres = ["All", "Gospel", "Worship", "Praises", "Rap", "Traditional", "Catholic Music", "Afrobeat"];
+const genres = ["All", "Gospel", "Worship", "Praises", "Rnb", "Afrobeat", "Dancehall", "Reggae", "Catholic Music", "Amapiano", "Rap", "Traditional", "Seben", "Other"];
 
 const formatPlays = (count: number) => {
   if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
