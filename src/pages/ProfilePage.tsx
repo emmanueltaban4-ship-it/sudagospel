@@ -16,7 +16,7 @@ import {
   LogIn, UserPlus, Music, Heart, Download, Upload, LogOut, Shield,
   Users, ListMusic, Mic2, Edit3, Save, X, Camera, Crown, ChevronRight,
   Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle,
-  Eye, Trash2, Pencil, Youtube, Rocket
+  Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
 import { useState, useRef } from "react";
@@ -75,6 +75,15 @@ const ProfilePage = () => {
   const [albumTitle, setAlbumTitle] = useState("");
   const [albumDesc, setAlbumDesc] = useState("");
   const [albumGenre, setAlbumGenre] = useState("");
+
+  // Video form
+  const [showVideoForm, setShowVideoForm] = useState(false);
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoDesc, setVideoDesc] = useState("");
+  const [videoType, setVideoType] = useState("music_video");
+  const [videoThumbnail, setVideoThumbnail] = useState("");
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -144,6 +153,16 @@ const ProfilePage = () => {
     enabled: !!myArtist,
   });
 
+  const { data: artistVideos } = useQuery({
+    queryKey: ["artist-videos", myArtist?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("videos").select("*").eq("artist_id", myArtist!.id).order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!myArtist,
+  });
+
   // Mutations
   const updateProfile = useMutation({
     mutationFn: async () => {
@@ -195,6 +214,36 @@ const ProfilePage = () => {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-albums"] }); toast.success("Album deleted"); },
     onError: (err: any) => toast.error(err.message),
   });
+
+  const resetVideoForm = () => {
+    setVideoTitle(""); setVideoUrl(""); setVideoDesc(""); setVideoType("music_video"); setVideoThumbnail(""); setEditingVideoId(null); setShowVideoForm(false);
+  };
+
+  const saveVideo = useMutation({
+    mutationFn: async () => {
+      if (editingVideoId) {
+        const { error } = await supabase.from("videos").update({ title: videoTitle, video_url: videoUrl, description: videoDesc || null, video_type: videoType, thumbnail_url: videoThumbnail || null }).eq("id", editingVideoId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("videos").insert({ title: videoTitle, video_url: videoUrl, description: videoDesc || null, video_type: videoType, thumbnail_url: videoThumbnail || null, artist_id: myArtist!.id, uploaded_by: user!.id });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-videos"] }); resetVideoForm(); toast.success(editingVideoId ? "Video updated!" : "Video added!"); },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const deleteVideo = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from("videos").delete().eq("id", id); if (error) throw error; },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-videos"] }); toast.success("Video deleted"); },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const startEditingVideo = (video: any) => {
+    setEditingVideoId(video.id); setVideoTitle(video.title); setVideoUrl(video.video_url);
+    setVideoDesc(video.description || ""); setVideoType(video.video_type); setVideoThumbnail(video.thumbnail_url || "");
+    setShowVideoForm(true);
+  };
 
   const handleAvatarUpload = async (file: File) => {
     const ext = file.name.split(".").pop();
@@ -394,6 +443,7 @@ const ProfilePage = () => {
                   <TabsTrigger value="overview" className="rounded-lg text-xs data-[state=active]:bg-background">Overview</TabsTrigger>
                   <TabsTrigger value="songs" className="rounded-lg text-xs data-[state=active]:bg-background">Songs {pendingSongs.length > 0 && `(${pendingSongs.length} pending)`}</TabsTrigger>
                   <TabsTrigger value="albums" className="rounded-lg text-xs data-[state=active]:bg-background">Albums</TabsTrigger>
+                  <TabsTrigger value="videos" className="rounded-lg text-xs data-[state=active]:bg-background">Videos</TabsTrigger>
                   <TabsTrigger value="settings" className="rounded-lg text-xs data-[state=active]:bg-background">Settings</TabsTrigger>
                 </TabsList>
 
@@ -491,6 +541,56 @@ const ProfilePage = () => {
                       ))}
                     </div>
                   ) : !showAlbumForm ? <p className="text-sm text-muted-foreground text-center py-4">No albums yet.</p> : null}
+                </TabsContent>
+
+                {/* Videos Tab */}
+                <TabsContent value="videos" className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-heading text-sm font-bold text-foreground">Videos ({artistVideos?.length || 0})</h3>
+                    <Button onClick={() => { resetVideoForm(); setShowVideoForm(!showVideoForm); }} size="sm" variant="outline" className="rounded-full gap-1.5 text-xs">
+                      {showVideoForm ? <><X className="h-3 w-3" /> Cancel</> : <><Plus className="h-3 w-3" /> Add Video</>}
+                    </Button>
+                  </div>
+
+                  {showVideoForm && (
+                    <div className="p-4 rounded-lg bg-card border border-border space-y-3">
+                      <Input value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} placeholder="Video title" className="bg-background" />
+                      <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="YouTube or video URL" className="bg-background" />
+                      <Textarea value={videoDesc} onChange={(e) => setVideoDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
+                      <Input value={videoThumbnail} onChange={(e) => setVideoThumbnail(e.target.value)} placeholder="Thumbnail URL (optional)" className="bg-background" />
+                      <Select value={videoType} onValueChange={setVideoType}>
+                        <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="music_video">Music Video</SelectItem>
+                          <SelectItem value="interview">Interview</SelectItem>
+                          <SelectItem value="spotlight">Spotlight</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button onClick={() => saveVideo.mutate()} size="sm" className="rounded-full bg-primary text-primary-foreground gap-1.5" disabled={!videoTitle.trim() || !videoUrl.trim()}>
+                        <Save className="h-3.5 w-3.5" /> {editingVideoId ? "Update" : "Add"}
+                      </Button>
+                    </div>
+                  )}
+
+                  {artistVideos && artistVideos.length > 0 ? (
+                    <div className="space-y-1">
+                      {artistVideos.map((video) => (
+                        <div key={video.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors">
+                          <div className="h-10 w-16 rounded overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center">
+                            {video.thumbnail_url ? <img src={video.thumbnail_url} alt="" className="h-full w-full object-cover" /> : <Video className="h-4 w-4 text-muted-foreground" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">{video.title}</p>
+                            <p className="text-[11px] text-muted-foreground capitalize">{video.video_type.replace("_", " ")} · {video.view_count.toLocaleString()} views · {video.is_published ? "Published" : "Draft"}</p>
+                          </div>
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <button onClick={() => startEditingVideo(video)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><Pencil className="h-3.5 w-3.5" /></button>
+                            <button onClick={() => { if (confirm("Delete this video?")) deleteVideo.mutate(video.id); }} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : !showVideoForm ? <p className="text-sm text-muted-foreground text-center py-8">No videos yet. Share your music videos and interviews!</p> : null}
                 </TabsContent>
 
                 {/* Settings Tab */}

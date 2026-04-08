@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Track {
   id: string;
@@ -131,6 +132,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.play().catch(() => setIsPlaying(false));
       setIsPlaying(true);
     }
+    // Fire-and-forget play count increment
+    supabase.rpc('increment_play_count', { song_uuid: track.id }).then(() => {});
     // Preload next track in queue
     requestIdleCallback(() => {
       const q = queueRef.current;
