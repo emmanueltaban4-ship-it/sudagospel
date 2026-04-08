@@ -81,6 +81,57 @@ const Index = () => {
     },
   });
 
+  // Recommended: songs from genres the user has liked
+  const { data: recommendedSongs } = useQuery({
+    queryKey: ["recommended-songs", user?.id],
+    queryFn: async () => {
+      // Get genres the user likes
+      const { data: likedSongs } = await supabase
+        .from("song_likes")
+        .select("song_id")
+        .eq("user_id", user!.id)
+        .limit(50);
+      if (!likedSongs?.length) {
+        // Fallback: random approved songs
+        const { data } = await supabase
+          .from("songs")
+          .select("*, artists(id, name, avatar_url)")
+          .eq("is_approved", true)
+          .order("play_count", { ascending: false })
+          .limit(10);
+        return data || [];
+      }
+      const likedIds = likedSongs.map((l) => l.song_id);
+      // Get genres from liked songs
+      const { data: likedDetails } = await supabase
+        .from("songs")
+        .select("genre")
+        .in("id", likedIds);
+      const genres = [...new Set((likedDetails || []).map((s) => s.genre).filter(Boolean))];
+      if (genres.length === 0) {
+        const { data } = await supabase
+          .from("songs")
+          .select("*, artists(id, name, avatar_url)")
+          .eq("is_approved", true)
+          .not("id", "in", `(${likedIds.join(",")})`)
+          .order("play_count", { ascending: false })
+          .limit(10);
+        return data || [];
+      }
+      // Get songs in those genres that user hasn't liked
+      const { data } = await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .in("genre", genres)
+        .not("id", "in", `(${likedIds.join(",")})`)
+        .order("play_count", { ascending: false })
+        .limit(10);
+      return data || [];
+    },
+    enabled: !!user,
+  });
+
   const playSong = (song: any) => {
     const artistName = (song.artists as any)?.name || "Unknown";
     const track: Track = {
