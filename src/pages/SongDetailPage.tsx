@@ -21,6 +21,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
+import ShareDialog from "@/components/ShareDialog";
 
 const SongDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -142,15 +143,6 @@ const SongDetailPage = () => {
     await downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
   };
 
-  const handleShare = async () => {
-    const shareUrl = ogShareUrl;
-    if (navigator.share) {
-      await navigator.share({ title: song.title, text: `Listen to ${song.title} by ${artistName}`, url: shareUrl });
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied!");
-    }
-  };
 
   const handleSubmitComment = () => {
     if (!commentText.trim()) return;
@@ -283,9 +275,13 @@ const SongDetailPage = () => {
             <Button variant="ghost" size="icon" onClick={handleDownload} className="text-muted-foreground hover:text-foreground rounded-full">
               <Download className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleShare} className="text-muted-foreground hover:text-foreground rounded-full">
-              <Share2 className="h-5 w-5" />
-            </Button>
+            <ShareDialog
+              title={song.title}
+              artist={artistName}
+              coverUrl={song.cover_url || undefined}
+              shareUrl={ogShareUrl}
+              type="song"
+            />
           </div>
 
           {/* Progress bar */}

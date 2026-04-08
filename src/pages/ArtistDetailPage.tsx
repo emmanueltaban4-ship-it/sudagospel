@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
+import ShareDialog from "@/components/ShareDialog";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
@@ -115,11 +116,7 @@ const ArtistDetailPage = () => {
     play(shuffled[0], shuffled);
     toast.success("Shuffling songs");
   };
-  const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) await navigator.share({ title: artist?.name, text: `Check out ${artist?.name} on Sudagospel`, url });
-    else { await navigator.clipboard.writeText(url); toast.success("Link copied!"); }
-  };
+  const artistShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=artist&id=${artist?.id}`;
 
   const formatTime = (s: number | null) => {
     if (!s) return "--:--";
@@ -186,12 +183,17 @@ const ArtistDetailPage = () => {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="absolute top-4 right-4 z-10 flex gap-2">
-            <button
-              onClick={handleShare}
-              className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95"
-            >
-              <Share2 className="h-5 w-5" />
-            </button>
+            <ShareDialog
+              title={artist?.name || "Artist"}
+              coverUrl={artist?.avatar_url || undefined}
+              shareUrl={artistShareUrl}
+              type="artist"
+              trigger={
+                <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95">
+                  <Share2 className="h-5 w-5" />
+                </button>
+              }
+            />
             <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95">
               <MoreHorizontal className="h-5 w-5" />
             </button>

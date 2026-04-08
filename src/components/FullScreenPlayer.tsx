@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
+import ShareDialog from "@/components/ShareDialog";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -76,15 +77,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     downloadFile(currentTrack.fileUrl, `${currentTrack.title} - ${currentTrack.artist}.mp3`);
   };
 
-  const handleShare = async () => {
-    const url = `${window.location.origin}/song/${currentTrack.id}`;
-    if (navigator.share) {
-      await navigator.share({ title: currentTrack.title, text: `Listen to ${currentTrack.title} by ${currentTrack.artist}`, url });
-    } else {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied!");
-    }
-  };
+  const shareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=song&id=${currentTrack.id}`;
 
   return (
     <AnimatePresence>
@@ -345,9 +338,18 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     <button onClick={handleDownload} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                       <Download className="h-5 w-5" />
                     </button>
-                    <button onClick={handleShare} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
-                      <Share2 className="h-5 w-5" />
-                    </button>
+                    <ShareDialog
+                      title={currentTrack.title}
+                      artist={currentTrack.artist}
+                      coverUrl={currentTrack.coverUrl}
+                      shareUrl={shareUrl}
+                      type="song"
+                      trigger={
+                        <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
+                          <Share2 className="h-5 w-5" />
+                        </button>
+                      }
+                    />
                   </div>
                 </motion.div>
               )}
