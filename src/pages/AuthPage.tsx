@@ -376,7 +376,7 @@ const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: str
   }, [target]);
   return <>{count}{suffix}</>;
 };
-
+const testimonials = [
   { name: "Gospel Minister", quote: "Sudagospel changed how I share my music with South Sudan." },
   { name: "Worship Leader", quote: "Finally a platform that understands gospel music in our community." },
   { name: "Church Choir", quote: "Our songs reached thousands of listeners we never knew existed." },
