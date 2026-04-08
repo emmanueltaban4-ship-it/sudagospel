@@ -543,6 +543,56 @@ const ProfilePage = () => {
                   ) : !showAlbumForm ? <p className="text-sm text-muted-foreground text-center py-4">No albums yet.</p> : null}
                 </TabsContent>
 
+                {/* Videos Tab */}
+                <TabsContent value="videos" className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-heading text-sm font-bold text-foreground">Videos ({artistVideos?.length || 0})</h3>
+                    <Button onClick={() => { resetVideoForm(); setShowVideoForm(!showVideoForm); }} size="sm" variant="outline" className="rounded-full gap-1.5 text-xs">
+                      {showVideoForm ? <><X className="h-3 w-3" /> Cancel</> : <><Plus className="h-3 w-3" /> Add Video</>}
+                    </Button>
+                  </div>
+
+                  {showVideoForm && (
+                    <div className="p-4 rounded-lg bg-card border border-border space-y-3">
+                      <Input value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} placeholder="Video title" className="bg-background" />
+                      <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="YouTube or video URL" className="bg-background" />
+                      <Textarea value={videoDesc} onChange={(e) => setVideoDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
+                      <Input value={videoThumbnail} onChange={(e) => setVideoThumbnail(e.target.value)} placeholder="Thumbnail URL (optional)" className="bg-background" />
+                      <Select value={videoType} onValueChange={setVideoType}>
+                        <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="music_video">Music Video</SelectItem>
+                          <SelectItem value="interview">Interview</SelectItem>
+                          <SelectItem value="spotlight">Spotlight</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button onClick={() => saveVideo.mutate()} size="sm" className="rounded-full bg-primary text-primary-foreground gap-1.5" disabled={!videoTitle.trim() || !videoUrl.trim()}>
+                        <Save className="h-3.5 w-3.5" /> {editingVideoId ? "Update" : "Add"}
+                      </Button>
+                    </div>
+                  )}
+
+                  {artistVideos && artistVideos.length > 0 ? (
+                    <div className="space-y-1">
+                      {artistVideos.map((video) => (
+                        <div key={video.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors">
+                          <div className="h-10 w-16 rounded overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center">
+                            {video.thumbnail_url ? <img src={video.thumbnail_url} alt="" className="h-full w-full object-cover" /> : <Video className="h-4 w-4 text-muted-foreground" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">{video.title}</p>
+                            <p className="text-[11px] text-muted-foreground capitalize">{video.video_type.replace("_", " ")} · {video.view_count.toLocaleString()} views · {video.is_published ? "Published" : "Draft"}</p>
+                          </div>
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <button onClick={() => startEditingVideo(video)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><Pencil className="h-3.5 w-3.5" /></button>
+                            <button onClick={() => { if (confirm("Delete this video?")) deleteVideo.mutate(video.id); }} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : !showVideoForm ? <p className="text-sm text-muted-foreground text-center py-8">No videos yet. Share your music videos and interviews!</p> : null}
+                </TabsContent>
+
                 {/* Settings Tab */}
                 <TabsContent value="settings" className="space-y-6 mt-4">
                   {/* Artist profile edit */}
