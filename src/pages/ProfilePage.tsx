@@ -88,6 +88,7 @@ const ProfilePage = () => {
   const [videoDesc, setVideoDesc] = useState("");
   const [videoType, setVideoType] = useState("music_video");
   const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [verificationReason, setVerificationReason] = useState("");
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
