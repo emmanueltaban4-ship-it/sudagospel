@@ -494,6 +494,7 @@ const Index = () => {
             </div>
           </div>
         </section>
+      )}
 
       {/* Albums */}
       {albums && albums.length > 0 && (
