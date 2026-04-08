@@ -1,116 +1,116 @@
 
 
-# Rebuild Sudagospel as Audiomack-Style Mobile-First Music App
+# Unified Profile + Enhanced Artist Features + Admin Expansion
 
-## Current State Assessment
+## Summary
+Merge artist and user profiles into one unified page, let artists edit songs and manage albums directly from their profile, and add more admin features for a gospel music streaming platform.
 
-The app already has a solid foundation with most of the requested features:
-- Music streaming with player (play, pause, next, prev, seek, volume)
-- Song detail pages with comments, likes, downloads
-- Artist profiles with follow functionality
-- Playlists (create, manage, add/remove songs)
-- Search overlay
-- Auth (email, phone, Google OAuth)
-- Artist dashboard (upload, edit songs, manage profile)
-- Admin dashboard (approve songs, manage users/artists, stats, monetization)
-- Hall of Fame, Most Listened, New Songs pages
-- Ad system, subscription page
+## What Changes
 
-**What's missing or needs rebuilding** to match the Audiomack-style spec:
+### 1. Unified Profile Page
+Currently there are two separate pages: ProfilePage (user) and ArtistDashboardPage (artist studio). The plan is to merge them so that:
+- If the user has an artist account, their profile page shows artist-specific sections (songs management, albums, analytics) inline — no separate "Artist Studio" page needed.
+- The profile page detects if the user is an artist via the `artists` table and conditionally renders artist tools.
+- The ArtistDashboardPage route (`/artist-dashboard`) redirects to `/profile` to avoid broken links.
+- The public artist detail page (`/artist/:slug`) remains separate — it's the public-facing view.
 
-1. **Splash screen** — does not exist
-2. **Onboarding flow** — does not exist
-3. **Color scheme change** — currently red/green, spec requests purple/gold/white
-4. **Downloads screen** — no dedicated offline/downloads page
-5. **Category filtering** (Worship, Praise, Choir, Sermons) — partial, genres exist but not these exact categories
-6. **Bottom nav restructure** — currently Home/Explore/Videos/Artists/You; spec wants Home/Search/Library/Profile
-7. **Full-screen player** — currently only mini player + song detail page
-8. **Low data mode** — not implemented
-9. **Overall UI polish** — needs Audiomack-like refinement
+### 2. Artist Song Editing on Profile
+Move the song editing functionality (currently in ArtistDashboardPage) into the unified profile:
+- Inline edit song title, description, genre, lyrics, album assignment
+- Delete songs
+- View pending/approved status
+- Upload new songs (link to upload page or inline form)
 
-## Plan
+### 3. Album Management on Profile
+Artists can:
+- Create new albums with title, description, genre, cover image upload
+- Edit existing albums (title, description, cover)
+- Delete albums
+- Assign songs to albums during song edit
+- Album cover upload using the existing `covers` storage bucket
 
-### Step 1: Update Color Theme to Purple/Gold/White
-- Modify `src/index.css` CSS variables
-- Primary: purple (~270° hue), accent: gold (~45° hue)
-- Update both light and dark theme tokens
-- Keep the South Sudan gospel identity but with the new palette
+### 4. Enhanced Admin Page
+Add these new admin sections:
 
-### Step 2: Create Splash Screen
-- New component `src/components/SplashScreen.tsx`
-- App logo centered, purple/gold gradient background
-- Auto-redirect after 2.5 seconds using state in `App.tsx`
-- Only show on first visit (use localStorage flag)
+- **Genre Management** — Add/edit/delete genre categories used across the app (stored in `site_settings` as a JSON value)
+- **Album Management** — View all albums, edit, delete, assign covers
+- **Reports & Flagging** — View flagged/reported content (requires a new `reports` table)
+- **Bulk Actions** — Bulk approve/reject songs, bulk delete
+- **Email/Notifications** — View email send logs, manage suppressed emails (already have tables)
+- **Storage Overview** — Show bucket usage stats
+- **Featured Content Manager** — Enhanced hero/featured section management with drag-to-reorder
 
-### Step 3: Create Onboarding Flow
-- New page `src/pages/OnboardingPage.tsx`
-- 3 swipeable slides with illustrations (using icons/gradients)
-  - "Discover South Sudan gospel music"
-  - "Stream and download songs"
-  - "Support gospel artists"
-- Next/Back/Get Started navigation
-- Store completion in localStorage, skip on return visits
+### 5. Database Changes
+- Create a `reports` table for content flagging (user reports songs/comments)
+- No other schema changes needed — existing tables support all features
 
-### Step 4: Restructure Bottom Navigation
-- Update `src/components/BottomNav.tsx`
-- New tabs: Home, Search, Library (playlists + downloads), Profile
-- Search tab opens the search overlay or navigates to a search page
-- Library tab shows playlists and downloads in a combined view
+## Technical Approach
 
-### Step 5: Create Downloads Screen
-- New page `src/pages/DownloadsPage.tsx`
-- List songs the user has downloaded (track in localStorage or IndexedDB)
-- Offline playback capability using Service Worker cache
-- Remove download option per song
-- Integrate into Library tab
+### Files to modify:
+- `src/pages/ProfilePage.tsx` — Major rewrite to include artist dashboard sections conditionally
+- `src/pages/ArtistDashboardPage.tsx` — Convert to redirect to `/profile`
+- `src/pages/AdminPage.tsx` — Add new tab entries
+- `src/components/admin/AdminGenreManagement.tsx` — New component
+- `src/components/admin/AdminAlbumManagement.tsx` — New component
+- `src/components/admin/AdminReports.tsx` — New component
+- `src/components/admin/AdminFeaturedContent.tsx` — New component
+- `src/components/admin/AdminEmailLogs.tsx` — New component
 
-### Step 6: Build Full-Screen Player View
-- Enhance `src/pages/SongDetailPage.tsx` or create a dedicated full-screen player modal
-- Large cover art, blurred background
-- All controls: play/pause, next/prev, seek bar, like, download, share
-- Swipe down to minimize back to mini player
+### Database migration:
+```sql
+CREATE TABLE public.reports (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  reporter_id uuid NOT NULL,
+  content_type text NOT NULL, -- 'song', 'comment', 'artist'
+  content_id uuid NOT NULL,
+  reason text NOT NULL,
+  status text NOT NULL DEFAULT 'pending', -- pending, reviewed, dismissed
+  admin_notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
 
-### Step 7: Add Category Sections to Home
-- Add category chips/cards on home page: Worship, Praise, Choir, Sermons
-- Filter songs by genre/category when tapped
-- These map to the existing `genre` field in the songs table
+ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
 
-### Step 8: Performance Optimizations
-- Add lazy loading for all route pages (React.lazy + Suspense)
-- Image optimization with loading="lazy" (already partially done)
-- Skeleton loading states for all data-dependent sections
-- Consider adding a "Low Data Mode" toggle in settings that reduces image quality
+-- Users can create reports
+CREATE POLICY "Users can create reports" ON public.reports
+  FOR INSERT TO authenticated WITH CHECK (auth.uid() = reporter_id);
 
-### Step 9: UI Polish — Audiomack Style
-- Rounded cards, smooth transitions, modern spacing
-- Gradient accents on player and hero sections
-- Improve mobile touch targets (min 44px)
-- Safe area handling for notched devices (already has safe-area-bottom)
+-- Users can view own reports
+CREATE POLICY "Users can view own reports" ON public.reports
+  FOR SELECT TO authenticated USING (auth.uid() = reporter_id);
 
-### Step 10: Wire Up Navigation & State
-- Splash → Onboarding → Auth/Home flow
-- Ensure all screens connect with proper back navigation
-- Add route for `/downloads` and `/library`
-- Update `App.tsx` with new routes
+-- Admins can manage all reports
+CREATE POLICY "Admins can manage reports" ON public.reports
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
+```
 
-## Technical Details
+### Profile page structure (artist mode):
+```text
+┌─────────────────────────────┐
+│  Hero Header (avatar, name) │
+│  Stats row                  │
+├─────────────────────────────┤
+│  Tabs: Overview │ Songs │   │
+│        Albums │ Settings    │
+├─────────────────────────────┤
+│  Tab content:               │
+│  - Overview: quick stats,   │
+│    top songs, recent uploads│
+│  - Songs: full list with    │
+│    edit/delete inline       │
+│  - Albums: create/edit/del  │
+│    with cover upload        │
+│  - Settings: edit profile,  │
+│    upload, playlists, etc   │
+├─────────────────────────────┤
+│  Following section          │
+│  Sign out                   │
+└─────────────────────────────┘
+```
 
-**No database changes needed** — all existing tables support the required features. Downloads tracking can use the existing `song_downloads` table plus client-side caching.
-
-**No new edge functions needed** — all functionality is client-side or already exists.
-
-**Files to create:**
-- `src/components/SplashScreen.tsx`
-- `src/pages/OnboardingPage.tsx`
-- `src/pages/DownloadsPage.tsx`
-- `src/pages/LibraryPage.tsx`
-
-**Files to modify:**
-- `src/index.css` (color theme)
-- `src/App.tsx` (splash logic, new routes)
-- `src/components/BottomNav.tsx` (new nav structure)
-- `src/components/Layout.tsx` (sidebar updates)
-- `src/pages/Index.tsx` (category sections)
-- `src/pages/SongDetailPage.tsx` (full-screen player enhancements)
-- `src/components/MiniPlayer.tsx` (tap to expand to full-screen)
+### Admin page new tabs:
+- Genres, Albums, Reports, Featured, Email Logs (5 new tabs added to existing 10)
 
