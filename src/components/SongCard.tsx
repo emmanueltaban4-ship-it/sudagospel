@@ -16,7 +16,7 @@ interface SongCardProps {
   isVerifiedArtist?: boolean;
 }
 
-const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCardProps) => {
+const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue, isVerifiedArtist }: SongCardProps) => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const isCurrentTrack = currentTrack?.id === id;
 
