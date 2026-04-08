@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Music } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
