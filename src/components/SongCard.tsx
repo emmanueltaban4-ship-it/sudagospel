@@ -28,13 +28,13 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
   };
 
   const cardContent = (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col card-hover rounded-xl">
       <div className="relative aspect-square rounded-xl overflow-hidden mb-3 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all">
         {fileUrl && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
             <button
               onClick={handlePlay}
-              className="rounded-full bg-gradient-gold p-3 text-primary-foreground hover:scale-110 transition-transform shadow-xl shadow-primary/30"
+              className="rounded-full bg-gradient-gold p-3 text-primary-foreground icon-btn-pop shadow-xl shadow-primary/30"
             >
               {isCurrentTrack && isPlaying ? (
                 <Pause className="h-5 w-5" />
@@ -71,7 +71,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
           <Play className="h-2.5 w-2.5" /> {plays} plays
         </span>
         <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="p-1 text-muted-foreground hover:text-primary transition-colors">
+          <button className="p-1 text-muted-foreground hover:text-primary icon-btn-pop">
             <Heart className="h-3 w-3" />
           </button>
           <button
@@ -81,7 +81,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
               if (!fileUrl) return;
               downloadFile(fileUrl, `${title} - ${artist}.mp3`);
             }}
-            className="p-1 text-muted-foreground hover:text-primary transition-colors"
+            className="p-1 text-muted-foreground hover:text-primary icon-btn-pop"
           >
             <Download className="h-3 w-3" />
           </button>
