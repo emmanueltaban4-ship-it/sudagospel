@@ -71,7 +71,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
           <Play className="h-2.5 w-2.5" /> {plays} plays
         </span>
         <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="p-1 text-muted-foreground hover:text-primary transition-colors">
+          <button className="p-1 text-muted-foreground hover:text-primary icon-btn-pop">
             <Heart className="h-3 w-3" />
           </button>
           <button
