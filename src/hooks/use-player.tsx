@@ -38,6 +38,12 @@ const PlayerContext = createContext<PlayerContextType>({
   prev: () => {},
 });
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const getPlayableUrl = (url: string) =>
+  url.includes("sudagospel.net/get-track.php")
+    ? `${SUPABASE_URL}/functions/v1/download-proxy?url=${encodeURIComponent(url)}`
+    : url;
+
 export const usePlayer = () => useContext(PlayerContext);
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
@@ -71,8 +77,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (newQueue) setQueue(newQueue);
     setCurrentTrack(track);
     if (audioRef.current) {
-      audioRef.current.src = track.fileUrl;
-      audioRef.current.play().catch(() => {});
+      audioRef.current.src = getPlayableUrl(track.fileUrl);
+      audioRef.current.play().catch(() => {
+        setIsPlaying(false);
+      });
       setIsPlaying(true);
     }
   }, []);
@@ -83,7 +91,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => {
+        setIsPlaying(false);
+      });
       setIsPlaying(true);
     }
   }, [isPlaying, currentTrack]);
