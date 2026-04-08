@@ -237,11 +237,38 @@ const Index = () => {
       {/* Trending Songs */}
       {trendingSongs && trendingSongs.length > 0 && (
         <section className="py-6">
-          <SectionHeader title="Trending Now" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
+          <SectionHeader title="Trending in South Sudan" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1">
               {trendingSongs.map((song, idx) => (
                 <SongCard key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} rank={idx + 1} showRank />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Because you listened to… */}
+      {becauseYouListened && becauseYouListened.length > 0 && becauseArtist && (
+        <section className="py-6">
+          <div className="flex items-center justify-between mb-4 px-4 lg:px-6">
+            <div className="flex items-center gap-2">
+              <Radio className="h-5 w-5 text-secondary" />
+              <div>
+                <h2 className="font-heading text-lg md:text-xl font-black text-foreground tracking-tight">
+                  Because you listened to
+                </h2>
+                <p className="text-xs text-primary font-semibold">{becauseArtist.artist}</p>
+              </div>
+            </div>
+            <Link to="/music" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+              Show all <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {becauseYouListened.map((song: any) => (
+                <SongCard key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
               ))}
             </div>
           </div>
