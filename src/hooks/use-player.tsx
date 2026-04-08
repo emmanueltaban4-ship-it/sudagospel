@@ -60,6 +60,17 @@ const getPlayableUrl = (url: string) =>
     ? `${SUPABASE_URL}/functions/v1/download-proxy?url=${encodeURIComponent(url)}`
     : url;
 
+// Preload next track for gapless playback
+const preloadAudio = (url: string) => {
+  const link = document.createElement("link");
+  link.rel = "prefetch";
+  link.as = "fetch";
+  link.href = getPlayableUrl(url);
+  link.crossOrigin = "anonymous";
+  document.head.appendChild(link);
+  setTimeout(() => link.remove(), 60000);
+};
+
 export const usePlayer = () => useContext(PlayerContext);
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
