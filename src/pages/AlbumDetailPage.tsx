@@ -59,7 +59,27 @@ const AlbumDetailPage = () => {
     })), [songs, album]);
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
+  const totalDuration = songs?.reduce((sum, s) => sum + (s.duration_seconds || 0), 0) || 0;
   const artist = album?.artists as any;
+  const albumType = (album as any)?.album_type || "album";
+
+  const formatDuration = (secs: number) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    if (h > 0) return `${h} hr ${m} min`;
+    return `${m} min ${s} sec`;
+  };
+
+  const handleDownloadAll = async () => {
+    if (!songs || songs.length === 0) return;
+    toast.info(`Downloading ${songs.length} tracks...`);
+    for (const song of songs) {
+      const songArtist = (song.artists as any)?.name || "Unknown";
+      await downloadFile(song.file_url, `${song.title} - ${songArtist}.mp3`);
+      await new Promise((r) => setTimeout(r, 500));
+    }
+  };
 
   useDocumentMeta({
     title: album ? `${album.title} - ${artist?.name || "Album"}` : "Album",
