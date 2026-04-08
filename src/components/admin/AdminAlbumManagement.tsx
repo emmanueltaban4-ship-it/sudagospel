@@ -28,7 +28,7 @@ const AdminAlbumManagement = () => {
 
   const updateAlbum = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("albums").update({ title: editTitle, genre: editGenre || null }).eq("id", editingId!);
+      const { error } = await supabase.from("albums").update({ title: editTitle, genre: editGenre || null, album_type: editAlbumType } as any).eq("id", editingId!);
       if (error) throw error;
     },
     onSuccess: () => {
