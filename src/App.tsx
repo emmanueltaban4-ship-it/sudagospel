@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/use-auth";
 import { PlayerProvider } from "@/hooks/use-player";
 import { lazy, Suspense, useState, useCallback, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import SplashScreen from "@/components/SplashScreen";
 
 // Lazy loaded pages
