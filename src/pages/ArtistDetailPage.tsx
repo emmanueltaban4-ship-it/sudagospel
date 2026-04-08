@@ -116,11 +116,7 @@ const ArtistDetailPage = () => {
     play(shuffled[0], shuffled);
     toast.success("Shuffling songs");
   };
-  const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) await navigator.share({ title: artist?.name, text: `Check out ${artist?.name} on Sudagospel`, url });
-    else { await navigator.clipboard.writeText(url); toast.success("Link copied!"); }
-  };
+  const artistShareUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=artist&id=${artist?.id}`;
 
   const formatTime = (s: number | null) => {
     if (!s) return "--:--";
