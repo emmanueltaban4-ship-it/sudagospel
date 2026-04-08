@@ -440,11 +440,15 @@ const RightPanel = () => {
         <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-5 shadow-2xl">
           <div className="grid grid-cols-2 gap-6 text-center">
             <div>
-              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.artists}+` : "..."}</p>
+              <p className="text-2xl font-heading font-extrabold text-white">
+                {stats ? <AnimatedCounter target={stats.artists} suffix="+" /> : "..."}
+              </p>
               <p className="text-[10px] text-white/50 uppercase tracking-wider">Artists</p>
             </div>
             <div>
-              <p className="text-2xl font-heading font-extrabold text-white">{stats ? `${stats.songs}+` : "..."}</p>
+              <p className="text-2xl font-heading font-extrabold text-white">
+                {stats ? <AnimatedCounter target={stats.songs} suffix="+" /> : "..."}
+              </p>
               <p className="text-[10px] text-white/50 uppercase tracking-wider">Songs</p>
             </div>
           </div>
