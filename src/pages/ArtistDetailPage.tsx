@@ -486,7 +486,10 @@ const ArtistDetailPage = () => {
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground mt-2">{artist.name}</p>
-                            <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{album.title}</p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{album.title}</p>
+                              <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-primary/10 text-primary flex-shrink-0">{(album as any).album_type || "album"}</span>
+                            </div>
                           </div>
                         ))}
                       </div>
