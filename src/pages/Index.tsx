@@ -193,6 +193,22 @@ const Index = () => {
         </section>
       )}
 
+      {/* Recommended for You */}
+      {recommendedSongs && recommendedSongs.length > 0 && (
+        <section className="py-6">
+          <div className="px-4 lg:px-6">
+            <SectionHeader title="Recommended for You" icon={<Sparkles className="h-5 w-5 text-primary" />} linkTo="/music" />
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {recommendedSongs.map((song: any) => (
+                <SongTile key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Weekly Top 10 */}
       {weeklyTopSongs && weeklyTopSongs.length > 0 && (
         <section className="py-6">
