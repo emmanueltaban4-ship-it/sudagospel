@@ -432,6 +432,42 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          admin_notes: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          reason: string
+          reporter_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          reason: string
+          reporter_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          reason?: string
+          reporter_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
