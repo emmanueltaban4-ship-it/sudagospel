@@ -16,7 +16,7 @@ import {
   LogIn, UserPlus, Music, Heart, Download, Upload, LogOut, Shield,
   Users, ListMusic, Mic2, Edit3, Save, X, Camera, Crown, ChevronRight,
   Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle,
-  Eye, Trash2, Pencil, Youtube, Rocket
+  Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
 import { useState, useRef } from "react";
