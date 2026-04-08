@@ -338,9 +338,18 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     <button onClick={handleDownload} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                       <Download className="h-5 w-5" />
                     </button>
-                    <button onClick={handleShare} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
-                      <Share2 className="h-5 w-5" />
-                    </button>
+                    <ShareDialog
+                      title={currentTrack.title}
+                      artist={currentTrack.artist}
+                      coverUrl={currentTrack.coverUrl}
+                      shareUrl={shareUrl}
+                      type="song"
+                      trigger={
+                        <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
+                          <Share2 className="h-5 w-5" />
+                        </button>
+                      }
+                    />
                   </div>
                 </motion.div>
               )}
