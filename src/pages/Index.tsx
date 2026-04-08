@@ -126,6 +126,20 @@ const Index = () => {
     },
   });
 
+  const { data: verifiedArtists } = useQuery({
+    queryKey: ["verified-artists-showcase"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("artists")
+        .select("id, name, avatar_url, is_verified, genre, bio, songs(count)")
+        .eq("is_verified", true)
+        .order("name")
+        .limit(12);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: recommendedSongs } = useQuery({
     queryKey: ["recommended-songs", user?.id],
     queryFn: async () => {
