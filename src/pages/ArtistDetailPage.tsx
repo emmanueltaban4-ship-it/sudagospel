@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
+import ShareDialog from "@/components/ShareDialog";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
