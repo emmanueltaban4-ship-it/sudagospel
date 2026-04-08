@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LogIn, UserPlus, Music, Heart, Download, Upload, LogOut, Shield,
   Users, ListMusic, Mic2, Edit3, Save, X, Camera, Crown, ChevronRight,
-  Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle,
+  Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle, BadgeCheck,
   Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
