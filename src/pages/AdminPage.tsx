@@ -98,49 +98,71 @@ const AdminPage = () => {
           )}
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-1 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-              {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
-                <span className={`ml-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                  activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
-                }`}>
-                  {stats.pendingSongs}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        <div className="flex gap-6">
+          {/* Vertical sidebar menu */}
+          <nav className="hidden md:flex flex-col gap-1 w-52 flex-shrink-0 sticky top-20 self-start">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left ${
+                  activeTab === tab.id
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                <tab.icon className="h-4 w-4 flex-shrink-0" />
+                {tab.label}
+                {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
+                  <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                    activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
+                  }`}>
+                    {stats.pendingSongs}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
 
-        {/* Tab content */}
-        {activeTab === "analytics" && <AdminAnalytics />}
-        {activeTab === "settings" && <AdminSiteSettings />}
-        {activeTab === "monetization" && <AdminMonetization />}
-        {activeTab === "ads" && <AdminAds />}
-        {activeTab === "songs" && <AdminSongManagement />}
-        {activeTab === "artists" && <AdminArtistManagement />}
-        {activeTab === "videos" && <AdminVideoManagement />}
-        {activeTab === "albums" && <AdminAlbumManagement />}
-        {activeTab === "genres" && <AdminGenreManagement />}
-        {activeTab === "articles" && <AdminArticles />}
-        {activeTab === "approvals" && <AdminApprovalQueue />}
-        {activeTab === "users" && <AdminUserManagement />}
-        {activeTab === "moderation" && <AdminModeration />}
-        {activeTab === "reports" && <AdminReports />}
-        {activeTab === "featured" && <AdminFeaturedContent />}
-        {activeTab === "verification" && <AdminVerificationRequests />}
-        {activeTab === "emails" && <AdminEmailLogs />}
+          {/* Mobile horizontal scroll menu */}
+          <div className="flex md:hidden gap-1 overflow-x-auto pb-2 mb-4 scrollbar-hide w-full">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab content */}
+          <div className="flex-1 min-w-0">
+            {activeTab === "analytics" && <AdminAnalytics />}
+            {activeTab === "settings" && <AdminSiteSettings />}
+            {activeTab === "monetization" && <AdminMonetization />}
+            {activeTab === "ads" && <AdminAds />}
+            {activeTab === "songs" && <AdminSongManagement />}
+            {activeTab === "artists" && <AdminArtistManagement />}
+            {activeTab === "videos" && <AdminVideoManagement />}
+            {activeTab === "albums" && <AdminAlbumManagement />}
+            {activeTab === "genres" && <AdminGenreManagement />}
+            {activeTab === "articles" && <AdminArticles />}
+            {activeTab === "approvals" && <AdminApprovalQueue />}
+            {activeTab === "users" && <AdminUserManagement />}
+            {activeTab === "moderation" && <AdminModeration />}
+            {activeTab === "reports" && <AdminReports />}
+            {activeTab === "featured" && <AdminFeaturedContent />}
+            {activeTab === "verification" && <AdminVerificationRequests />}
+            {activeTab === "emails" && <AdminEmailLogs />}
+          </div>
+        </div>
       </div>
     </Layout>
   );
