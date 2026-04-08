@@ -206,10 +206,28 @@ const ProfilePage = () => {
 
   const createAlbum = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("albums").insert({ artist_id: myArtist!.id, title: albumTitle, description: albumDesc || null, genre: albumGenre || null });
+      let coverUrl: string | null = null;
+      if (albumCoverFile) {
+        const ext = albumCoverFile.name.split(".").pop();
+        const path = `albums/${myArtist!.id}/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("covers").upload(path, albumCoverFile);
+        if (upErr) throw upErr;
+        const { data: urlData } = supabase.storage.from("covers").getPublicUrl(path);
+        coverUrl = urlData.publicUrl;
+      }
+      const { error } = await supabase.from("albums").insert({
+        artist_id: myArtist!.id, title: albumTitle, description: albumDesc || null,
+        genre: albumGenre || null, album_type: albumType,
+        release_date: albumReleaseDate || null, cover_url: coverUrl,
+      } as any);
       if (error) throw error;
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-albums"] }); setShowAlbumForm(false); setAlbumTitle(""); setAlbumDesc(""); setAlbumGenre(""); toast.success("Album created!"); },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-albums"] });
+      setShowAlbumForm(false); setAlbumTitle(""); setAlbumDesc(""); setAlbumGenre("");
+      setAlbumType("album"); setAlbumReleaseDate(""); setAlbumCoverFile(null);
+      toast.success("Album created!");
+    },
     onError: (err: any) => toast.error(err.message),
   });
 
