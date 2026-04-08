@@ -13,7 +13,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useAuth } from "@/hooks/use-auth";
 
 const Index = () => {
-  const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { play, currentTrack, isPlaying, togglePlay, recentlyPlayed } = usePlayer();
   const { data: siteSettings } = useSiteSettings();
   const { user } = useAuth();
 
