@@ -1,64 +1,61 @@
 
 
-# Play/Download Count Tracking + Artist Video Sharing
+# Full Album System Enhancement
 
 ## Summary
-Add real-time play count and download count incrementing for songs, and give artists the ability to upload/manage their own videos from their profile page.
+The album infrastructure (table, detail page, basic CRUD) already exists. This plan adds: (1) album type support (Album/EP/Single), (2) cover art upload for albums, (3) release date picker, (4) total duration calculation on the album detail page, (5) "Download All" button, and (6) better album creation flow in both the profile page and upload page.
 
 ## What Changes
 
-### 1. Increment Play Count When a Song Plays
-Currently `play_count` on the `songs` table is never incremented. Add a database function `increment_play_count(song_id)` and call it from the player when a new track starts playing.
+### 1. Database: Add `album_type` Column
+Add an `album_type` text column to the `albums` table with values: `album`, `ep`, `single`. Default: `album`.
 
-**Database migration:**
-- Create `increment_play_count(song_uuid)` — SQL function that does `UPDATE songs SET play_count = COALESCE(play_count, 0) + 1 WHERE id = song_uuid`, with `SECURITY DEFINER` so any user (even anonymous via anon key) can increment.
+**Migration:**
+```sql
+ALTER TABLE public.albums ADD COLUMN album_type text NOT NULL DEFAULT 'album';
+```
 
-**Code change:**
-- `src/hooks/use-player.tsx` — In `playTrack()`, after setting the audio source, call `supabase.rpc('increment_play_count', { song_uuid: track.id })` (fire-and-forget).
+### 2. Album Creation with Cover Art Upload (Profile Page)
+Enhance the existing album creation form on `src/pages/ProfilePage.tsx`:
+- Add cover image upload (to `covers` bucket)
+- Add release date picker
+- Add album type selector (Album / EP / Single)
+- Show album type badge on album cards
 
-### 2. Increment Download Count on Download
-Currently the download logs to `song_downloads` table but never updates the `download_count` column on `songs`.
+### 3. Upload Page: Create Album Inline
+On `src/pages/UploadPage.tsx`, add a "New Album" option in the album dropdown that opens an inline form to create an album (with cover, type, release date) before uploading the song.
 
-**Database migration:**
-- Create `increment_download_count(song_uuid)` — same pattern as play count.
+### 4. Album Detail Page Enhancements (`src/pages/AlbumDetailPage.tsx`)
+- Show album type badge (Album / EP / Single)
+- Calculate and display total duration from all songs' `duration_seconds`
+- Add "Download All" button that downloads each track sequentially
+- Show track numbers properly
 
-**Code change:**
-- `src/pages/SongDetailPage.tsx` — In `handleDownload`, also call `supabase.rpc('increment_download_count', { song_uuid: song.id })`.
+### 5. Artist Detail Page: Better Album Display
+On `src/pages/ArtistDetailPage.tsx`, ensure the albums tab shows album type badges and links to album detail pages with cover art.
 
-### 3. Artist Video Management on Profile Page
-Give artists a "Videos" tab on their profile page where they can add, edit, and delete their own videos (music videos, interviews, etc.). The `videos` table already has `uploaded_by` and artist RLS policies.
-
-**Code change — `src/pages/ProfilePage.tsx`:**
-- Add a "Videos" tab to the artist section (alongside Songs, Albums, Settings)
-- List artist's videos with title, type, view count
-- Add video form: title, YouTube/video URL, description, thumbnail URL, video type selector
-- Edit/delete existing videos
-- Videos use `uploaded_by = user.id` and `artist_id = artist.id`
+### 6. Admin Album Management
+Update `src/components/admin/AdminAlbumManagement.tsx` to show and edit album type.
 
 ## Technical Details
 
-### DB Functions (single migration)
-```sql
-CREATE OR REPLACE FUNCTION public.increment_play_count(song_uuid uuid)
-RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
-  UPDATE songs SET play_count = COALESCE(play_count, 0) + 1 WHERE id = song_uuid;
-$$;
+### Database migration
+Single migration adding `album_type` column to `albums`.
 
-CREATE OR REPLACE FUNCTION public.increment_download_count(song_uuid uuid)
-RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
-  UPDATE songs SET download_count = COALESCE(download_count, 0) + 1 WHERE id = song_uuid;
-$$;
-```
+### Cover art upload flow
+Reuse the existing `covers` storage bucket. On album creation, upload the image and store the public URL in `albums.cover_url`.
 
-### Player integration
-```typescript
-// In playTrack callback, fire-and-forget
-supabase.rpc('increment_play_count', { song_uuid: track.id });
-```
+### Total duration calculation
+Sum `duration_seconds` from all songs in the album query result, displayed as "X min Y sec".
+
+### Download All
+Iterate through tracks, fetch each blob, and trigger downloads with a small delay between each to avoid browser blocking.
 
 ### Files to modify
-- **New migration** — two increment functions
-- `src/hooks/use-player.tsx` — add supabase import + rpc call in `playTrack`
-- `src/pages/SongDetailPage.tsx` — add download count rpc call
-- `src/pages/ProfilePage.tsx` — add Videos tab with CRUD for artist videos
+- **New migration** — add `album_type` to `albums`
+- `src/pages/ProfilePage.tsx` — enhanced album create form with cover upload, type, release date
+- `src/pages/UploadPage.tsx` — inline album creation option
+- `src/pages/AlbumDetailPage.tsx` — total duration, download all, album type badge
+- `src/pages/ArtistDetailPage.tsx` — album type badges in albums tab
+- `src/components/admin/AdminAlbumManagement.tsx` — album type column and edit
 
