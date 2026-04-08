@@ -1,4 +1,4 @@
-import { Play, Pause, Heart, Download } from "lucide-react";
+import { Play, Pause, Heart, Download, CheckCircle } from "lucide-react";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
@@ -13,6 +13,7 @@ interface SongCardProps {
   plays: string;
   fileUrl?: string;
   queue?: Track[];
+  isVerifiedArtist?: boolean;
 }
 
 const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCardProps) => {
