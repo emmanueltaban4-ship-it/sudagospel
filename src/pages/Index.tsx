@@ -386,7 +386,7 @@ const Index = () => {
 
       {/* Upload CTA */}
       <section className="px-4 lg:px-6 py-8">
-        <div className="rounded-2xl bg-gradient-to-br from-primary/10 via-card to-secondary/10 border border-border p-8 md:p-12 text-center">
+        <div className="rounded-2xl bg-gradient-to-br from-accent/10 via-card to-primary/10 border border-primary/10 p-8 md:p-12 text-center">
           <Headphones className="h-10 w-10 text-primary mx-auto mb-4" />
           <h3 className="font-heading text-xl md:text-2xl font-extrabold text-foreground mb-2 tracking-tight">
             Share Your Music with the World
@@ -396,7 +396,7 @@ const Index = () => {
           </p>
           <Link
             to="/upload"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-full px-8 py-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/20"
+            className="inline-flex items-center gap-2 bg-gradient-gold hover:opacity-90 text-primary-foreground font-bold text-sm rounded-full px-8 py-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/30"
           >
             Start Uploading <ArrowRight className="h-4 w-4" />
           </Link>
