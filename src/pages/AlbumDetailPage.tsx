@@ -172,17 +172,21 @@ const AlbumDetailPage = () => {
               </div>
 
               <div className="flex-1 min-w-0 text-center md:text-left">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Album</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{albumType}</span>
+                  <Badge variant="outline" className="text-[9px] uppercase">{albumType}</Badge>
+                </div>
                 <h1 className="font-heading text-3xl md:text-5xl font-extrabold text-foreground mt-1 leading-tight">
                   {album.title}
                 </h1>
-                <div className="flex items-center gap-3 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
+                <div className="flex items-center gap-3 mt-3 justify-center md:justify-start text-sm text-muted-foreground flex-wrap">
                   {artist && (
                     <Link to={artistPath(artist.name)} className="hover:text-primary transition-colors font-medium">
                       {artist.name}
                     </Link>
                   )}
                   <span>{songs?.length || 0} songs</span>
+                  {totalDuration > 0 && <span>{formatDuration(totalDuration)}</span>}
                   <span>{totalPlays.toLocaleString()} plays</span>
                   {album.release_date && <span>{new Date(album.release_date).getFullYear()}</span>}
                 </div>
