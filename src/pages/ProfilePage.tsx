@@ -572,7 +572,10 @@ const ProfilePage = () => {
                           <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
                             {album.cover_url ? <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" /> : <Disc3 className="h-8 w-8 text-muted-foreground/30" />}
                           </div>
-                          <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">{(album as any).album_type || "album"}</span>
+                          </div>
                           <p className="text-[11px] text-muted-foreground">{(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "Gospel"}</p>
                           <button onClick={(e) => { e.preventDefault(); if (confirm("Delete this album?")) deleteAlbum.mutate(album.id); }} className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all"><Trash2 className="h-3.5 w-3.5" /></button>
                         </Link>

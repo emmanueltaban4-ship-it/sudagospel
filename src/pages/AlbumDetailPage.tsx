@@ -211,6 +211,9 @@ const AlbumDetailPage = () => {
             <Button onClick={handleShuffle} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full" disabled={queue.length === 0}>
               <Shuffle className="h-5 w-5" />
             </Button>
+            <Button onClick={handleDownloadAll} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full" disabled={!songs || songs.length === 0} title="Download all tracks">
+              <Download className="h-5 w-5" />
+            </Button>
             <Button onClick={handleShare} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full">
               <Share2 className="h-5 w-5" />
             </Button>

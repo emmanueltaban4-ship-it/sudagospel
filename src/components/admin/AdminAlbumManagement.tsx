@@ -94,7 +94,7 @@ const AdminAlbumManagement = () => {
                   <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
                   <p className="text-xs text-muted-foreground">{album.artists?.name} · {(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "N/A"} · <span className="uppercase font-bold text-primary">{(album as any).album_type || "album"}</span></p>
                 </div>
-                <button onClick={() => { setEditingId(album.id); setEditTitle(album.title); setEditGenre(album.genre || ""); }} className="p-2 text-muted-foreground hover:text-foreground"><Edit3 className="h-4 w-4" /></button>
+                <button onClick={() => { setEditingId(album.id); setEditTitle(album.title); setEditGenre(album.genre || ""); setEditAlbumType((album as any).album_type || "album"); }} className="p-2 text-muted-foreground hover:text-foreground"><Edit3 className="h-4 w-4" /></button>
                 <button onClick={() => { if (confirm("Delete this album?")) deleteAlbum.mutate(album.id); }} className="p-2 text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
               </>
             )}
