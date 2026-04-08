@@ -127,7 +127,7 @@ const AdminVerificationRequests = () => {
                 size="sm"
                 variant="outline"
                 className="gap-1.5 rounded-full text-destructive border-destructive/30 hover:bg-destructive/10 flex-1"
-                onClick={() => handleRequest.mutate({ id: req.id, status: "rejected", artistId: req.artist_id })}
+                onClick={() => handleRequest.mutate({ id: req.id, status: "rejected", artistId: req.artist_id, userId: req.user_id })}
                 disabled={handleRequest.isPending}
               >
                 <X className="h-3.5 w-3.5" /> Reject
