@@ -81,7 +81,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
               if (!fileUrl) return;
               downloadFile(fileUrl, `${title} - ${artist}.mp3`);
             }}
-            className="p-1 text-muted-foreground hover:text-primary transition-colors"
+            className="p-1 text-muted-foreground hover:text-primary icon-btn-pop"
           >
             <Download className="h-3 w-3" />
           </button>

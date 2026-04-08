@@ -13,8 +13,8 @@ interface ArtistCardProps {
 
 const ArtistCard = ({ id, name, genre, songs, avatarUrl, isVerified }: ArtistCardProps) => {
   const content = (
-    <div className="flex flex-col items-center gap-2.5 group cursor-pointer">
-      <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 shadow-lg">
+    <div className="flex flex-col items-center gap-2.5 group cursor-pointer card-hover rounded-2xl p-2">
+      <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/50 transition-all duration-300 shadow-lg group-hover:shadow-primary/20">
         {avatarUrl ? (
           <img
             src={avatarUrl}
