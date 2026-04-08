@@ -79,21 +79,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
               e.preventDefault();
               e.stopPropagation();
               if (!fileUrl) return;
-              toast.info("Preparing download...");
-              fetch(fileUrl)
-                .then(r => r.blob())
-                .then(blob => {
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `${title} - ${artist}.mp3`;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-                  toast.success("Download started!");
-                })
-                .catch(() => toast.error("Download failed."));
+              downloadFile(fileUrl, `${title} - ${artist}.mp3`);
             }}
             className="p-1 text-muted-foreground hover:text-primary transition-colors"
           >
