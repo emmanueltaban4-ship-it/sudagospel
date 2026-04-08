@@ -95,6 +95,36 @@ const Index = () => {
     },
   });
 
+  const { data: spotlightVideos } = useQuery({
+    queryKey: ["spotlight-videos"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("videos")
+        .select("*, artists(id, name, avatar_url, is_verified)")
+        .eq("is_published", true)
+        .in("video_type", ["spotlight", "interview"])
+        .order("is_featured", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(6);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: featuredMinisters } = useQuery({
+    queryKey: ["featured-ministers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("artists")
+        .select("id, name, avatar_url, is_verified, genre, bio")
+        .eq("is_verified", true)
+        .order("name")
+        .limit(8);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: recommendedSongs } = useQuery({
     queryKey: ["recommended-songs", user?.id],
     queryFn: async () => {
