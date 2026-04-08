@@ -153,15 +153,15 @@ const Index = () => {
       <section className="px-4 lg:px-6 py-4">
         <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
           {[
-            { label: "Worship", icon: Mic2, gradient: "from-primary/20 to-primary/5" },
-            { label: "Praise", icon: HandMetal, gradient: "from-secondary/20 to-secondary/5" },
-            { label: "Choir", icon: Users2, gradient: "from-primary/15 to-secondary/10" },
-            { label: "Sermons", icon: BookOpen, gradient: "from-secondary/15 to-primary/10" },
+            { label: "Worship", icon: Mic2, gradient: "from-accent/20 to-accent/5" },
+            { label: "Praise", icon: HandMetal, gradient: "from-primary/20 to-primary/5" },
+            { label: "Choir", icon: Users2, gradient: "from-accent/15 to-primary/10" },
+            { label: "Sermons", icon: BookOpen, gradient: "from-primary/15 to-accent/10" },
           ].map((cat) => (
             <Link
               key={cat.label}
               to={`/music?genre=${cat.label}`}
-              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-gradient-to-r border border-border hover:border-primary/30 transition-all group"
+              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-card border border-border hover:border-primary/30 hover:glow-gold transition-all group"
             >
               <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${cat.gradient} flex items-center justify-center`}>
                 <cat.icon className="h-4 w-4 text-primary" />
