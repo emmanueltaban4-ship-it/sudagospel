@@ -196,6 +196,43 @@ const LibraryPage = () => {
               </div>
             )}
 
+            {/* RECENTLY PLAYED */}
+            {tab === "recent" && (
+              <div className="animate-fade-in">
+                {recentlyPlayed.length > 0 ? (
+                  <div className="space-y-0.5">
+                    {recentlyPlayed.map((song: any) => (
+                      <div
+                        key={song.id}
+                        onClick={() => play(song)}
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-card/80 transition-colors group cursor-pointer"
+                      >
+                        <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">
+                          {song.coverUrl ? (
+                            <img src={song.coverUrl} alt={song.title} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center">
+                              <Music className="h-5 w-5 text-muted-foreground/40" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{song.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
+                        </div>
+                        <Clock className="h-4 w-4 text-muted-foreground/40 flex-shrink-0" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <Clock className="h-12 w-12 text-muted-foreground/20 mx-auto mb-4" />
+                    <p className="text-sm text-muted-foreground">Songs you play will appear here</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* DOWNLOADS */}
             {tab === "downloads" && (
               <div className="animate-fade-in">
