@@ -141,6 +141,54 @@ const Index = () => {
     enabled: !!user,
   });
 
+  // "Because you listened to…" — pick a recently played artist and find similar songs
+  const becauseArtist = useMemo(() => {
+    if (!recentlyPlayed || recentlyPlayed.length === 0) return null;
+    return recentlyPlayed[0];
+  }, [recentlyPlayed]);
+
+  const { data: becauseYouListened } = useQuery({
+    queryKey: ["because-you-listened", becauseArtist?.artist],
+    queryFn: async () => {
+      // Find artist by name, then get other songs by same artist or same genre
+      const { data: artistMatch } = await supabase
+        .from("artists")
+        .select("id, name, genre")
+        .ilike("name", becauseArtist!.artist)
+        .limit(1);
+      
+      if (!artistMatch?.length) return [];
+      const artist = artistMatch[0];
+      
+      // Get songs from same artist (excluding the trigger song)
+      const { data: artistSongs } = await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .eq("artist_id", artist.id)
+        .neq("id", becauseArtist!.id)
+        .order("play_count", { ascending: false })
+        .limit(5);
+
+      // Also get songs from same genre by other artists
+      const genreSongs = artist.genre ? await supabase
+        .from("songs")
+        .select("*, artists(id, name, avatar_url)")
+        .eq("is_approved", true)
+        .eq("genre", artist.genre)
+        .neq("artist_id", artist.id)
+        .order("play_count", { ascending: false })
+        .limit(5)
+        .then(r => r.data || []) : [];
+
+      const combined = [...(artistSongs || []), ...genreSongs];
+      // Deduplicate
+      const seen = new Set<string>();
+      return combined.filter(s => { if (seen.has(s.id)) return false; seen.add(s.id); return true; }).slice(0, 10);
+    },
+    enabled: !!becauseArtist,
+  });
+
   const playSong = (song: any) => {
     const artistName = (song.artists as any)?.name || "Unknown";
     const track: Track = {
