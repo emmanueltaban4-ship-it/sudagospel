@@ -75,6 +75,10 @@ const ProfilePage = () => {
   const [albumTitle, setAlbumTitle] = useState("");
   const [albumDesc, setAlbumDesc] = useState("");
   const [albumGenre, setAlbumGenre] = useState("");
+  const [albumType, setAlbumType] = useState("album");
+  const [albumReleaseDate, setAlbumReleaseDate] = useState("");
+  const [albumCoverFile, setAlbumCoverFile] = useState<File | null>(null);
+  const albumCoverInputRef = useRef<HTMLInputElement>(null);
 
   // Video form
   const [showVideoForm, setShowVideoForm] = useState(false);
