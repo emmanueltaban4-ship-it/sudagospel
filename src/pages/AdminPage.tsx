@@ -128,6 +128,7 @@ const AdminPage = () => {
         {activeTab === "ads" && <AdminAds />}
         {activeTab === "songs" && <AdminSongManagement />}
         {activeTab === "artists" && <AdminArtistManagement />}
+        {activeTab === "videos" && <AdminVideoManagement />}
         {activeTab === "albums" && <AdminAlbumManagement />}
         {activeTab === "genres" && <AdminGenreManagement />}
         {activeTab === "articles" && <AdminArticles />}
