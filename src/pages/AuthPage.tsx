@@ -348,47 +348,8 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Right panel — hero image (hidden on mobile) */}
-      <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Feel the music"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/30" />
-
-        {/* Floating text on image */}
-        <div className="absolute bottom-12 left-10 right-10 z-10">
-          <div className="flex items-center gap-2 mb-3">
-            <Music2 className="h-5 w-5 text-primary" />
-            <span className="text-xs font-bold uppercase tracking-widest text-primary">Now Streaming</span>
-          </div>
-          <h2 className="font-heading text-2xl xl:text-3xl font-extrabold text-white leading-tight">
-            South Sudan's #1<br />Gospel Music Platform
-          </h2>
-          <p className="text-sm text-white/60 mt-2 max-w-xs">
-            10,000+ songs from gospel ministers across the nation
-          </p>
-        </div>
-
-        {/* Stats floating card */}
-        <div className="absolute top-10 right-10 z-10">
-          <div className="backdrop-blur-xl bg-white/10 border border-white/10 rounded-2xl p-4 shadow-2xl">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <p className="text-xl font-heading font-extrabold text-white">1K+</p>
-                <p className="text-[10px] text-white/50 uppercase tracking-wider">Artists</p>
-              </div>
-              <div>
-                <p className="text-xl font-heading font-extrabold text-white">10K+</p>
-                <p className="text-[10px] text-white/50 uppercase tracking-wider">Songs</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Right panel — hero image with social proof (hidden on mobile) */}
+      <RightPanel />
     </div>
   );
 };
