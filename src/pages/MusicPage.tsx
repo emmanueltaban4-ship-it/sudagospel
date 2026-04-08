@@ -212,6 +212,7 @@ const MusicPage = () => {
                   plays={formatPlays(song.plays)}
                   fileUrl={song.fileUrl}
                   queue={queue}
+                  isVerifiedArtist={song.isVerifiedArtist}
                 />
               ))}
             </div>
