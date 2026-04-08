@@ -12,6 +12,7 @@ const AdminAlbumManagement = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editGenre, setEditGenre] = useState("");
+  const [editAlbumType, setEditAlbumType] = useState("album");
 
   const { data: albums, isLoading } = useQuery({
     queryKey: ["admin-all-albums"],
