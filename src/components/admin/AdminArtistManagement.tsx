@@ -359,7 +359,7 @@ const AdminArtistManagement = () => {
                 <label className="text-xs font-semibold text-muted-foreground mb-1.5 block">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="pl-10" placeholder="artist@sudagospel.net" />
+                  <Input value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="pl-10" placeholder="artist@sudagospel.com" />
                 </div>
               </div>
               <div>
