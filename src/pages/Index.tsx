@@ -23,7 +23,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .order("play_count", { ascending: false })
         .limit(10);
@@ -37,7 +37,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .order("created_at", { ascending: false })
         .limit(10);
@@ -74,7 +74,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("albums")
-        .select("*, artists(id, name, avatar_url), songs(count)")
+        .select("*, artists(id, name, avatar_url, is_verified), songs(count)")
         .order("created_at", { ascending: false })
         .limit(10);
       if (error) throw error;
@@ -137,7 +137,7 @@ const Index = () => {
       if (!likedSongs?.length) {
         const { data } = await supabase
           .from("songs")
-          .select("*, artists(id, name, avatar_url)")
+          .select("*, artists(id, name, avatar_url, is_verified)")
           .eq("is_approved", true)
           .order("play_count", { ascending: false })
           .limit(10);
@@ -152,7 +152,7 @@ const Index = () => {
       if (genres.length === 0) {
         const { data } = await supabase
           .from("songs")
-          .select("*, artists(id, name, avatar_url)")
+          .select("*, artists(id, name, avatar_url, is_verified)")
           .eq("is_approved", true)
           .not("id", "in", `(${likedIds.join(",")})`)
           .order("play_count", { ascending: false })
@@ -161,7 +161,7 @@ const Index = () => {
       }
       const { data } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .in("genre", genres)
         .not("id", "in", `(${likedIds.join(",")})`)
@@ -194,7 +194,7 @@ const Index = () => {
       // Get songs from same artist (excluding the trigger song)
       const { data: artistSongs } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .eq("artist_id", artist.id)
         .neq("id", becauseArtist!.id)
@@ -204,7 +204,7 @@ const Index = () => {
       // Also get songs from same genre by other artists
       const genreSongs = artist.genre ? await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .eq("genre", artist.genre)
         .neq("artist_id", artist.id)
