@@ -7,6 +7,8 @@ import { artistPath } from "@/lib/artist-slug";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { downloadFile } from "@/lib/download";
 import {
   ArrowLeft, Music, Play, Pause, Shuffle, Download, Share2, Disc3, Clock,
 } from "lucide-react";
@@ -57,7 +59,27 @@ const AlbumDetailPage = () => {
     })), [songs, album]);
 
   const totalPlays = songs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
+  const totalDuration = songs?.reduce((sum, s) => sum + (s.duration_seconds || 0), 0) || 0;
   const artist = album?.artists as any;
+  const albumType = (album as any)?.album_type || "album";
+
+  const formatDuration = (secs: number) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    if (h > 0) return `${h} hr ${m} min`;
+    return `${m} min ${s} sec`;
+  };
+
+  const handleDownloadAll = async () => {
+    if (!songs || songs.length === 0) return;
+    toast.info(`Downloading ${songs.length} tracks...`);
+    for (const song of songs) {
+      const songArtist = (song.artists as any)?.name || "Unknown";
+      await downloadFile(song.file_url, `${song.title} - ${songArtist}.mp3`);
+      await new Promise((r) => setTimeout(r, 500));
+    }
+  };
 
   useDocumentMeta({
     title: album ? `${album.title} - ${artist?.name || "Album"}` : "Album",
@@ -150,17 +172,21 @@ const AlbumDetailPage = () => {
               </div>
 
               <div className="flex-1 min-w-0 text-center md:text-left">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Album</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{albumType}</span>
+                  <Badge variant="outline" className="text-[9px] uppercase">{albumType}</Badge>
+                </div>
                 <h1 className="font-heading text-3xl md:text-5xl font-extrabold text-foreground mt-1 leading-tight">
                   {album.title}
                 </h1>
-                <div className="flex items-center gap-3 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
+                <div className="flex items-center gap-3 mt-3 justify-center md:justify-start text-sm text-muted-foreground flex-wrap">
                   {artist && (
                     <Link to={artistPath(artist.name)} className="hover:text-primary transition-colors font-medium">
                       {artist.name}
                     </Link>
                   )}
                   <span>{songs?.length || 0} songs</span>
+                  {totalDuration > 0 && <span>{formatDuration(totalDuration)}</span>}
                   <span>{totalPlays.toLocaleString()} plays</span>
                   {album.release_date && <span>{new Date(album.release_date).getFullYear()}</span>}
                 </div>
@@ -184,6 +210,9 @@ const AlbumDetailPage = () => {
             </button>
             <Button onClick={handleShuffle} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full" disabled={queue.length === 0}>
               <Shuffle className="h-5 w-5" />
+            </Button>
+            <Button onClick={handleDownloadAll} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full" disabled={!songs || songs.length === 0} title="Download all tracks">
+              <Download className="h-5 w-5" />
             </Button>
             <Button onClick={handleShare} variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground rounded-full">
               <Share2 className="h-5 w-5" />

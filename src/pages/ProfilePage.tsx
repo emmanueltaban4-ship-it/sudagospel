@@ -75,6 +75,10 @@ const ProfilePage = () => {
   const [albumTitle, setAlbumTitle] = useState("");
   const [albumDesc, setAlbumDesc] = useState("");
   const [albumGenre, setAlbumGenre] = useState("");
+  const [albumType, setAlbumType] = useState("album");
+  const [albumReleaseDate, setAlbumReleaseDate] = useState("");
+  const [albumCoverFile, setAlbumCoverFile] = useState<File | null>(null);
+  const albumCoverInputRef = useRef<HTMLInputElement>(null);
 
   // Video form
   const [showVideoForm, setShowVideoForm] = useState(false);
@@ -202,10 +206,28 @@ const ProfilePage = () => {
 
   const createAlbum = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("albums").insert({ artist_id: myArtist!.id, title: albumTitle, description: albumDesc || null, genre: albumGenre || null });
+      let coverUrl: string | null = null;
+      if (albumCoverFile) {
+        const ext = albumCoverFile.name.split(".").pop();
+        const path = `albums/${myArtist!.id}/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("covers").upload(path, albumCoverFile);
+        if (upErr) throw upErr;
+        const { data: urlData } = supabase.storage.from("covers").getPublicUrl(path);
+        coverUrl = urlData.publicUrl;
+      }
+      const { error } = await supabase.from("albums").insert({
+        artist_id: myArtist!.id, title: albumTitle, description: albumDesc || null,
+        genre: albumGenre || null, album_type: albumType,
+        release_date: albumReleaseDate || null, cover_url: coverUrl,
+      } as any);
       if (error) throw error;
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["artist-albums"] }); setShowAlbumForm(false); setAlbumTitle(""); setAlbumDesc(""); setAlbumGenre(""); toast.success("Album created!"); },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artist-albums"] });
+      setShowAlbumForm(false); setAlbumTitle(""); setAlbumDesc(""); setAlbumGenre("");
+      setAlbumType("album"); setAlbumReleaseDate(""); setAlbumCoverFile(null);
+      toast.success("Album created!");
+    },
     onError: (err: any) => toast.error(err.message),
   });
 
@@ -523,6 +545,22 @@ const ProfilePage = () => {
                       <Input value={albumTitle} onChange={(e) => setAlbumTitle(e.target.value)} placeholder="Album title" className="bg-background" />
                       <Textarea value={albumDesc} onChange={(e) => setAlbumDesc(e.target.value)} placeholder="Description" rows={2} className="bg-background" />
                       <Input value={albumGenre} onChange={(e) => setAlbumGenre(e.target.value)} placeholder="Genre" className="bg-background" />
+                      <Select value={albumType} onValueChange={setAlbumType}>
+                        <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="album">Album</SelectItem>
+                          <SelectItem value="ep">EP</SelectItem>
+                          <SelectItem value="single">Single</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input type="date" value={albumReleaseDate} onChange={(e) => setAlbumReleaseDate(e.target.value)} className="bg-background" placeholder="Release date" />
+                      <div>
+                        <label className="flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border-2 border-dashed border-border bg-background p-3 text-center hover:border-primary transition-colors">
+                          <Camera className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">{albumCoverFile ? albumCoverFile.name : "Upload cover art"}</span>
+                          <input ref={albumCoverInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => setAlbumCoverFile(e.target.files?.[0] || null)} />
+                        </label>
+                      </div>
                       <Button onClick={() => createAlbum.mutate()} size="sm" className="rounded-full bg-primary text-primary-foreground gap-1.5" disabled={!albumTitle.trim()}><Save className="h-3.5 w-3.5" /> Create</Button>
                     </div>
                   )}
@@ -534,7 +572,10 @@ const ProfilePage = () => {
                           <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
                             {album.cover_url ? <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" /> : <Disc3 className="h-8 w-8 text-muted-foreground/30" />}
                           </div>
-                          <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">{(album as any).album_type || "album"}</span>
+                          </div>
                           <p className="text-[11px] text-muted-foreground">{(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "Gospel"}</p>
                           <button onClick={(e) => { e.preventDefault(); if (confirm("Delete this album?")) deleteAlbum.mutate(album.id); }} className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all"><Trash2 className="h-3.5 w-3.5" /></button>
                         </Link>

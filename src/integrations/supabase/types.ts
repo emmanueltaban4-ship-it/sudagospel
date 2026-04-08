@@ -61,6 +61,7 @@ export type Database = {
       }
       albums: {
         Row: {
+          album_type: string
           artist_id: string
           cover_url: string | null
           created_at: string
@@ -72,6 +73,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          album_type?: string
           artist_id: string
           cover_url?: string | null
           created_at?: string
@@ -83,6 +85,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          album_type?: string
           artist_id?: string
           cover_url?: string | null
           created_at?: string

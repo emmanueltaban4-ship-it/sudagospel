@@ -12,6 +12,7 @@ const AdminAlbumManagement = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editGenre, setEditGenre] = useState("");
+  const [editAlbumType, setEditAlbumType] = useState("album");
 
   const { data: albums, isLoading } = useQuery({
     queryKey: ["admin-all-albums"],
@@ -27,7 +28,7 @@ const AdminAlbumManagement = () => {
 
   const updateAlbum = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("albums").update({ title: editTitle, genre: editGenre || null }).eq("id", editingId!);
+      const { error } = await supabase.from("albums").update({ title: editTitle, genre: editGenre || null, album_type: editAlbumType } as any).eq("id", editingId!);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -76,9 +77,14 @@ const AdminAlbumManagement = () => {
               {album.cover_url ? <img src={album.cover_url} alt="" className="h-full w-full object-cover" /> : <Disc3 className="h-5 w-5 text-muted-foreground" />}
             </div>
             {editingId === album.id ? (
-              <div className="flex-1 flex items-center gap-2">
+              <div className="flex-1 flex items-center gap-2 flex-wrap">
                 <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className="h-8 text-sm" />
                 <Input value={editGenre} onChange={(e) => setEditGenre(e.target.value)} placeholder="Genre" className="h-8 text-sm max-w-[120px]" />
+                <select value={editAlbumType} onChange={(e) => setEditAlbumType(e.target.value)} className="h-8 text-sm rounded border border-border bg-background px-2">
+                  <option value="album">Album</option>
+                  <option value="ep">EP</option>
+                  <option value="single">Single</option>
+                </select>
                 <button onClick={() => updateAlbum.mutate()} className="text-primary"><Save className="h-4 w-4" /></button>
                 <button onClick={() => setEditingId(null)} className="text-muted-foreground"><X className="h-4 w-4" /></button>
               </div>
@@ -86,9 +92,9 @@ const AdminAlbumManagement = () => {
               <>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
-                  <p className="text-xs text-muted-foreground">{album.artists?.name} · {(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "N/A"}</p>
+                  <p className="text-xs text-muted-foreground">{album.artists?.name} · {(album.songs as any)?.[0]?.count || 0} songs · {album.genre || "N/A"} · <span className="uppercase font-bold text-primary">{(album as any).album_type || "album"}</span></p>
                 </div>
-                <button onClick={() => { setEditingId(album.id); setEditTitle(album.title); setEditGenre(album.genre || ""); }} className="p-2 text-muted-foreground hover:text-foreground"><Edit3 className="h-4 w-4" /></button>
+                <button onClick={() => { setEditingId(album.id); setEditTitle(album.title); setEditGenre(album.genre || ""); setEditAlbumType((album as any).album_type || "album"); }} className="p-2 text-muted-foreground hover:text-foreground"><Edit3 className="h-4 w-4" /></button>
                 <button onClick={() => { if (confirm("Delete this album?")) deleteAlbum.mutate(album.id); }} className="p-2 text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
               </>
             )}

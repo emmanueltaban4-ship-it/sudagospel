@@ -28,6 +28,12 @@ const UploadPage = () => {
   const [musicFile, setMusicFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
 
+  // Inline album creation
+  const [showNewAlbum, setShowNewAlbum] = useState(false);
+  const [newAlbumTitle, setNewAlbumTitle] = useState("");
+  const [newAlbumType, setNewAlbumType] = useState("album");
+  const [newAlbumCover, setNewAlbumCover] = useState<File | null>(null);
+
   // New artist fields
   const [showNewArtist, setShowNewArtist] = useState(false);
   const [newArtistName, setNewArtistName] = useState("");
@@ -211,20 +217,63 @@ const UploadPage = () => {
           </div>
 
           {/* Album selection (optional) */}
-          {artistId && albums && albums.length > 0 && (
+          {artistId && (
             <div>
               <Label className="text-foreground">Album (optional)</Label>
-              <Select value={albumId} onValueChange={setAlbumId}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Single (no album)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Single (no album)</SelectItem>
-                  {albums.map((a) => (
-                    <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {!showNewAlbum ? (
+                <div className="flex gap-2 mt-1">
+                  <Select value={albumId} onValueChange={(v) => { if (v === "__new__") { setShowNewAlbum(true); setAlbumId(""); } else { setAlbumId(v); } }}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Single (no album)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Single (no album)</SelectItem>
+                      {albums?.map((a) => (
+                        <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>
+                      ))}
+                      <SelectItem value="__new__">+ Create New Album</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <div className="mt-1 p-3 rounded-lg bg-card border border-border space-y-2">
+                  <p className="text-xs font-bold text-foreground">New Album</p>
+                  <Input value={newAlbumTitle} onChange={(e) => setNewAlbumTitle(e.target.value)} placeholder="Album title" />
+                  <Select value={newAlbumType} onValueChange={setNewAlbumType}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="album">Album</SelectItem>
+                      <SelectItem value="ep">EP</SelectItem>
+                      <SelectItem value="single">Single</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <label className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-dashed border-border bg-background p-2 text-center hover:border-primary transition-colors">
+                    <Image className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">{newAlbumCover ? newAlbumCover.name : "Album cover (optional)"}</span>
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => setNewAlbumCover(e.target.files?.[0] || null)} />
+                  </label>
+                  <div className="flex gap-2">
+                    <Button type="button" size="sm" className="bg-secondary text-secondary-foreground" disabled={!newAlbumTitle.trim()} onClick={async () => {
+                      let coverUrl: string | null = null;
+                      if (newAlbumCover) {
+                        const ext = newAlbumCover.name.split(".").pop();
+                        const path = `albums/${artistId}/${Date.now()}.${ext}`;
+                        const { error: upErr } = await supabase.storage.from("covers").upload(path, newAlbumCover);
+                        if (upErr) { toast.error(upErr.message); return; }
+                        const { data: urlData } = supabase.storage.from("covers").getPublicUrl(path);
+                        coverUrl = urlData.publicUrl;
+                      }
+                      const { data, error } = await supabase.from("albums").insert({ artist_id: artistId, title: newAlbumTitle.trim(), album_type: newAlbumType, cover_url: coverUrl } as any).select().single();
+                      if (error) { toast.error(error.message); return; }
+                      setAlbumId(data.id);
+                      setShowNewAlbum(false);
+                      setNewAlbumTitle(""); setNewAlbumType("album"); setNewAlbumCover(null);
+                      toast.success("Album created!");
+                    }}>Create</Button>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setShowNewAlbum(false)}>Cancel</Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

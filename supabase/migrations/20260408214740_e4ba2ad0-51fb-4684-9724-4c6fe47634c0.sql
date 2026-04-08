@@ -1,0 +1,1 @@
+ALTER TABLE public.albums ADD COLUMN album_type text NOT NULL DEFAULT 'album';
