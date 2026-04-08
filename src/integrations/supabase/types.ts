@@ -492,6 +492,53 @@ export type Database = {
         }
         Relationships: []
       }
+      song_boosts: {
+        Row: {
+          amount_paid: number
+          boost_type: string
+          created_at: string
+          ends_at: string | null
+          id: string
+          song_id: string
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid?: number
+          boost_type?: string
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          song_id: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          boost_type?: string
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          song_id?: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "song_boosts_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       song_comments: {
         Row: {
           content: string
