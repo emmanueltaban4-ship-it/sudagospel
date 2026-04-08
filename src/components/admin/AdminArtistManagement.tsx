@@ -418,7 +418,7 @@ const AdminArtistManagement = () => {
               <div className="rounded-lg bg-muted p-4 text-sm text-muted-foreground space-y-2">
                 <p>This will create accounts for <strong className="text-foreground">{unlinkedCount} artists</strong>:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Email format: <code>artist.name@sudagospel.net</code></li>
+                  <li>Email format: <code>artist.name@sudagospel.com</code></li>
                   <li>Random 12-character passwords</li>
                   <li>You can download credentials as CSV after</li>
                 </ul>
