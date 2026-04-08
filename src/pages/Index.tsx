@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useAuth } from "@/hooks/use-auth";
 
 const Index = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
