@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
+import PageTransition from "./PageTransition";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
 import {
@@ -27,6 +28,7 @@ const sidebarLinks = [
 ];
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <TopBar />
@@ -78,7 +80,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {/* Main content — proper bottom padding for mini player + bottom nav on mobile */}
         <main className="flex-1 min-w-0 overflow-y-auto h-[calc(100vh-3.5rem)] overscroll-contain scroll-smooth">
           <div className="pb-[140px] md:pb-[80px]">
-            {children}
+            <PageTransition key={location.pathname}>
+              {children}
+            </PageTransition>
             <footer className="border-t border-border py-4 px-4 mt-8">
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                 <span>© {new Date().getFullYear()} SudaGospel</span>
