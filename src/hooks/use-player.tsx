@@ -15,6 +15,7 @@ interface PlayerContextType {
   currentTime: number;
   volume: number;
   queue: Track[];
+  recentlyPlayed: Track[];
   play: (track: Track, queue?: Track[]) => void;
   togglePlay: () => void;
   seek: (time: number) => void;
@@ -30,6 +31,7 @@ const PlayerContext = createContext<PlayerContextType>({
   currentTime: 0,
   volume: 1,
   queue: [],
+  recentlyPlayed: [],
   play: () => {},
   togglePlay: () => {},
   seek: () => {},
@@ -54,6 +56,12 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolumeState] = useState(1);
   const [queue, setQueue] = useState<Track[]>([]);
+  const [recentlyPlayed, setRecentlyPlayed] = useState<Track[]>(() => {
+    try {
+      const stored = localStorage.getItem("sudagospel_recently_played");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -76,6 +84,12 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const play = useCallback((track: Track, newQueue?: Track[]) => {
     if (newQueue) setQueue(newQueue);
     setCurrentTrack(track);
+    setRecentlyPlayed(prev => {
+      const filtered = prev.filter(t => t.id !== track.id);
+      const updated = [track, ...filtered].slice(0, 30);
+      localStorage.setItem("sudagospel_recently_played", JSON.stringify(updated));
+      return updated;
+    });
     if (audioRef.current) {
       audioRef.current.src = getPlayableUrl(track.fileUrl);
       audioRef.current.play().catch(() => {
@@ -139,6 +153,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         currentTime,
         volume,
         queue,
+        recentlyPlayed,
         play,
         togglePlay,
         seek,
