@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
 
 const SongDetailPage = () => {
@@ -138,22 +139,7 @@ const SongDetailPage = () => {
     if (user) {
       supabase.from("song_downloads").insert({ song_id: song.id, user_id: user.id }).then(() => {});
     }
-    toast.info("Preparing download...");
-    try {
-      const r = await fetch(song.file_url);
-      const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${song.title} - ${artistName}.mp3`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast.success("Download started!");
-    } catch {
-      toast.error("Download failed.");
-    }
+    await downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
   };
 
   const handleShare = async () => {

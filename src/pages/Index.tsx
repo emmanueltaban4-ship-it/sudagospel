@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -67,6 +67,20 @@ const Index = () => {
       return data;
     },
   });
+
+  const { data: albums } = useQuery({
+    queryKey: ["albums-home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("*, artists(id, name, avatar_url), songs(count)")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: youtubeArtists } = useQuery({
     queryKey: ["youtube-artists-home"],
     queryFn: async () => {
@@ -294,6 +308,44 @@ const Index = () => {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Albums */}
+      {albums && albums.length > 0 && (
+        <section className="py-6">
+          <div className="px-4 lg:px-6">
+            <SectionHeader title="Albums" icon={<Disc3 className="h-5 w-5 text-primary" />} linkTo="/music" />
+          </div>
+          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-1">
+              {albums.map((album) => {
+                const artist = album.artists as any;
+                return (
+                  <Link key={album.id} to={`/album/${album.id}`} className="flex-shrink-0 w-40 md:w-48 group">
+                    <div className="relative aspect-square rounded-xl overflow-hidden mb-2.5 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all">
+                      {album.cover_url ? (
+                        <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-accent/20 to-primary/10 flex items-center justify-center">
+                          <Disc3 className="h-10 w-10 text-muted-foreground" />
+                        </div>
+                      )}
+                      <div className="absolute bottom-2 right-2 bg-background/80 backdrop-blur-sm rounded-full px-2 py-0.5 text-[10px] font-semibold text-foreground">
+                        {(album.songs as any)?.[0]?.count || 0} songs
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                      {album.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">
+                      {artist?.name || "Unknown"}
+                    </p>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
