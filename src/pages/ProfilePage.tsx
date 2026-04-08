@@ -272,6 +272,24 @@ const ProfilePage = () => {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const extractYouTubeId = (url: string): string | null => {
+    if (!url) return null;
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+      /^([a-zA-Z0-9_-]{11})$/,
+    ];
+    for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
+    return null;
+  };
+
+  const handleVideoUrlChange = (url: string) => {
+    setVideoUrl(url);
+    const id = extractYouTubeId(url);
+    if (id && (!videoThumbnail || videoThumbnail.includes("img.youtube.com"))) {
+      setVideoThumbnail(`https://img.youtube.com/vi/${id}/hqdefault.jpg`);
+    }
+  };
+
   const resetVideoForm = () => {
     setVideoTitle(""); setVideoUrl(""); setVideoDesc(""); setVideoType("music_video"); setVideoThumbnail(""); setEditingVideoId(null); setShowVideoForm(false);
   };
