@@ -653,6 +653,8 @@ export type Database = {
           is_approved: boolean | null
           lyrics: string | null
           play_count: number | null
+          release_status: string
+          scheduled_release_at: string | null
           title: string
           updated_at: string
           uploaded_by: string | null
@@ -671,6 +673,8 @@ export type Database = {
           is_approved?: boolean | null
           lyrics?: string | null
           play_count?: number | null
+          release_status?: string
+          scheduled_release_at?: string | null
           title: string
           updated_at?: string
           uploaded_by?: string | null
@@ -689,6 +693,8 @@ export type Database = {
           is_approved?: boolean | null
           lyrics?: string | null
           play_count?: number | null
+          release_status?: string
+          scheduled_release_at?: string | null
           title?: string
           updated_at?: string
           uploaded_by?: string | null

@@ -1,61 +1,76 @@
 
-
-# Full Album System Enhancement
+# Upgraded Upload Experience + Scheduled Releases
 
 ## Summary
-The album infrastructure (table, detail page, basic CRUD) already exists. This plan adds: (1) album type support (Album/EP/Single), (2) cover art upload for albums, (3) release date picker, (4) total duration calculation on the album detail page, (5) "Download All" button, and (6) better album creation flow in both the profile page and upload page.
+Replace the current single-form upload page with a polished multi-step wizard. Add scheduled release support with countdown timers and follower notifications via email.
 
 ## What Changes
 
-### 1. Database: Add `album_type` Column
-Add an `album_type` text column to the `albums` table with values: `album`, `ep`, `single`. Default: `album`.
+### 1. Database: Add `scheduled_release_at` and `release_status` to Songs
+- `scheduled_release_at` (timestamptz, nullable) — future publish date
+- `release_status` (text, default 'published') — values: `draft`, `scheduled`, `published`
+- Songs with `release_status = 'scheduled'` are hidden until the scheduled date
+- Update the SELECT RLS policy so scheduled songs are only visible to the uploader/admin until release
 
 **Migration:**
 ```sql
-ALTER TABLE public.albums ADD COLUMN album_type text NOT NULL DEFAULT 'album';
+ALTER TABLE public.songs ADD COLUMN scheduled_release_at timestamptz;
+ALTER TABLE public.songs ADD COLUMN release_status text NOT NULL DEFAULT 'published';
 ```
 
-### 2. Album Creation with Cover Art Upload (Profile Page)
-Enhance the existing album creation form on `src/pages/ProfilePage.tsx`:
-- Add cover image upload (to `covers` bucket)
-- Add release date picker
-- Add album type selector (Album / EP / Single)
-- Show album type badge on album cards
+### 2. Multi-Step Upload Wizard (`src/pages/UploadPage.tsx`)
+Rewrite as a 4-step wizard with progress indicator:
 
-### 3. Upload Page: Create Album Inline
-On `src/pages/UploadPage.tsx`, add a "New Album" option in the album dropdown that opens an inline form to create an album (with cover, type, release date) before uploading the song.
+**Step 1 — Audio File**
+- Drag & drop or click to upload audio (MP3, WAV)
+- Show file name, size, duration preview
+- Visual upload progress
 
-### 4. Album Detail Page Enhancements (`src/pages/AlbumDetailPage.tsx`)
-- Show album type badge (Album / EP / Single)
-- Calculate and display total duration from all songs' `duration_seconds`
-- Add "Download All" button that downloads each track sequentially
-- Show track numbers properly
+**Step 2 — Cover Artwork**
+- Upload cover image with live preview
+- Square aspect ratio guidance
 
-### 5. Artist Detail Page: Better Album Display
-On `src/pages/ArtistDetailPage.tsx`, ensure the albums tab shows album type badges and links to album detail pages with cover art.
+**Step 3 — Metadata**
+- Title, Description, Genre selector, Lyrics
+- Artist selector (with create-new inline)
+- Album selector (with create-new inline, including type/cover)
 
-### 6. Admin Album Management
-Update `src/components/admin/AdminAlbumManagement.tsx` to show and edit album type.
+**Step 4 — Release Options**
+- Choose: Publish Now or Schedule Release
+- If scheduled: date/time picker for future release
+- Summary card showing all entered info
+- Submit button
+
+### 3. Countdown Timer Component (`src/components/CountdownTimer.tsx`)
+- Shows days/hours/minutes/seconds until release
+- Used on song detail page and in song cards for scheduled songs
+- Animated, clean design
+
+### 4. Scheduled Release Display
+- Song detail page shows countdown for upcoming releases
+- Song cards show "Coming Soon" badge with countdown
+- Home page "New Releases" can show upcoming scheduled songs
+
+### 5. Edge Function: Auto-Publish Scheduled Songs
+- `publish-scheduled-songs` edge function triggered by pg_cron every minute
+- Checks for songs where `scheduled_release_at <= now()` and `release_status = 'scheduled'`
+- Updates them to `release_status = 'published'` and `is_approved = true`
+
+### 6. Edge Function: Notify Followers
+- When a song gets published (either immediately or via schedule), notify followers
+- Query `artist_follows` for the artist, send notification emails
+- Uses the existing email infrastructure if configured, otherwise stores in a notifications approach
+
+## Files to Create/Modify
+- **New migration** — `scheduled_release_at` + `release_status` columns, updated RLS
+- `src/pages/UploadPage.tsx` — Complete rewrite as multi-step wizard
+- `src/components/CountdownTimer.tsx` — New countdown component
+- `src/pages/SongDetailPage.tsx` — Show countdown for scheduled songs
+- `supabase/functions/publish-scheduled-songs/index.ts` — Auto-publish cron function
+- pg_cron job for auto-publishing
 
 ## Technical Details
-
-### Database migration
-Single migration adding `album_type` column to `albums`.
-
-### Cover art upload flow
-Reuse the existing `covers` storage bucket. On album creation, upload the image and store the public URL in `albums.cover_url`.
-
-### Total duration calculation
-Sum `duration_seconds` from all songs in the album query result, displayed as "X min Y sec".
-
-### Download All
-Iterate through tracks, fetch each blob, and trigger downloads with a small delay between each to avoid browser blocking.
-
-### Files to modify
-- **New migration** — add `album_type` to `albums`
-- `src/pages/ProfilePage.tsx` — enhanced album create form with cover upload, type, release date
-- `src/pages/UploadPage.tsx` — inline album creation option
-- `src/pages/AlbumDetailPage.tsx` — total duration, download all, album type badge
-- `src/pages/ArtistDetailPage.tsx` — album type badges in albums tab
-- `src/components/admin/AdminAlbumManagement.tsx` — album type column and edit
-
+- Wizard state managed with useState, step transitions with framer-motion
+- Audio file duration extracted via Web Audio API on upload
+- Countdown uses `setInterval` with 1-second ticks
+- Scheduled songs visible only to uploader until release date

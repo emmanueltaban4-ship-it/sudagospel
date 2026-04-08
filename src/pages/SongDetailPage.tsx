@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
 import ShareDialog from "@/components/ShareDialog";
+import CountdownTimer from "@/components/CountdownTimer";
 
 const SongDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -199,6 +200,13 @@ const SongDetailPage = () => {
 
               {/* Info */}
               <div className="flex-1 min-w-0 text-center md:text-left">
+                {(song as any).release_status === "scheduled" && (song as any).scheduled_release_at && (
+                  <div className="mb-3 flex justify-center md:justify-start">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Coming Soon</span>
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Song</p>
                 <h1 className="font-heading text-2xl md:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight">
                   {song.title}
@@ -236,6 +244,21 @@ const SongDetailPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Countdown Timer for scheduled songs */}
+        {(song as any).release_status === "scheduled" && (song as any).scheduled_release_at && (
+          <div className="px-4 lg:px-8 max-w-4xl mx-auto py-6">
+            <div className="rounded-xl bg-card border border-primary/20 p-6 text-center">
+              <p className="text-sm font-bold text-foreground mb-4">Releasing in</p>
+              <div className="flex justify-center">
+                <CountdownTimer targetDate={(song as any).scheduled_release_at} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                This song will be available on {new Date((song as any).scheduled_release_at).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* === CONTROLS BAR === */}
         <div className="px-4 lg:px-8 max-w-4xl mx-auto">
