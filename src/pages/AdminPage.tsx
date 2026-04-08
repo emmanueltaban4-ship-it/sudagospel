@@ -13,7 +13,12 @@ import AdminSongManagement from "@/components/admin/AdminSongManagement";
 import AdminArtistManagement from "@/components/admin/AdminArtistManagement";
 import AdminAds from "@/components/admin/AdminAds";
 import AdminMonetization from "@/components/admin/AdminMonetization";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign } from "lucide-react";
+import AdminGenreManagement from "@/components/admin/AdminGenreManagement";
+import AdminAlbumManagement from "@/components/admin/AdminAlbumManagement";
+import AdminReports from "@/components/admin/AdminReports";
+import AdminFeaturedContent from "@/components/admin/AdminFeaturedContent";
+import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail } from "lucide-react";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -22,10 +27,15 @@ const tabs = [
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
   { id: "artists", label: "Artists", icon: Mic2 },
+  { id: "albums", label: "Albums", icon: Disc3 },
+  { id: "genres", label: "Genres", icon: Tag },
   { id: "articles", label: "Articles", icon: FileText },
   { id: "approvals", label: "Approvals", icon: CheckSquare },
   { id: "users", label: "Users", icon: Users },
   { id: "moderation", label: "Moderation", icon: MessageCircle },
+  { id: "reports", label: "Reports", icon: Flag },
+  { id: "featured", label: "Featured", icon: Star },
+  { id: "emails", label: "Emails", icon: Mail },
 ] as const;
 
 type TabId = typeof tabs[number]["id"];
@@ -116,10 +126,15 @@ const AdminPage = () => {
         {activeTab === "ads" && <AdminAds />}
         {activeTab === "songs" && <AdminSongManagement />}
         {activeTab === "artists" && <AdminArtistManagement />}
+        {activeTab === "albums" && <AdminAlbumManagement />}
+        {activeTab === "genres" && <AdminGenreManagement />}
         {activeTab === "articles" && <AdminArticles />}
         {activeTab === "approvals" && <AdminApprovalQueue />}
         {activeTab === "users" && <AdminUserManagement />}
         {activeTab === "moderation" && <AdminModeration />}
+        {activeTab === "reports" && <AdminReports />}
+        {activeTab === "featured" && <AdminFeaturedContent />}
+        {activeTab === "emails" && <AdminEmailLogs />}
       </div>
     </Layout>
   );
