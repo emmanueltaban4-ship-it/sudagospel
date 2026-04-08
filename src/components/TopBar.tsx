@@ -1,4 +1,5 @@
 import { Search, Crown } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
