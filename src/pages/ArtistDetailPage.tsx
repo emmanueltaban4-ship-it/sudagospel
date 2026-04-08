@@ -183,12 +183,17 @@ const ArtistDetailPage = () => {
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="absolute top-4 right-4 z-10 flex gap-2">
-            <button
-              onClick={handleShare}
-              className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95"
-            >
-              <Share2 className="h-5 w-5" />
-            </button>
+            <ShareDialog
+              title={artist?.name || "Artist"}
+              coverUrl={artist?.avatar_url || undefined}
+              shareUrl={artistShareUrl}
+              type="artist"
+              trigger={
+                <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95">
+                  <Share2 className="h-5 w-5" />
+                </button>
+              }
+            />
             <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95">
               <MoreHorizontal className="h-5 w-5" />
             </button>
