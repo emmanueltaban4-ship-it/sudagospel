@@ -9,6 +9,7 @@ import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
+import { SongCardSkeleton, ArtistCardSkeleton, SectionSkeleton } from "@/components/Skeletons";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useAuth } from "@/hooks/use-auth";
 
