@@ -1,50 +1,64 @@
 
 
-# Share Links, Light/Dark Mode, and Admin Video Management
+# Play/Download Count Tracking + Artist Video Sharing
 
 ## Summary
-Three changes: (1) hardcode share URLs to `https://sudagospel.com` instead of `window.location.origin`, (2) ensure the existing light/dark mode toggle works properly with full theme support, and (3) add a Video Content Management tab to the admin dashboard.
+Add real-time play count and download count incrementing for songs, and give artists the ability to upload/manage their own videos from their profile page.
 
 ## What Changes
 
-### 1. Share Links → sudagospel.com Domain
-Replace `window.location.origin` with `https://sudagospel.com` in all share URL constructions.
+### 1. Increment Play Count When a Song Plays
+Currently `play_count` on the `songs` table is never incremented. Add a database function `increment_play_count(song_id)` and call it from the player when a new track starts playing.
 
-**Files to edit:**
-- `src/pages/SongDetailPage.tsx` — change `ogShareUrl`
-- `src/components/FullScreenPlayer.tsx` — change `shareUrl`
-- `src/pages/ArtistDetailPage.tsx` — change `artistShareUrl`
+**Database migration:**
+- Create `increment_play_count(song_uuid)` — SQL function that does `UPDATE songs SET play_count = COALESCE(play_count, 0) + 1 WHERE id = song_uuid`, with `SECURITY DEFINER` so any user (even anonymous via anon key) can increment.
 
-### 2. Light/Dark Mode
-The app already has `next-themes` ThemeProvider (defaultTheme="dark") and a ThemeToggle component in the TopBar. This is already functional. I will verify the CSS supports both themes properly and ensure the toggle is also accessible on mobile (add it to BottomNav or a settings area if missing).
+**Code change:**
+- `src/hooks/use-player.tsx` — In `playTrack()`, after setting the audio source, call `supabase.rpc('increment_play_count', { song_uuid: track.id })` (fire-and-forget).
 
-**Files to review/edit:**
-- `src/index.css` — ensure light theme CSS variables are properly defined
-- `src/components/BottomNav.tsx` — optionally add theme toggle access on mobile
+### 2. Increment Download Count on Download
+Currently the download logs to `song_downloads` table but never updates the `download_count` column on `songs`.
 
-### 3. Admin Video Content Management
-Add a new "Videos" tab to the admin dashboard for managing video content (music videos, interviews, spotlight features).
+**Database migration:**
+- Create `increment_download_count(song_uuid)` — same pattern as play count.
 
-**New file:** `src/components/admin/AdminVideoManagement.tsx`
-- List all videos with title, type, artist, publish status, view count
-- Add/edit video (title, URL, description, thumbnail, type, artist, featured flag)
-- Delete videos
-- Toggle publish/featured status
-- Filter by video type (music_video, interview, spotlight)
+**Code change:**
+- `src/pages/SongDetailPage.tsx` — In `handleDownload`, also call `supabase.rpc('increment_download_count', { song_uuid: song.id })`.
 
-**Edit:** `src/pages/AdminPage.tsx`
-- Add "Videos" tab with Video icon between existing tabs
+### 3. Artist Video Management on Profile Page
+Give artists a "Videos" tab on their profile page where they can add, edit, and delete their own videos (music videos, interviews, etc.). The `videos` table already has `uploaded_by` and artist RLS policies.
+
+**Code change — `src/pages/ProfilePage.tsx`:**
+- Add a "Videos" tab to the artist section (alongside Songs, Albums, Settings)
+- List artist's videos with title, type, view count
+- Add video form: title, YouTube/video URL, description, thumbnail URL, video type selector
+- Edit/delete existing videos
+- Videos use `uploaded_by = user.id` and `artist_id = artist.id`
 
 ## Technical Details
 
-### Share URL change
-```typescript
-// Before
-const shareUrl = `${window.location.origin}/song/${id}`;
-// After  
-const shareUrl = `https://sudagospel.com/song/${id}`;
+### DB Functions (single migration)
+```sql
+CREATE OR REPLACE FUNCTION public.increment_play_count(song_uuid uuid)
+RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE songs SET play_count = COALESCE(play_count, 0) + 1 WHERE id = song_uuid;
+$$;
+
+CREATE OR REPLACE FUNCTION public.increment_download_count(song_uuid uuid)
+RETURNS void LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE songs SET download_count = COALESCE(download_count, 0) + 1 WHERE id = song_uuid;
+$$;
 ```
 
-### Admin Video Management component
-Will query the existing `videos` table which already has columns for title, video_url, description, thumbnail_url, video_type, artist_id, is_featured, is_published, view_count. RLS policies already allow admins full access. No database changes needed.
+### Player integration
+```typescript
+// In playTrack callback, fire-and-forget
+supabase.rpc('increment_play_count', { song_uuid: track.id });
+```
+
+### Files to modify
+- **New migration** — two increment functions
+- `src/hooks/use-player.tsx` — add supabase import + rpc call in `playTrack`
+- `src/pages/SongDetailPage.tsx` — add download count rpc call
+- `src/pages/ProfilePage.tsx` — add Videos tab with CRUD for artist videos
 
