@@ -443,6 +443,7 @@ const ProfilePage = () => {
                   <TabsTrigger value="overview" className="rounded-lg text-xs data-[state=active]:bg-background">Overview</TabsTrigger>
                   <TabsTrigger value="songs" className="rounded-lg text-xs data-[state=active]:bg-background">Songs {pendingSongs.length > 0 && `(${pendingSongs.length} pending)`}</TabsTrigger>
                   <TabsTrigger value="albums" className="rounded-lg text-xs data-[state=active]:bg-background">Albums</TabsTrigger>
+                  <TabsTrigger value="videos" className="rounded-lg text-xs data-[state=active]:bg-background">Videos</TabsTrigger>
                   <TabsTrigger value="settings" className="rounded-lg text-xs data-[state=active]:bg-background">Settings</TabsTrigger>
                 </TabsList>
 
