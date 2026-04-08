@@ -146,7 +146,7 @@ const HeroSection = () => {
                     )}
                     {activeSong.title}
                   </p>
-                  <Link to={artistPath(artist?.name || '')} className="text-[11px] text-muted-foreground hover:text-primary transition-colors">
+                  <Link to={artistPath(artist?.name || '')} className="text-[11px] text-white/50 hover:text-primary transition-colors">
                     {artist?.name || "Unknown"} • {activeSong.genre || "Gospel"}
                   </Link>
                 </div>
