@@ -56,6 +56,12 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolumeState] = useState(1);
   const [queue, setQueue] = useState<Track[]>([]);
+  const [recentlyPlayed, setRecentlyPlayed] = useState<Track[]>(() => {
+    try {
+      const stored = localStorage.getItem("sudagospel_recently_played");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
 
   useEffect(() => {
     if (!audioRef.current) {
