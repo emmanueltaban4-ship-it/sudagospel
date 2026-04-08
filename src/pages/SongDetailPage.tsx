@@ -200,6 +200,13 @@ const SongDetailPage = () => {
 
               {/* Info */}
               <div className="flex-1 min-w-0 text-center md:text-left">
+                {(song as any).release_status === "scheduled" && (song as any).scheduled_release_at && (
+                  <div className="mb-3 flex justify-center md:justify-start">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Coming Soon</span>
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Song</p>
                 <h1 className="font-heading text-2xl md:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight">
                   {song.title}
