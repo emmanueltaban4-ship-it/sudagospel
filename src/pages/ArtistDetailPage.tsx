@@ -170,13 +170,13 @@ const ArtistDetailPage = () => {
     <Layout>
       <div className="pb-28">
         {/* === COVER BANNER === */}
-        <div className="relative h-[200px] md:h-[280px] overflow-hidden bg-card">
-          {artist.avatar_url ? (
-            <img src={artist.avatar_url} alt="" className="h-full w-full object-cover object-top" />
+        <div className="relative h-[220px] md:h-[320px] overflow-hidden bg-card">
+          {(artist as any).cover_url || artist.avatar_url ? (
+            <img src={(artist as any).cover_url || artist.avatar_url!} alt="" className="h-full w-full object-cover object-top" />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-primary/30 via-secondary/20 to-background" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
           {/* Nav buttons */}
           <button
@@ -229,18 +229,37 @@ const ArtistDetailPage = () => {
                 )}
               </div>
 
-              {/* Follow button */}
-              <div className="mt-4 flex justify-center md:justify-start">
+              {/* Follow + Action buttons */}
+              <div className="mt-4 flex items-center gap-2 justify-center md:justify-start flex-wrap">
                 <button
                   onClick={() => toggleFollow()}
-                  className={`w-full max-w-[200px] md:max-w-none py-2.5 rounded-full text-sm font-bold transition-all active:scale-95 ${
+                  className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all active:scale-95 ${
                     isFollowing
                       ? "border-2 border-primary text-primary hover:bg-primary/10"
-                      : "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-gradient-gold text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/30"
                   }`}
                 >
-                  {isFollowing ? "FOLLOWING" : "FOLLOW"}
+                  <span className="flex items-center gap-1.5">
+                    {isFollowing ? <UserCheck className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+                    {isFollowing ? "Following" : "Follow"}
+                  </span>
                 </button>
+                {queue.length > 0 && (
+                  <>
+                    <button
+                      onClick={handlePlayAll}
+                      className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md shadow-primary/30"
+                    >
+                      <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
+                    </button>
+                    <button
+                      onClick={handleShuffle}
+                      className="h-10 w-10 rounded-full bg-card border border-border/50 text-muted-foreground flex items-center justify-center hover:text-foreground hover:scale-105 active:scale-95 transition-all"
+                    >
+                      <Shuffle className="h-4 w-4" />
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* Stats */}
