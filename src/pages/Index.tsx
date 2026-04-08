@@ -18,7 +18,7 @@ const Index = () => {
   const { data: siteSettings } = useSiteSettings();
   const { user } = useAuth();
 
-  const { data: trendingSongs } = useQuery({
+  const { data: trendingSongs, isLoading: loadingTrending } = useQuery({
     queryKey: ["trending-songs"],
     queryFn: async () => {
       const { data, error } = await supabase
