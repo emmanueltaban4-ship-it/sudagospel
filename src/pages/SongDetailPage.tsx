@@ -140,6 +140,7 @@ const SongDetailPage = () => {
     if (user) {
       supabase.from("song_downloads").insert({ song_id: song.id, user_id: user.id }).then(() => {});
     }
+    supabase.rpc('increment_download_count', { song_uuid: song.id }).then(() => {});
     await downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
   };
 
