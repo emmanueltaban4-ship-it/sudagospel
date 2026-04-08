@@ -9,12 +9,13 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Clock, TrendingUp, Disc3, UserPlus, UserCheck
+  Download, Share2, Clock, TrendingUp, Disc3, UserPlus, UserCheck,
+  MoreHorizontal, Heart
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import { toast } from "sonner";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
 type SortMode = "popular" | "newest" | "title";
 
@@ -24,15 +25,23 @@ const ArtistDetailPage = () => {
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [sortMode, setSortMode] = useState<SortMode>("popular");
   const [showAllTracks, setShowAllTracks] = useState(false);
+  const [bannerOffset, setBannerOffset] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setBannerOffset(window.scrollY * 0.4);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["artist", slug],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("artists")
-        .select("*");
+      const { data, error } = await supabase.from("artists").select("*");
       if (error) throw error;
-      // Match by slugified name
       const match = data?.find((a) => artistSlug(a.name) === slug);
       if (!match) throw new Error("Artist not found");
       return match;
@@ -97,11 +106,11 @@ const ArtistDetailPage = () => {
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
   const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
-  const canonicalUrl = artist ? `https://sudagospel-vibes.lovable.app/artist/${artistSlug(artist.name)}` : undefined;
+  const canonicalUrl = artist ? `https://sudagospel.lovable.app/artist/${artistSlug(artist.name)}` : undefined;
   const songCount = songs?.length || 0;
   const seoDescription = artist?.bio
     ? `${artist.bio.slice(0, 140)}${artist.bio.length > 140 ? "…" : ""}`
-    : `Listen to ${artist?.name || "this artist"}'s ${songCount} gospel songs on Sudagospel. Stream and download free South Sudanese gospel music.`;
+    : `Listen to ${artist?.name || "this artist"}'s ${songCount} gospel songs on Sudagospel.`;
 
   useDocumentMeta({
     title: artist?.name || "Artist",
@@ -151,11 +160,22 @@ const ArtistDetailPage = () => {
     return `${m}:${sec.toString().padStart(2, "0")}`;
   };
 
+  const formatCount = (n: number) => {
+    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+    if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+    return n.toLocaleString();
+  };
+
   if (isLoading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="animate-pulse">
+          <div className="h-[320px] bg-muted" />
+          <div className="px-4 -mt-16">
+            <div className="h-32 w-32 rounded-full bg-muted border-4 border-background" />
+            <div className="mt-4 h-8 w-48 bg-muted rounded" />
+            <div className="mt-2 h-4 w-32 bg-muted rounded" />
+          </div>
         </div>
       </Layout>
     );
@@ -175,121 +195,143 @@ const ArtistDetailPage = () => {
   return (
     <Layout>
       <div className="pb-28">
-        {/* === HERO BANNER === */}
-        <div className="relative overflow-hidden min-h-[280px] md:min-h-[340px]">
-          {/* Background */}
-          <div className="absolute inset-0">
+        {/* === COVER BANNER with parallax === */}
+        <div ref={heroRef} className="relative h-[300px] md:h-[380px] overflow-hidden">
+          <div
+            className="absolute inset-0 w-full h-[140%]"
+            style={{ transform: `translateY(-${bannerOffset}px)` }}
+          >
             {artist.avatar_url ? (
-              <img src={artist.avatar_url} alt="" className="h-full w-full object-cover scale-110 blur-[80px] opacity-60" />
+              <img
+                src={artist.avatar_url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             ) : (
-              <div className="h-full w-full bg-gradient-to-br from-primary/50 to-secondary/30" />
+              <div className="h-full w-full bg-gradient-to-br from-primary/60 via-secondary/40 to-background" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/50 to-background" />
           </div>
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent" />
 
-          <div className="relative px-4 lg:px-8 pt-4 pb-8">
-            <button
-              onClick={() => navigate(-1)}
-              className="mb-6 inline-flex items-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" /> Back
-            </button>
+          {/* Back button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-4 left-4 z-10 h-10 w-10 rounded-full glass flex items-center justify-center text-foreground hover:bg-card/80 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
 
-            {/* Artist info - horizontal layout */}
-            <div className="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 max-w-4xl mx-auto">
-              {/* Avatar */}
-              <div className="relative flex-shrink-0">
-                <div className="h-40 w-40 md:h-52 md:w-52 rounded-full overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
-                  {artist.avatar_url ? (
-                    <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-6xl font-heading font-bold text-primary-foreground">
-                      {artist.name[0]}
-                    </div>
-                  )}
-                </div>
-                {artist.is_verified && (
-                  <div className="absolute bottom-2 right-2 bg-primary rounded-full p-2 shadow-lg border-[3px] border-background">
-                    <CheckCircle className="h-5 w-5 text-primary-foreground" />
+          {/* Share button */}
+          <button
+            onClick={handleShare}
+            className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full glass flex items-center justify-center text-foreground hover:bg-card/80 transition-colors"
+          >
+            <Share2 className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* === ARTIST INFO overlapping banner === */}
+        <div className="relative px-4 lg:px-8 -mt-24 md:-mt-28 max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6">
+            {/* Artist avatar */}
+            <div className="relative flex-shrink-0">
+              <div className="h-36 w-36 md:h-44 md:w-44 rounded-full overflow-hidden border-4 border-background shadow-[0_8px_40px_rgba(0,0,0,0.5)] ring-2 ring-primary/20">
+                {artist.avatar_url ? (
+                  <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-5xl font-heading font-bold text-primary-foreground">
+                    {artist.name[0]}
                   </div>
                 )}
               </div>
+              {artist.is_verified && (
+                <div className="absolute bottom-1 right-1 bg-primary rounded-full p-1.5 shadow-lg border-[3px] border-background glow-gold">
+                  <CheckCircle className="h-5 w-5 text-primary-foreground" />
+                </div>
+              )}
+            </div>
 
-              {/* Text info */}
-              <div className="flex-1 min-w-0 text-center md:text-left">
-                <div className="flex items-center gap-2 justify-center md:justify-start">
-                  {artist.is_verified && (
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      Verified Artist
-                    </span>
-                  )}
-                </div>
-                <h1 className="font-heading text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground mt-1 leading-tight">
-                  {artist.name}
-                </h1>
-                <div className="flex items-center gap-4 mt-3 justify-center md:justify-start text-sm text-muted-foreground">
-                  {artist.genre && <span>{artist.genre}</span>}
-                  <span>{songs?.length || 0} songs</span>
-                  <span>{followerCount.toLocaleString()} followers</span>
-                  <span>{totalPlays.toLocaleString()} plays</span>
-                </div>
+            {/* Name + meta */}
+            <div className="flex-1 min-w-0 text-center sm:text-left pb-1">
+              {artist.is_verified && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
+                  <CheckCircle className="h-3 w-3" /> Verified Artist
+                </span>
+              )}
+              <h1 className="font-heading text-3xl md:text-5xl font-extrabold text-foreground leading-tight">
+                {artist.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-3 mt-2 justify-center sm:justify-start text-sm text-muted-foreground">
+                {artist.genre && (
+                  <span className="bg-muted px-2.5 py-0.5 rounded-full text-xs font-medium">{artist.genre}</span>
+                )}
+                <span>{formatCount(followerCount)} followers</span>
+                <span className="text-foreground/20">•</span>
+                <span>{formatCount(totalPlays)} streams</span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* === CONTROLS === */}
-        <div className="px-4 lg:px-8 max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 py-5">
+          {/* === ACTION BUTTONS === */}
+          <div className="flex items-center gap-3 mt-6 flex-wrap justify-center sm:justify-start">
             <button
               onClick={handlePlayAll}
-              className="h-14 w-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:scale-105 hover:bg-primary/90 transition-all flex-shrink-0"
+              className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg glow-gold hover:scale-110 active:scale-95 transition-all flex-shrink-0"
               disabled={queue.length === 0}
             >
-              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+              <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
             </button>
             <Button
               onClick={handleShuffle}
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground rounded-full"
+              variant="outline"
+              size="sm"
+              className="rounded-full gap-1.5 border-border/50 hover:border-primary/40 hover:text-primary transition-all"
               disabled={queue.length === 0}
             >
-              <Shuffle className="h-5 w-5" />
+              <Shuffle className="h-4 w-4" /> Shuffle
             </Button>
             <Button
               onClick={() => toggleFollow()}
               variant={isFollowing ? "outline" : "default"}
-              className={`rounded-full gap-2 text-sm ${isFollowing ? "border-primary/30 text-primary" : "bg-primary text-primary-foreground"}`}
+              size="sm"
+              className={`rounded-full gap-1.5 transition-all ${
+                isFollowing
+                  ? "border-primary/30 text-primary hover:bg-primary/10"
+                  : "bg-primary text-primary-foreground hover:scale-105 glow-gold"
+              }`}
             >
               {isFollowing ? <UserCheck className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
               {isFollowing ? "Following" : "Follow"}
             </Button>
-            <Button
-              onClick={handleShare}
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground rounded-full"
-            >
-              <Share2 className="h-5 w-5" />
-            </Button>
           </div>
 
-          {/* Bio */}
-          {artist.bio && (
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-2xl">{artist.bio}</p>
-          )}
+          {/* === STATS ROW === */}
+          <div className="grid grid-cols-4 gap-3 mt-6 p-4 rounded-2xl bg-card/60 border border-border/50">
+            {[
+              { label: "Songs", value: songCount },
+              { label: "Streams", value: totalPlays },
+              { label: "Downloads", value: totalDownloads },
+              { label: "Followers", value: followerCount },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <p className="font-heading text-xl md:text-2xl font-bold text-foreground">{formatCount(stat.value)}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">{stat.label}</p>
+              </div>
+            ))}
+          </div>
 
-          {/* === POPULAR TRACKS === */}
-          <div className="mb-8">
+          {/* === TOP SONGS === */}
+          <section className="mt-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-heading text-lg font-bold text-foreground">Popular</h2>
-              <div className="flex items-center gap-1.5">
+              <h2 className="font-heading text-lg font-bold text-foreground">Top Songs</h2>
+              <div className="flex items-center gap-1">
                 {(["popular", "newest", "title"] as SortMode[]).map((mode) => (
                   <button
                     key={mode}
                     onClick={() => setSortMode(mode)}
-                    className={`text-[11px] px-2.5 py-1 rounded-full transition-colors font-medium capitalize ${
+                    className={`text-[11px] px-2.5 py-1 rounded-full transition-all font-medium capitalize ${
                       sortMode === mode
                         ? "bg-primary/15 text-primary"
                         : "text-muted-foreground hover:text-foreground"
@@ -309,8 +351,8 @@ const ArtistDetailPage = () => {
                 return (
                   <div
                     key={song.id}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all cursor-pointer group ${
-                      isCurrentSong ? "bg-primary/10" : "hover:bg-card"
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all cursor-pointer group ${
+                      isCurrentSong ? "bg-primary/10 border border-primary/20" : "hover:bg-card/80"
                     }`}
                     onClick={() => {
                       if (isCurrentSong) togglePlay();
@@ -334,7 +376,7 @@ const ArtistDetailPage = () => {
                     </div>
 
                     {/* Cover */}
-                    <div className="h-10 w-10 rounded overflow-hidden flex-shrink-0 bg-muted">
+                    <div className="h-11 w-11 rounded-lg overflow-hidden flex-shrink-0 bg-muted shadow-sm">
                       {song.cover_url ? (
                         <img src={song.cover_url} alt="" className="h-full w-full object-cover" loading="lazy" />
                       ) : (
@@ -347,16 +389,12 @@ const ArtistDetailPage = () => {
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <Link to={`/song/${song.id}`} onClick={(e) => e.stopPropagation()}>
-                        <p className={`text-sm font-medium truncate hover:underline ${isCurrentSong ? "text-primary" : "text-foreground"}`}>
+                        <p className={`text-sm font-semibold truncate hover:underline ${isCurrentSong ? "text-primary" : "text-foreground"}`}>
                           {song.title}
                         </p>
                       </Link>
+                      <p className="text-[11px] text-muted-foreground">{formatCount(song.play_count || 0)} streams</p>
                     </div>
-
-                    {/* Play count */}
-                    <span className="text-xs text-muted-foreground tabular-nums hidden sm:block">
-                      {(song.play_count || 0).toLocaleString()}
-                    </span>
 
                     {/* Duration */}
                     <span className="text-xs text-muted-foreground tabular-nums hidden sm:block w-12 text-right">
@@ -368,22 +406,16 @@ const ArtistDetailPage = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         toast.info("Preparing download...");
-                        fetch(song.file_url)
-                          .then(r => r.blob())
-                          .then(blob => {
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = url;
-                            a.download = `${song.title} - ${artistName}.mp3`;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            URL.revokeObjectURL(url);
-                            toast.success("Download started!");
-                          })
-                          .catch(() => toast.error("Download failed."));
+                        fetch(song.file_url).then(r => r.blob()).then(blob => {
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url; a.download = `${song.title} - ${artistName}.mp3`;
+                          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                          toast.success("Download started!");
+                        }).catch(() => toast.error("Download failed."));
                       }}
-                      className="p-1.5 rounded-full text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all"
+                      className="p-2 rounded-full text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
                     >
                       <Download className="h-4 w-4" />
                     </button>
@@ -395,7 +427,7 @@ const ArtistDetailPage = () => {
             {sortedSongs.length > 5 && (
               <button
                 onClick={() => setShowAllTracks(!showAllTracks)}
-                className="mt-3 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                className="mt-4 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
               >
                 {showAllTracks ? "Show less" : `See all ${sortedSongs.length} songs`}
               </button>
@@ -407,115 +439,80 @@ const ArtistDetailPage = () => {
                 <p className="text-sm text-muted-foreground">No songs uploaded yet</p>
               </div>
             )}
-          </div>
+          </section>
 
           {/* === ALBUMS === */}
           {albums && albums.length > 0 && (
-            <div className="mb-8">
+            <section className="mt-8">
               <h2 className="font-heading text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                 <Disc3 className="h-5 w-5 text-primary" /> Albums
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
                 {albums.map((album) => (
                   <div
                     key={album.id}
-                    className="group cursor-pointer"
+                    className="group cursor-pointer flex-shrink-0 w-36 md:w-44"
                     onClick={() => navigate(`/album/${album.id}`)}
                   >
-                    <div className="relative aspect-square rounded-lg overflow-hidden mb-2 bg-muted shadow-sm">
+                    <div className="relative aspect-square rounded-xl overflow-hidden mb-2 bg-muted shadow-md group-hover:shadow-xl transition-shadow">
                       {album.cover_url ? (
-                        <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                        <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                       ) : (
                         <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center">
                           <Disc3 className="h-10 w-10 text-primary/40" />
                         </div>
                       )}
+                      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+                        <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center shadow-xl glow-gold">
+                          <Play className="h-4 w-4 text-primary-foreground fill-primary-foreground ml-0.5" />
+                        </div>
+                      </div>
                     </div>
                     <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{album.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{album.genre || "Album"}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
-          {/* === DISCOGRAPHY GRID === */}
-          {songs && songs.length > 0 && (
-            <div className="mb-8">
-              <h2 className="font-heading text-lg font-bold text-foreground mb-4">Discography</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {songs.slice(0, 8).map((song) => {
-                  const isCurrentSong = currentTrack?.id === song.id;
-                  return (
-                    <div
-                      key={song.id}
-                      className="group cursor-pointer"
-                      onClick={() => navigate(`/song/${song.id}`)}
-                    >
-                      <div className="relative aspect-square rounded-md overflow-hidden mb-2 bg-muted">
-                        {song.cover_url ? (
-                          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                        ) : (
-                          <div className="h-full w-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center text-2xl font-heading font-bold text-primary-foreground">
-                            {song.title[0]}
-                          </div>
-                        )}
-                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
-                          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center shadow-xl">
-                            {isCurrentSong && isPlaying ? (
-                              <Pause className="h-4 w-4 text-primary-foreground" />
-                            ) : (
-                              <Play className="h-4 w-4 text-primary-foreground fill-primary-foreground ml-0.5" />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground truncate">{song.title}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {(song.play_count || 0).toLocaleString()} plays
-                      </p>
-                    </div>
-                  );
-                })}
+          {/* === ABOUT === */}
+          <section className="mt-8">
+            <h2 className="font-heading text-lg font-bold text-foreground mb-4">About {artist.name}</h2>
+            <div className="rounded-2xl bg-card/60 border border-border/50 overflow-hidden">
+              {artist.avatar_url && (
+                <div className="h-40 overflow-hidden">
+                  <img src={artist.avatar_url} alt="" className="w-full h-full object-cover opacity-60" />
+                </div>
+              )}
+              <div className="p-5">
+                {artist.bio ? (
+                  <p className="text-sm text-muted-foreground leading-relaxed">{artist.bio}</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">No bio available yet.</p>
+                )}
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/50">
+                  <span className="text-sm font-bold text-foreground">{formatCount(followerCount)}</span>
+                  <span className="text-xs text-muted-foreground">monthly listeners</span>
+                </div>
+                {artist.is_verified && (
+                  <div className="flex items-center gap-2 mt-3">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    <p className="text-xs text-muted-foreground">Verified by Sudagospel</p>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </section>
 
-          {/* === YOUTUBE SECTION === */}
+          {/* === YOUTUBE === */}
           {artist.youtube_channel_url && (
-            <YouTubeEmbed channelUrl={artist.youtube_channel_url} artistName={artist.name} />
+            <section className="mt-8">
+              <YouTubeEmbed channelUrl={artist.youtube_channel_url} artistName={artist.name} />
+            </section>
           )}
-
-          {/* === STATS SECTION === */}
-          <div className="rounded-xl bg-card/50 border border-border p-5">
-            <h2 className="font-heading text-sm font-bold text-foreground mb-4 uppercase tracking-wider">About</h2>
-            {artist.bio && (
-              <p className="text-sm text-muted-foreground leading-relaxed mb-5">{artist.bio}</p>
-            )}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="font-heading text-2xl font-bold text-foreground">{songs?.length || 0}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Songs</p>
-              </div>
-              <div className="text-center">
-                <p className="font-heading text-2xl font-bold text-foreground">{totalPlays.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Plays</p>
-              </div>
-              <div className="text-center">
-                <p className="font-heading text-2xl font-bold text-foreground">{totalDownloads.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Downloads</p>
-              </div>
-            </div>
-            {artist.is_verified && (
-              <div className="flex items-center gap-2 mt-5 pt-4 border-t border-border">
-                <CheckCircle className="h-4 w-4 text-primary" />
-                <p className="text-xs text-muted-foreground">Verified by Sudagospel</p>
-              </div>
-            )}
-          </div>
         </div>
       </div>
-
       <MiniPlayer />
     </Layout>
   );
