@@ -705,6 +705,62 @@ export type Database = {
         }
         Relationships: []
       }
+      videos: {
+        Row: {
+          artist_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_featured: boolean
+          is_published: boolean
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+          video_type: string
+          video_url: string
+          view_count: number
+        }
+        Insert: {
+          artist_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+          video_type?: string
+          video_url: string
+          view_count?: number
+        }
+        Update: {
+          artist_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
+          video_type?: string
+          video_url?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
