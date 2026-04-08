@@ -28,7 +28,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue }: SongCa
   };
 
   const cardContent = (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col card-hover rounded-xl">
       <div className="relative aspect-square rounded-xl overflow-hidden mb-3 bg-muted shadow-md ring-1 ring-border/50 hover:ring-primary/30 transition-all">
         {fileUrl && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10">
