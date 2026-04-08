@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LogIn, UserPlus, Music, Heart, Download, Upload, LogOut, Shield,
   Users, ListMusic, Mic2, Edit3, Save, X, Camera, Crown, ChevronRight,
-  Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle,
+  Headphones, Settings, Disc3, Play, TrendingUp, Clock, CheckCircle, BadgeCheck,
   Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
@@ -88,6 +88,7 @@ const ProfilePage = () => {
   const [videoDesc, setVideoDesc] = useState("");
   const [videoType, setVideoType] = useState("music_video");
   const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [verificationReason, setVerificationReason] = useState("");
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -165,6 +166,40 @@ const ProfilePage = () => {
       return data;
     },
     enabled: !!myArtist,
+  });
+
+  const { data: verificationRequest } = useQuery({
+    queryKey: ["verification-request", myArtist?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("verification_requests")
+        .select("*")
+        .eq("artist_id", myArtist!.id)
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!myArtist && !!user,
+  });
+
+  const submitVerification = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("verification_requests").insert({
+        artist_id: myArtist!.id,
+        user_id: user!.id,
+        reason: verificationReason,
+      } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["verification-request"] });
+      setVerificationReason("");
+      toast.success("Verification request submitted!");
+    },
+    onError: (err: any) => toast.error(err.message),
   });
 
   // Mutations
@@ -665,6 +700,70 @@ const ProfilePage = () => {
                       </div>
                     )}
                   </div>
+
+                  {/* Verification Request */}
+                  {!myArtist!.is_verified && (
+                    <div className="rounded-xl bg-card border border-border p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <BadgeCheck className="h-5 w-5 text-primary" />
+                        <h3 className="font-heading text-sm font-bold text-foreground">Get Verified</h3>
+                      </div>
+                      {verificationRequest?.status === "pending" ? (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4 text-yellow-500" />
+                          <span>Your verification request is under review.</span>
+                        </div>
+                      ) : verificationRequest?.status === "rejected" ? (
+                        <div className="space-y-2">
+                          <p className="text-sm text-destructive">Your previous request was not approved.</p>
+                          {verificationRequest.admin_notes && <p className="text-xs text-muted-foreground">Note: {verificationRequest.admin_notes}</p>}
+                          <Textarea
+                            value={verificationReason}
+                            onChange={(e) => setVerificationReason(e.target.value)}
+                            placeholder="Why should you be verified? (e.g., active ministry, social following, released albums...)"
+                            rows={3}
+                            className="bg-background"
+                          />
+                          <Button
+                            size="sm"
+                            className="gap-1.5 rounded-full"
+                            onClick={() => submitVerification.mutate()}
+                            disabled={!verificationReason.trim() || submitVerification.isPending}
+                          >
+                            <BadgeCheck className="h-3.5 w-3.5" /> Request Again
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-sm text-muted-foreground">Get a blue checkmark to build trust with your listeners.</p>
+                          <Textarea
+                            value={verificationReason}
+                            onChange={(e) => setVerificationReason(e.target.value)}
+                            placeholder="Why should you be verified? (e.g., active ministry, social following, released albums...)"
+                            rows={3}
+                            className="bg-background"
+                          />
+                          <Button
+                            size="sm"
+                            className="gap-1.5 rounded-full"
+                            onClick={() => submitVerification.mutate()}
+                            disabled={!verificationReason.trim() || submitVerification.isPending}
+                          >
+                            <BadgeCheck className="h-3.5 w-3.5" /> Request Verification
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {myArtist!.is_verified && (
+                    <div className="rounded-xl bg-primary/5 border border-primary/20 p-4 flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Verified Artist</p>
+                        <p className="text-xs text-muted-foreground">Your profile shows a verified badge.</p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Quick links */}
                   <div className="space-y-1.5">

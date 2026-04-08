@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3, Flame, Heart, Star, ChevronRight, Radio, Video, Award } from "lucide-react";
+import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3, Flame, Heart, Star, ChevronRight, Radio, Video, Award, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .order("play_count", { ascending: false })
         .limit(10);
@@ -37,7 +37,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .order("created_at", { ascending: false })
         .limit(10);
@@ -74,7 +74,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("albums")
-        .select("*, artists(id, name, avatar_url), songs(count)")
+        .select("*, artists(id, name, avatar_url, is_verified), songs(count)")
         .order("created_at", { ascending: false })
         .limit(10);
       if (error) throw error;
@@ -137,7 +137,7 @@ const Index = () => {
       if (!likedSongs?.length) {
         const { data } = await supabase
           .from("songs")
-          .select("*, artists(id, name, avatar_url)")
+          .select("*, artists(id, name, avatar_url, is_verified)")
           .eq("is_approved", true)
           .order("play_count", { ascending: false })
           .limit(10);
@@ -152,7 +152,7 @@ const Index = () => {
       if (genres.length === 0) {
         const { data } = await supabase
           .from("songs")
-          .select("*, artists(id, name, avatar_url)")
+          .select("*, artists(id, name, avatar_url, is_verified)")
           .eq("is_approved", true)
           .not("id", "in", `(${likedIds.join(",")})`)
           .order("play_count", { ascending: false })
@@ -161,7 +161,7 @@ const Index = () => {
       }
       const { data } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .in("genre", genres)
         .not("id", "in", `(${likedIds.join(",")})`)
@@ -194,7 +194,7 @@ const Index = () => {
       // Get songs from same artist (excluding the trigger song)
       const { data: artistSongs } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .eq("artist_id", artist.id)
         .neq("id", becauseArtist!.id)
@@ -204,7 +204,7 @@ const Index = () => {
       // Also get songs from same genre by other artists
       const genreSongs = artist.genre ? await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .eq("genre", artist.genre)
         .neq("artist_id", artist.id)
@@ -738,8 +738,9 @@ const SongCard = ({ song, onPlay, currentTrack, isPlaying, rank, showRank }: any
       <Link to={`/song/${song.id}`} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
         {song.title}
       </Link>
-      <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate block mt-0.5">
+      <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate mt-0.5 flex items-center gap-1">
         {artistName}
+        {artist?.is_verified && <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />}
       </Link>
     </div>
   );
