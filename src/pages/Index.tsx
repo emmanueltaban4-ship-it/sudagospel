@@ -67,6 +67,20 @@ const Index = () => {
       return data;
     },
   });
+
+  const { data: albums } = useQuery({
+    queryKey: ["albums-home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("albums")
+        .select("*, artists(id, name, avatar_url), songs(count)")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { data: youtubeArtists } = useQuery({
     queryKey: ["youtube-artists-home"],
     queryFn: async () => {
