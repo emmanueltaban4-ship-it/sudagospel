@@ -159,7 +159,7 @@ const VideosPage = () => {
               const artist = video.artists as any;
               return (
                 <div key={video.id} className="group">
-                  <VideoPlayer videoUrl={video.video_url} thumbnailUrl={video.thumbnail_url || undefined} title={video.title} />
+                  <VideoPlayer videoUrl={video.video_url} thumbnailUrl={video.thumbnail_url || undefined} title={video.title} inline />
                   <div className="mt-2.5 flex gap-2.5">
                     {artist && (
                       <Link to={artistPath(artist.name)} className="flex-shrink-0">
