@@ -9,6 +9,7 @@ import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useMemo } from "react";
+import { SongCardSkeleton, ArtistCardSkeleton, SectionSkeleton } from "@/components/Skeletons";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -17,7 +18,7 @@ const Index = () => {
   const { data: siteSettings } = useSiteSettings();
   const { user } = useAuth();
 
-  const { data: trendingSongs } = useQuery({
+  const { data: trendingSongs, isLoading: loadingTrending } = useQuery({
     queryKey: ["trending-songs"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -265,8 +266,10 @@ const Index = () => {
       </div>
 
       {/* Trending Songs */}
-      {trendingSongs && trendingSongs.length > 0 && (
-        <section className="py-6">
+      {loadingTrending ? (
+        <SectionSkeleton count={6} />
+      ) : trendingSongs && trendingSongs.length > 0 ? (
+        <section className="py-6 section-reveal">
           <SectionHeader title="Trending in South Sudan" icon={<TrendingUp className="h-5 w-5 text-primary" />} linkTo="/music" />
           <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
             <div className="flex gap-4 pb-1">
@@ -276,7 +279,7 @@ const Index = () => {
             </div>
           </div>
         </section>
-      )}
+      ) : null}
 
       {/* Because you listened to… */}
       {becauseYouListened && becauseYouListened.length > 0 && becauseArtist && (
