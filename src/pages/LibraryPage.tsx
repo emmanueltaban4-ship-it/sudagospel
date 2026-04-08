@@ -12,7 +12,7 @@ import { getDownloads } from "@/pages/DownloadsPage";
 import { ListMusic, Download, Plus, Music, ChevronRight, Heart, Clock, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type TabKey = "playlists" | "liked" | "downloads";
+type TabKey = "playlists" | "liked" | "recent" | "downloads";
 
 const LibraryPage = () => {
   const { user } = useAuth();
