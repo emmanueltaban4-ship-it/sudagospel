@@ -469,6 +469,106 @@ const Index = () => {
         </section>
       )}
 
+      {/* ═══ SUDA GOSPEL SPOTLIGHT ═══ */}
+      {((spotlightVideos && spotlightVideos.length > 0) || (featuredMinisters && featuredMinisters.length > 0)) && (
+        <section className="py-8">
+          <div className="px-4 lg:px-6 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
+                  <Award className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h2 className="font-heading text-xl md:text-2xl font-black text-foreground tracking-tight">
+                    Suda Gospel Spotlight
+                  </h2>
+                  <p className="text-xs text-muted-foreground">Interviews & featured gospel ministers</p>
+                </div>
+              </div>
+              <Link to="/videos" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                View all <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Spotlight Videos */}
+          {spotlightVideos && spotlightVideos.length > 0 && (
+            <div className="px-4 lg:px-6 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {spotlightVideos.slice(0, 3).map((video: any) => {
+                  const artist = video.artists as any;
+                  const ytId = video.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&]+)/)?.[1];
+                  const thumb = video.thumbnail_url || (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : undefined);
+                  return (
+                    <Link key={video.id} to="/videos" className="group">
+                      <div className="relative aspect-video rounded-xl overflow-hidden bg-muted shadow-md mb-2.5">
+                        {thumb ? (
+                          <img src={thumb} alt={video.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-secondary/20 to-primary/10 flex items-center justify-center">
+                            <Video className="h-10 w-10 text-muted-foreground/30" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        <div className="absolute top-2 left-2 bg-primary/90 text-primary-foreground text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                          {video.video_type === "interview" ? "Interview" : "Spotlight"}
+                        </div>
+                        <div className="absolute bottom-3 right-3 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
+                          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-xl shadow-primary/40">
+                            <Play className="h-4 w-4 text-primary-foreground ml-0.5" fill="currentColor" />
+                          </div>
+                        </div>
+                        <div className="absolute bottom-3 left-3">
+                          <p className="text-sm font-bold text-white truncate drop-shadow-lg">{video.title}</p>
+                          {artist && <p className="text-xs text-white/70">{artist.name}</p>}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Featured Gospel Ministers */}
+          {featuredMinisters && featuredMinisters.length > 0 && (
+            <div className="px-4 lg:px-6">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">Featured Gospel Ministers</h3>
+              <div className="overflow-x-auto scrollbar-hide">
+                <div className="flex gap-4 pb-1">
+                  {featuredMinisters.map((minister) => (
+                    <Link key={minister.id} to={artistPath(minister.name)} className="flex-shrink-0 group">
+                      <div className="w-28 md:w-36 flex flex-col items-center gap-2">
+                        <div className="relative">
+                          <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all shadow-xl">
+                            {minister.avatar_url ? (
+                              <img src={minister.avatar_url} alt={minister.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                            ) : (
+                              <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-2xl font-heading font-bold text-muted-foreground">
+                                {minister.name[0]}
+                              </div>
+                            )}
+                          </div>
+                          {minister.is_verified && (
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center ring-2 ring-background">
+                              <Star className="h-3 w-3 text-primary-foreground" fill="currentColor" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs font-bold text-foreground truncate w-full group-hover:text-primary transition-colors">{minister.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{minister.genre || "Gospel Minister"}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* YouTube Videos */}
       {youtubeArtists && youtubeArtists.length > 0 && (
         <section className="py-6">
