@@ -170,13 +170,13 @@ const ArtistDetailPage = () => {
     <Layout>
       <div className="pb-28">
         {/* === COVER BANNER === */}
-        <div className="relative h-[200px] md:h-[280px] overflow-hidden bg-card">
-          {artist.avatar_url ? (
-            <img src={artist.avatar_url} alt="" className="h-full w-full object-cover object-top" />
+        <div className="relative h-[220px] md:h-[320px] overflow-hidden bg-card">
+          {(artist as any).cover_url || artist.avatar_url ? (
+            <img src={(artist as any).cover_url || artist.avatar_url!} alt="" className="h-full w-full object-cover object-top" />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-primary/30 via-secondary/20 to-background" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
           {/* Nav buttons */}
           <button
