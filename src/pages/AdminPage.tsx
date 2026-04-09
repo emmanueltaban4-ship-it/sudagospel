@@ -20,7 +20,8 @@ import AdminFeaturedContent from "@/components/admin/AdminFeaturedContent";
 import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
 import AdminVideoManagement from "@/components/admin/AdminVideoManagement";
 import AdminVerificationRequests from "@/components/admin/AdminVerificationRequests";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck } from "lucide-react";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -124,22 +125,46 @@ const AdminPage = () => {
             ))}
           </nav>
 
-          {/* Mobile horizontal scroll menu */}
-          <div className="flex md:hidden gap-1 overflow-x-auto pb-2 mb-4 scrollbar-hide w-full">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }`}
-              >
-                <tab.icon className="h-4 w-4" />
-                {tab.label}
-              </button>
-            ))}
+          {/* Mobile drawer menu */}
+          <div className="md:hidden w-full mb-4">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="flex items-center gap-2 w-full rounded-xl bg-muted px-4 py-3 text-sm font-medium text-foreground">
+                  <Menu className="h-4 w-4" />
+                  {tabs.find(t => t.id === activeTab)?.label || "Menu"}
+                  {(() => { const Icon = tabs.find(t => t.id === activeTab)?.icon; return Icon ? <Icon className="h-4 w-4 ml-auto text-primary" /> : null; })()}
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] p-0">
+                <SheetTitle className="px-4 pt-5 pb-2 text-lg font-bold flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" /> Admin
+                </SheetTitle>
+                <nav className="flex flex-col gap-0.5 px-2 pb-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+                  {tabs.map((tab) => (
+                    <SheetTrigger key={tab.id} asChild>
+                      <button
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-3 text-sm font-medium transition-colors text-left ${
+                          activeTab === tab.id
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        <tab.icon className="h-4 w-4 flex-shrink-0" />
+                        {tab.label}
+                        {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
+                          <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                            activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
+                          }`}>
+                            {stats.pendingSongs}
+                          </span>
+                        )}
+                      </button>
+                    </SheetTrigger>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
 
           {/* Tab content */}
