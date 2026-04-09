@@ -37,6 +37,9 @@ const OnboardingPage = lazy(() => import("./pages/OnboardingPage.tsx"));
 const AlbumDetailPage = lazy(() => import("./pages/AlbumDetailPage.tsx"));
 const DownloadsPage = lazy(() => import("./pages/DownloadsPage.tsx"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage.tsx"));
+const DmcaPage = lazy(() => import("./pages/DmcaPage.tsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
+const CopyrightPage = lazy(() => import("./pages/CopyrightPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient({
