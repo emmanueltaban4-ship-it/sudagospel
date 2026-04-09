@@ -118,6 +118,9 @@ const App = () => {
                     <Route path="/album/:id" element={<AlbumDetailPage />} />
                     <Route path="/downloads" element={<DownloadsPage />} />
                     <Route path="/library" element={<LibraryPage />} />
+                    <Route path="/dmca" element={<DmcaPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/copyright" element={<CopyrightPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
