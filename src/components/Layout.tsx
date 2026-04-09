@@ -90,8 +90,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <footer className="border-t border-border/30 py-5 px-4 mt-10">
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] text-muted-foreground/50">
                 <span>© {new Date().getFullYear()} SudaGospel</span>
+                <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms & Conditions</Link>
                 <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-                <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
+                <Link to="/dmca" className="hover:text-primary transition-colors">DMCA</Link>
+                <Link to="/copyright" className="hover:text-primary transition-colors">Copyright</Link>
+                <Link to="/contact" className="hover:text-primary transition-colors">Contact Us</Link>
               </div>
             </footer>
           </div>
