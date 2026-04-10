@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 import PageTransition from "./PageTransition";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
