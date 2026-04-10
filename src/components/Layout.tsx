@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 import PageTransition from "./PageTransition";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
@@ -88,6 +89,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
               {children}
             </PageTransition>
             <footer className="border-t border-border/30 py-5 px-4 mt-10">
+              <div className="flex items-center justify-center gap-4 mb-3">
+                <a href="https://facebook.com/sudagospel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/50 hover:text-primary transition-colors"><Facebook className="h-4 w-4" /></a>
+                <a href="https://twitter.com/sudagospel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/50 hover:text-primary transition-colors"><Twitter className="h-4 w-4" /></a>
+                <a href="https://instagram.com/sudagospel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/50 hover:text-primary transition-colors"><Instagram className="h-4 w-4" /></a>
+                <a href="https://youtube.com/@sudagospel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground/50 hover:text-primary transition-colors"><Youtube className="h-4 w-4" /></a>
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[11px] text-muted-foreground/50">
                 <span>© {new Date().getFullYear()} SudaGospel</span>
                 <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms & Conditions</Link>
