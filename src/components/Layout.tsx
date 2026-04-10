@@ -6,7 +6,7 @@ import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
 import {
   Home, TrendingUp, Clock, Users, ListMusic, Newspaper, Crown,
-  Upload, Trophy, Headphones, Download, Library,
+  Upload, Trophy, Headphones, Download, Library, Video,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -22,6 +22,7 @@ const sidebarLinks = [
     { to: "/library", icon: Library, label: "Library" },
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
     { to: "/downloads", icon: Download, label: "Downloads" },
+    { to: "/videos", icon: Video, label: "Videos" },
     { to: "/news", icon: Newspaper, label: "News" },
     { to: "/subscription", icon: Crown, label: "Premium" },
     { to: "/artist-dashboard", icon: Upload, label: "Artist Studio" },
