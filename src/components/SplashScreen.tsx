@@ -125,7 +125,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       <div className="absolute bottom-10 sm:bottom-14 flex flex-col items-center gap-3 z-10">
         <div className="h-1 w-24 rounded-full bg-white/10 overflow-hidden">
           <div
-            className="h-full rounded-full animate-[loading_2.2s_ease-in-out]"
+            className="h-full rounded-full animate-[loading_4.5s_ease-in-out]"
             style={{
               background: "linear-gradient(90deg, hsl(0 70% 50%), hsl(45 90% 55%))",
             }}
