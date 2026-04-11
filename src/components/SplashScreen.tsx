@@ -10,11 +10,11 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    const t0 = setTimeout(() => setStep(1), 300);
-    const t1 = setTimeout(() => setStep(2), 800);
-    const t2 = setTimeout(() => setStep(3), 1300);
-    const t3 = setTimeout(() => setFadeOut(true), 2200);
-    const t4 = setTimeout(() => onComplete(), 2700);
+    const t0 = setTimeout(() => setStep(1), 500);
+    const t1 = setTimeout(() => setStep(2), 1200);
+    const t2 = setTimeout(() => setStep(3), 2000);
+    const t3 = setTimeout(() => setFadeOut(true), 4500);
+    const t4 = setTimeout(() => onComplete(), 5000);
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, [onComplete]);
 
