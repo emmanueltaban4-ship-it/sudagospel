@@ -40,6 +40,7 @@ const LibraryPage = lazy(() => import("./pages/LibraryPage.tsx"));
 const DmcaPage = lazy(() => import("./pages/DmcaPage.tsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
 const CopyrightPage = lazy(() => import("./pages/CopyrightPage.tsx"));
+const VotingPage = lazy(() => import("./pages/VotingPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient({
@@ -121,6 +122,7 @@ const App = () => {
                     <Route path="/dmca" element={<DmcaPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/copyright" element={<CopyrightPage />} />
+                    <Route path="/vote" element={<VotingPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

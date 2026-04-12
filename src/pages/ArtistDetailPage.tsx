@@ -1,19 +1,21 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { artistSlug, artistPath } from "@/lib/artist-slug";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useDocumentMeta } from "@/hooks/use-document-meta";
+import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import ShareDialog from "@/components/ShareDialog";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
@@ -22,9 +24,13 @@ type TabKey = "all" | "top-tracks" | "albums";
 const ArtistDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [activeTab, setActiveTab] = useState<TabKey>("all");
   const [showAllTracks, setShowAllTracks] = useState(false);
+  const [showVerifyForm, setShowVerifyForm] = useState(false);
+  const [verifyReason, setVerifyReason] = useState("");
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["artist", slug],
@@ -39,6 +45,42 @@ const ArtistDetailPage = () => {
   });
 
   const artistId = artist?.id;
+  const isOwnProfile = !!user && !!artist?.user_id && user.id === artist.user_id;
+
+  const { data: verificationStatus } = useQuery({
+    queryKey: ["verification-status", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("verification_requests")
+        .select("status")
+        .eq("artist_id", artistId!)
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: isOwnProfile && !artist?.is_verified,
+  });
+
+  const requestVerification = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("verification_requests").insert({
+        artist_id: artistId!,
+        user_id: user!.id,
+        reason: verifyReason.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Verification request submitted!");
+      setShowVerifyForm(false);
+      setVerifyReason("");
+      queryClient.invalidateQueries({ queryKey: ["verification-status"] });
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
 
   const { data: songs } = useQuery({
     queryKey: ["artist-songs", artistId],
@@ -263,6 +305,61 @@ const ArtistDetailPage = () => {
                   </>
                 )}
               </div>
+
+              {/* Verification Request */}
+              {isOwnProfile && !artist.is_verified && (
+                <div className="mt-4">
+                  {verificationStatus?.status === "pending" ? (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
+                      <BadgeCheck className="h-4 w-4 text-primary" />
+                      Verification pending...
+                    </div>
+                  ) : verificationStatus?.status === "rejected" ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 rounded-full w-full"
+                      onClick={() => setShowVerifyForm(true)}
+                    >
+                      <BadgeCheck className="h-3.5 w-3.5" /> Reapply for Verification
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 rounded-full w-full"
+                      onClick={() => setShowVerifyForm(true)}
+                    >
+                      <BadgeCheck className="h-3.5 w-3.5" /> Request Verification
+                    </Button>
+                  )}
+
+                  {showVerifyForm && (
+                    <div className="mt-3 space-y-2">
+                      <Textarea
+                        placeholder="Why should you be verified? (optional)"
+                        value={verifyReason}
+                        onChange={(e) => setVerifyReason(e.target.value)}
+                        rows={3}
+                        className="text-sm"
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          className="rounded-full flex-1"
+                          onClick={() => requestVerification.mutate()}
+                          disabled={requestVerification.isPending}
+                        >
+                          Submit
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => setShowVerifyForm(false)}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Stats */}
               <div className="mt-6 space-y-4 border-t border-border/50 pt-5 text-center md:text-left">
