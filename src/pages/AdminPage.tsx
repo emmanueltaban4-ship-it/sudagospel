@@ -20,7 +20,8 @@ import AdminFeaturedContent from "@/components/admin/AdminFeaturedContent";
 import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
 import AdminVideoManagement from "@/components/admin/AdminVideoManagement";
 import AdminVerificationRequests from "@/components/admin/AdminVerificationRequests";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu } from "lucide-react";
+import AdminPolls from "@/components/admin/AdminPolls";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
@@ -40,6 +41,7 @@ const tabs = [
   { id: "reports", label: "Reports", icon: Flag },
   { id: "featured", label: "Featured", icon: Star },
   { id: "verification", label: "Verification", icon: BadgeCheck },
+  { id: "polls", label: "Polls", icon: Vote },
   { id: "emails", label: "Emails", icon: Mail },
 ] as const;
 
@@ -185,6 +187,7 @@ const AdminPage = () => {
             {activeTab === "reports" && <AdminReports />}
             {activeTab === "featured" && <AdminFeaturedContent />}
             {activeTab === "verification" && <AdminVerificationRequests />}
+            {activeTab === "polls" && <AdminPolls />}
             {activeTab === "emails" && <AdminEmailLogs />}
           </div>
         </div>
