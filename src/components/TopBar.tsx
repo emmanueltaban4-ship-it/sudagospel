@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import SearchOverlay from "./SearchOverlay";
 import NotificationBell from "./NotificationBell";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
