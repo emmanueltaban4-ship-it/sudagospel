@@ -113,9 +113,14 @@ const TopBar = () => {
             {user ? (
               <Link
                 to="/profile"
-                className="h-9 w-9 rounded-full bg-gradient-gold flex items-center justify-center text-primary-foreground font-bold text-xs active:scale-90 transition-all ring-2 ring-primary/20 hover:ring-primary/40"
+                className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center active:scale-90 transition-all ring-2 ring-primary/20 hover:ring-primary/40"
               >
-                {user.email?.[0]?.toUpperCase() || "U"}
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={profile?.avatar_url || undefined} />
+                  <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xs">
+                    {(profile?.display_name?.[0] || user.email?.[0] || "U").toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
             ) : (
               <Link
