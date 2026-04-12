@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sheet";
 import {
   Home, TrendingUp, Clock, Users, ListMusic, Newspaper, Crown as CrownIcon,
-  Upload, Trophy, Headphones, Download, Library, Video, Settings,
+  Upload, Trophy, Headphones, Download, Library, Video, Settings, Vote,
 } from "lucide-react";
 
 const drawerLinks = [
@@ -32,6 +32,7 @@ const drawerLinks = [
     { to: "/playlists", icon: ListMusic, label: "Playlists" },
     { to: "/downloads", icon: Download, label: "Downloads" },
     { to: "/videos", icon: Video, label: "Videos" },
+    { to: "/vote", icon: Vote, label: "Vote" },
     { to: "/news", icon: Newspaper, label: "News" },
     { to: "/subscription", icon: CrownIcon, label: "Premium" },
     { to: "/artist-dashboard", icon: Upload, label: "Artist Studio" },
