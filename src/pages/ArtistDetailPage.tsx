@@ -45,6 +45,42 @@ const ArtistDetailPage = () => {
   });
 
   const artistId = artist?.id;
+  const isOwnProfile = !!user && !!artist?.user_id && user.id === artist.user_id;
+
+  const { data: verificationStatus } = useQuery({
+    queryKey: ["verification-status", artistId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("verification_requests")
+        .select("status")
+        .eq("artist_id", artistId!)
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: isOwnProfile && !artist?.is_verified,
+  });
+
+  const requestVerification = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("verification_requests").insert({
+        artist_id: artistId!,
+        user_id: user!.id,
+        reason: verifyReason.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Verification request submitted!");
+      setShowVerifyForm(false);
+      setVerifyReason("");
+      queryClient.invalidateQueries({ queryKey: ["verification-status"] });
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
 
   const { data: songs } = useQuery({
     queryKey: ["artist-songs", artistId],
