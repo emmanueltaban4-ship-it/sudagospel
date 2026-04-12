@@ -8,6 +8,8 @@ import NotificationBell from "./NotificationBell";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
@@ -44,6 +46,19 @@ const TopBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: settings } = useSiteSettings();
   const { user } = useAuth();
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("user_id", user!.id)
+        .single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   const siteName = settings?.site_name || "Sudagospel";
 
@@ -98,9 +113,14 @@ const TopBar = () => {
             {user ? (
               <Link
                 to="/profile"
-                className="h-9 w-9 rounded-full bg-gradient-gold flex items-center justify-center text-primary-foreground font-bold text-xs active:scale-90 transition-all ring-2 ring-primary/20 hover:ring-primary/40"
+                className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center active:scale-90 transition-all ring-2 ring-primary/20 hover:ring-primary/40"
               >
-                {user.email?.[0]?.toUpperCase() || "U"}
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={profile?.avatar_url || undefined} />
+                  <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xs">
+                    {(profile?.display_name?.[0] || user.email?.[0] || "U").toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
             ) : (
               <Link
@@ -121,13 +141,13 @@ const TopBar = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-                  <AvatarImage src={undefined} />
+                  <AvatarImage src={profile?.avatar_url || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">
-                    {user.email?.[0]?.toUpperCase() || "U"}
+                    {(profile?.display_name?.[0] || user.email?.[0] || "U").toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate">{user.email?.split("@")[0]}</p>
+                  <p className="text-sm font-semibold truncate">{profile?.display_name || user.email?.split("@")[0]}</p>
                   <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
                 </div>
               </div>
