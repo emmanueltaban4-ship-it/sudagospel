@@ -24,9 +24,13 @@ type TabKey = "all" | "top-tracks" | "albums";
 const ArtistDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
   const [activeTab, setActiveTab] = useState<TabKey>("all");
   const [showAllTracks, setShowAllTracks] = useState(false);
+  const [showVerifyForm, setShowVerifyForm] = useState(false);
+  const [verifyReason, setVerifyReason] = useState("");
 
   const { data: artist, isLoading } = useQuery({
     queryKey: ["artist", slug],
