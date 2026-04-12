@@ -1,19 +1,21 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { artistSlug, artistPath } from "@/lib/artist-slug";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { useDocumentMeta } from "@/hooks/use-document-meta";
+import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import ShareDialog from "@/components/ShareDialog";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 
