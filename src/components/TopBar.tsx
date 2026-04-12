@@ -117,11 +117,26 @@ const TopBar = () => {
       {/* Mobile navigation drawer */}
       <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
         <SheetContent side="left" className="w-[280px] p-0 bg-background border-r border-border/40">
-          <SheetHeader className="p-4 pb-2 border-b border-border/30">
-            <SheetTitle className="flex items-center gap-2">
-              <img src={logoImg} alt="Sudagospel" className="h-8 object-contain" />
-              <span className="text-base font-bold">{siteName}</span>
-            </SheetTitle>
+          <SheetHeader className="p-4 pb-3 border-b border-border/30">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 ring-2 ring-primary/20">
+                  <AvatarImage src={undefined} />
+                  <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">
+                    {user.email?.[0]?.toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold truncate">{user.email?.split("@")[0]}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
+                </div>
+              </div>
+            ) : (
+              <SheetTitle className="flex items-center gap-2">
+                <img src={logoImg} alt="Sudagospel" className="h-8 object-contain" />
+                <span className="text-base font-bold">{siteName}</span>
+              </SheetTitle>
+            )}
           </SheetHeader>
           <nav className="flex-1 overflow-y-auto py-3 px-2">
             {drawerLinks.map((group, gi) => (
