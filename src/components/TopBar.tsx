@@ -141,13 +141,13 @@ const TopBar = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-                  <AvatarImage src={undefined} />
+                  <AvatarImage src={profile?.avatar_url || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">
-                    {user.email?.[0]?.toUpperCase() || "U"}
+                    {(profile?.display_name?.[0] || user.email?.[0] || "U").toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate">{user.email?.split("@")[0]}</p>
+                  <p className="text-sm font-semibold truncate">{profile?.display_name || user.email?.split("@")[0]}</p>
                   <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
                 </div>
               </div>
