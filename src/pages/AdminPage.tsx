@@ -101,8 +101,50 @@ const AdminPage = () => {
           )}
         </div>
 
+        {/* Mobile drawer menu */}
+        <div className="md:hidden mb-4">
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="flex items-center gap-2 w-full rounded-xl bg-muted px-4 py-3 text-sm font-medium text-foreground">
+                <Menu className="h-4 w-4" />
+                {tabs.find(t => t.id === activeTab)?.label || "Menu"}
+                {(() => { const Icon = tabs.find(t => t.id === activeTab)?.icon; return Icon ? <Icon className="h-4 w-4 ml-auto text-primary" /> : null; })()}
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] p-0">
+              <SheetTitle className="px-4 pt-5 pb-2 text-lg font-bold flex items-center gap-2">
+                <Shield className="h-5 w-5 text-primary" /> Admin
+              </SheetTitle>
+              <nav className="flex flex-col gap-0.5 px-2 pb-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+                {tabs.map((tab) => (
+                  <SheetTrigger key={tab.id} asChild>
+                    <button
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-3 text-sm font-medium transition-colors text-left ${
+                        activeTab === tab.id
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                    >
+                      <tab.icon className="h-4 w-4 flex-shrink-0" />
+                      {tab.label}
+                      {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
+                        <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                          activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
+                        }`}>
+                          {stats.pendingSongs}
+                        </span>
+                      )}
+                    </button>
+                  </SheetTrigger>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+
         <div className="flex gap-6">
-          {/* Vertical sidebar menu */}
+          {/* Desktop sidebar */}
           <nav className="hidden md:flex flex-col gap-1 w-52 flex-shrink-0 sticky top-20 self-start">
             {tabs.map((tab) => (
               <button
@@ -126,48 +168,6 @@ const AdminPage = () => {
               </button>
             ))}
           </nav>
-
-          {/* Mobile drawer menu */}
-          <div className="md:hidden w-full mb-4">
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="flex items-center gap-2 w-full rounded-xl bg-muted px-4 py-3 text-sm font-medium text-foreground">
-                  <Menu className="h-4 w-4" />
-                  {tabs.find(t => t.id === activeTab)?.label || "Menu"}
-                  {(() => { const Icon = tabs.find(t => t.id === activeTab)?.icon; return Icon ? <Icon className="h-4 w-4 ml-auto text-primary" /> : null; })()}
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0">
-                <SheetTitle className="px-4 pt-5 pb-2 text-lg font-bold flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-primary" /> Admin
-                </SheetTitle>
-                <nav className="flex flex-col gap-0.5 px-2 pb-4 overflow-y-auto max-h-[calc(100vh-80px)]">
-                  {tabs.map((tab) => (
-                    <SheetTrigger key={tab.id} asChild>
-                      <button
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-3 text-sm font-medium transition-colors text-left ${
-                          activeTab === tab.id
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        }`}
-                      >
-                        <tab.icon className="h-4 w-4 flex-shrink-0" />
-                        {tab.label}
-                        {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
-                          <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                            activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
-                          }`}>
-                            {stats.pendingSongs}
-                          </span>
-                        )}
-                      </button>
-                    </SheetTrigger>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
 
           {/* Tab content */}
           <div className="flex-1 min-w-0">
