@@ -101,6 +101,24 @@ const AdminPage = () => {
           )}
         </div>
 
+        {/* Mobile stats summary */}
+        {stats && (
+          <div className="md:hidden grid grid-cols-4 gap-2 mb-4">
+            {[
+              { label: "Users", value: stats.totalUsers, icon: Users },
+              { label: "Songs", value: stats.totalSongs, icon: Music },
+              { label: "Artists", value: stats.totalArtists, icon: Mic2 },
+              { label: "Pending", value: stats.pendingSongs, icon: CheckSquare },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl bg-muted/60 border border-border/40 p-2.5 text-center">
+                <item.icon className="h-4 w-4 mx-auto mb-1 text-primary" />
+                <p className="text-base font-bold text-foreground leading-none">{item.value}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Mobile drawer menu */}
         <div className="md:hidden mb-4">
           <Sheet>
