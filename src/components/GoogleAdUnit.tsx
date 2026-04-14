@@ -60,7 +60,7 @@ const GoogleAdUnit = ({
       <ins
         className="adsbygoogle"
         style={{ display: "block", ...style }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client="ca-pub-1213518516892861"
         data-ad-slot={slot}
         data-ad-format={format}
         {...(responsive ? { "data-full-width-responsive": "true" } : {})}
