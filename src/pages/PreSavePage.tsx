@@ -127,7 +127,7 @@ const PreSavePage = () => {
 
             <h1 className="font-heading text-3xl md:text-4xl font-extrabold mb-2">{song.title}</h1>
             {artist && (
-              <Link to={artistPath({ id: artist.id, name: artist.name })} className="text-base text-muted-foreground hover:text-primary inline-flex items-center gap-1.5 mb-6">
+              <Link to={artistPath(artist.name)} className="text-base text-muted-foreground hover:text-primary inline-flex items-center gap-1.5 mb-6">
                 {artist.name}
                 {artist.is_verified && <BadgeCheck className="h-4 w-4 text-primary" />}
               </Link>
@@ -135,7 +135,7 @@ const PreSavePage = () => {
 
             {releaseDate && (
               <div className="mb-6 w-full max-w-md">
-                <CountdownTimer targetDate={releaseDate} />
+                <CountdownTimer targetDate={releaseDate.toISOString()} />
                 <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5" />
                   Releases {format(releaseDate, "MMMM d, yyyy 'at' p")}

@@ -225,7 +225,7 @@ const ArtistDashboardPage = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5">
-              <Link to={artistPath({ id: myArtist.id, name: myArtist.name })}><Eye className="h-4 w-4" />Public page</Link>
+              <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />Public page</Link>
             </Button>
             <Button asChild size="sm" className="rounded-xl gap-1.5 bg-gradient-gold text-primary-foreground">
               <Link to="/upload"><Music className="h-4 w-4" />Upload</Link>
@@ -347,7 +347,7 @@ const ArtistDashboardPage = () => {
               <ActionRow icon={Share2} label="Share kit" hint="Promo links & embeds" onClick={() => {}} />
               <div className="pt-2 mt-2 border-t border-border/40">
                 <ShareKit
-                  url={`${window.location.origin}${artistPath({ id: myArtist.id, name: myArtist.name })}`}
+                  url={`${window.location.origin}${artistPath(myArtist.name)}`}
                   title={`${myArtist.name} on Sudagospel`}
                   description={`Listen to ${myArtist.name} — gospel music on Sudagospel`}
                   trigger={
