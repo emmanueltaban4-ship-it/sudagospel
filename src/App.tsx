@@ -27,6 +27,7 @@ const ArticleDetailPage = lazy(() => import("./pages/ArticleDetailPage.tsx"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.tsx"));
 const SubscriptionPage = lazy(() => import("./pages/SubscriptionPage.tsx"));
 const ArtistDashboardPage = lazy(() => import("./pages/ArtistDashboardPage.tsx"));
+const PreSavePage = lazy(() => import("./pages/PreSavePage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsOfServicePage = lazy(() => import("./pages/TermsOfServicePage.tsx"));
 const VideosPage = lazy(() => import("./pages/VideosPage.tsx"));
@@ -108,6 +109,7 @@ const App = () => {
                     <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                     <Route path="/subscription" element={<SubscriptionPage />} />
                     <Route path="/artist-dashboard" element={<ArtistDashboardPage />} />
+                    <Route path="/presave/:id" element={<PreSavePage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                     <Route path="/terms-of-service" element={<TermsOfServicePage />} />
