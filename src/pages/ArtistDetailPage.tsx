@@ -10,7 +10,7 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
