@@ -703,6 +703,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          parent_id: string | null
           song_id: string
           updated_at: string
           user_id: string
@@ -711,6 +712,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          parent_id?: string | null
           song_id: string
           updated_at?: string
           user_id: string
@@ -719,11 +721,19 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          parent_id?: string | null
           song_id?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "song_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "song_comments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "song_comments_song_id_fkey"
             columns: ["song_id"]
@@ -787,6 +797,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "song_likes_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      song_reposts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          song_id: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          song_id: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          song_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "song_reposts_song_id_fkey"
             columns: ["song_id"]
             isOneToOne: false
             referencedRelation: "songs"
@@ -895,6 +937,35 @@ export type Database = {
           reason?: string
         }
         Relationships: []
+      }
+      user_listening_history: {
+        Row: {
+          id: string
+          played_at: string
+          song_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          played_at?: string
+          song_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          played_at?: string
+          song_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_listening_history_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -1026,6 +1097,61 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_artist_radio: {
+        Args: { _artist_id: string; lim?: number }
+        Returns: {
+          artist_id: string
+          artist_name: string
+          cover_url: string
+          file_url: string
+          genre: string
+          song_id: string
+          title: string
+        }[]
+      }
+      get_daily_mix: {
+        Args: { _user_id: string; lim?: number }
+        Returns: {
+          artist_id: string
+          artist_name: string
+          cover_url: string
+          file_url: string
+          genre: string
+          song_id: string
+          title: string
+        }[]
+      }
+      get_for_you_feed: {
+        Args: { _user_id: string; lim?: number }
+        Returns: {
+          actor_id: string
+          actor_name: string
+          artist_id: string
+          artist_name: string
+          cover_url: string
+          created_at: string
+          feed_type: string
+          file_url: string
+          song_id: string
+          title: string
+        }[]
+      }
+      get_trending_songs: {
+        Args: { genre_filter?: string; lim?: number; period?: string }
+        Returns: {
+          artist_id: string
+          artist_name: string
+          cover_url: string
+          downloads: number
+          file_url: string
+          genre: string
+          likes: number
+          plays: number
+          score: number
+          song_id: string
+          title: string
+        }[]
       }
       get_weekly_top_songs: {
         Args: { lim?: number }
