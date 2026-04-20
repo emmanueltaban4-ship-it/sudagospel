@@ -23,6 +23,10 @@ import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
 import ShareDialog from "@/components/ShareDialog";
 import CountdownTimer from "@/components/CountdownTimer";
+import RepostButton from "@/components/RepostButton";
+import ShareStoryCard from "@/components/ShareStoryCard";
+import CommentThread from "@/components/CommentThread";
+import { Sparkles } from "lucide-react";
 
 const SongDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +35,7 @@ const SongDetailPage = () => {
   const { play, currentTrack, isPlaying, togglePlay, currentTime, duration, seek, next, prev } = usePlayer();
   const [commentText, setCommentText] = useState("");
   const [activeTab, setActiveTab] = useState<"details" | "lyrics" | "comments">("details");
+  const [storyOpen, setStoryOpen] = useState(false);
 
   const { data: song, isLoading } = useQuery({
     queryKey: ["song", id],
@@ -296,8 +301,12 @@ const SongDetailPage = () => {
             <div className="flex-1" />
 
             {/* Actions */}
+            <RepostButton songId={song.id} />
             <Button variant="ghost" size="icon" onClick={handleDownload} className="text-muted-foreground hover:text-foreground rounded-full">
               <Download className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setStoryOpen(true)} className="text-muted-foreground hover:text-foreground rounded-full" aria-label="Share to story">
+              <Sparkles className="h-5 w-5" />
             </Button>
             <ShareDialog
               title={song.title}
@@ -305,6 +314,13 @@ const SongDetailPage = () => {
               coverUrl={song.cover_url || undefined}
               shareUrl={ogShareUrl}
               type="song"
+            />
+            <ShareStoryCard
+              open={storyOpen}
+              onOpenChange={setStoryOpen}
+              songTitle={song.title}
+              artistName={artistName}
+              coverUrl={song.cover_url || undefined}
             />
           </div>
 
