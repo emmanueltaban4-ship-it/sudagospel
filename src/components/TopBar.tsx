@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/sheet";
 import {
   Home, TrendingUp, Clock, Users, ListMusic, Newspaper, Crown as CrownIcon,
-  Upload, Trophy, Headphones, Download, Library, Video, Settings, Vote,
+  Upload, Trophy, Headphones, Download, Library, Video, Settings, Vote, Flame, Sparkles,
 } from "lucide-react";
 
 const drawerLinks = [
   { section: null, items: [
     { to: "/", icon: Home, label: "Home" },
+    { to: "/for-you", icon: Sparkles, label: "For You" },
+    { to: "/charts", icon: Flame, label: "Trending Charts" },
     { to: "/music", icon: TrendingUp, label: "Explore" },
     { to: "/artists", icon: Users, label: "Artists" },
     { to: "/most-listened", icon: Headphones, label: "Top Songs" },

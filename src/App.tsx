@@ -42,6 +42,10 @@ const DmcaPage = lazy(() => import("./pages/DmcaPage.tsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
 const CopyrightPage = lazy(() => import("./pages/CopyrightPage.tsx"));
 const VotingPage = lazy(() => import("./pages/VotingPage.tsx"));
+const ChartsPage = lazy(() => import("./pages/ChartsPage.tsx"));
+const ForYouPage = lazy(() => import("./pages/ForYouPage.tsx"));
+const ArtistRadioPage = lazy(() => import("./pages/ArtistRadioPage.tsx"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient({
@@ -125,6 +129,10 @@ const App = () => {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/copyright" element={<CopyrightPage />} />
                     <Route path="/vote" element={<VotingPage />} />
+                    <Route path="/charts" element={<ChartsPage />} />
+                    <Route path="/for-you" element={<ForYouPage />} />
+                    <Route path="/radio/:artistId" element={<ArtistRadioPage />} />
+                    <Route path="/notifications" element={<NotificationsPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

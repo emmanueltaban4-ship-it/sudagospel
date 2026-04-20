@@ -45,7 +45,7 @@ const NotificationBell = () => {
               No notifications yet
             </div>
           ) : (
-            notifications.map((n: any) => (
+            notifications.slice(0, 8).map((n: any) => (
               <div
                 key={n.id}
                 onClick={() => !n.is_read && markAsRead.mutate(n.id)}
@@ -64,6 +64,12 @@ const NotificationBell = () => {
             ))
           )}
         </div>
+        <Link
+          to="/notifications"
+          className="block py-2.5 text-center text-xs font-semibold text-primary border-t border-border hover:bg-muted/40 transition-colors"
+        >
+          View all notifications
+        </Link>
       </PopoverContent>
     </Popover>
   );

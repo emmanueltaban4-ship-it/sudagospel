@@ -23,6 +23,10 @@ import { downloadFile } from "@/lib/download";
 import { formatDistanceToNow } from "date-fns";
 import ShareDialog from "@/components/ShareDialog";
 import CountdownTimer from "@/components/CountdownTimer";
+import RepostButton from "@/components/RepostButton";
+import ShareStoryCard from "@/components/ShareStoryCard";
+import CommentThread from "@/components/CommentThread";
+import { Sparkles } from "lucide-react";
 
 const SongDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +35,7 @@ const SongDetailPage = () => {
   const { play, currentTrack, isPlaying, togglePlay, currentTime, duration, seek, next, prev } = usePlayer();
   const [commentText, setCommentText] = useState("");
   const [activeTab, setActiveTab] = useState<"details" | "lyrics" | "comments">("details");
+  const [storyOpen, setStoryOpen] = useState(false);
 
   const { data: song, isLoading } = useQuery({
     queryKey: ["song", id],
@@ -296,8 +301,12 @@ const SongDetailPage = () => {
             <div className="flex-1" />
 
             {/* Actions */}
+            <RepostButton songId={song.id} />
             <Button variant="ghost" size="icon" onClick={handleDownload} className="text-muted-foreground hover:text-foreground rounded-full">
               <Download className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setStoryOpen(true)} className="text-muted-foreground hover:text-foreground rounded-full" aria-label="Share to story">
+              <Sparkles className="h-5 w-5" />
             </Button>
             <ShareDialog
               title={song.title}
@@ -305,6 +314,13 @@ const SongDetailPage = () => {
               coverUrl={song.cover_url || undefined}
               shareUrl={ogShareUrl}
               type="song"
+            />
+            <ShareStoryCard
+              open={storyOpen}
+              onOpenChange={setStoryOpen}
+              songTitle={song.title}
+              artistName={artistName}
+              coverUrl={song.cover_url || undefined}
             />
           </div>
 
@@ -413,75 +429,7 @@ const SongDetailPage = () => {
           )}
 
           {activeTab === "comments" && (
-            <div className="space-y-4">
-              {user ? (
-                <div className="flex gap-3">
-                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground flex-shrink-0">
-                    {user.email?.[0]?.toUpperCase() || "?"}
-                  </div>
-                  <div className="flex-1 flex gap-2">
-                    <Textarea
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="Write a comment..."
-                      rows={1}
-                      className="flex-1 resize-none rounded-lg bg-card border-border min-h-[40px]"
-                    />
-                    <Button
-                      onClick={handleSubmitComment}
-                      disabled={!commentText.trim() || postComment.isPending}
-                      size="icon"
-                      className="self-end bg-primary text-primary-foreground rounded-full h-9 w-9"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={() => navigate("/auth")}
-                  className="w-full rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground/40 transition-colors text-center"
-                >
-                  Sign in to leave a comment
-                </button>
-              )}
-
-              <div className="space-y-3">
-                {comments?.map((comment) => (
-                  <div key={comment.id} className="flex gap-3 group">
-                    <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">
-                      {(comment.profiles as any)?.display_name?.[0]?.toUpperCase() || "?"}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-foreground">
-                          {(comment.profiles as any)?.display_name || "Anonymous"}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
-                        </span>
-                        {user?.id === comment.user_id && (
-                          <button
-                            onClick={() => deleteComment.mutate({ commentId: comment.id, songId: song.id })}
-                            className="text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100 ml-auto"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                      </div>
-                      <p className="text-sm text-foreground/80 mt-0.5">{comment.content}</p>
-                    </div>
-                  </div>
-                ))}
-                {(!comments || comments.length === 0) && (
-                  <div className="flex flex-col items-center py-12 text-center">
-                    <MessageCircle className="h-10 w-10 text-muted-foreground/20 mb-3" />
-                    <p className="text-sm text-muted-foreground">No comments yet</p>
-                    <p className="text-xs text-muted-foreground/60 mt-1">Be the first to share your thoughts!</p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <CommentThread songId={song.id} />
           )}
 
           {/* Ad Space */}

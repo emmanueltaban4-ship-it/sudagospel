@@ -10,7 +10,7 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
@@ -299,9 +299,16 @@ const ArtistDetailPage = () => {
                     <button
                       onClick={handleShuffle}
                       className="h-10 w-10 rounded-full bg-card border border-border/50 text-muted-foreground flex items-center justify-center hover:text-foreground hover:scale-105 active:scale-95 transition-all"
+                      aria-label="Shuffle"
                     >
                       <Shuffle className="h-4 w-4" />
                     </button>
+                    <Link
+                      to={`/radio/${artistId}`}
+                      className="h-10 px-4 rounded-full bg-card border border-border/50 text-foreground text-sm font-bold flex items-center gap-1.5 hover:bg-muted active:scale-95 transition-all"
+                    >
+                      <Radio className="h-4 w-4 text-secondary" /> Radio
+                    </Link>
                   </>
                 )}
               </div>

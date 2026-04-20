@@ -132,8 +132,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.play().catch(() => setIsPlaying(false));
       setIsPlaying(true);
     }
-    // Fire-and-forget play count increment
+    // Fire-and-forget play count increment + listening history
     supabase.rpc('increment_play_count', { song_uuid: track.id }).then(() => {});
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        supabase.from('user_listening_history').insert({ user_id: data.user.id, song_id: track.id }).then(() => {});
+      }
+    });
     // Preload next track in queue
     requestIdleCallback(() => {
       const q = queueRef.current;
