@@ -21,13 +21,15 @@ import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
 import AdminVideoManagement from "@/components/admin/AdminVideoManagement";
 import AdminVerificationRequests from "@/components/admin/AdminVerificationRequests";
 import AdminPolls from "@/components/admin/AdminPolls";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote } from "lucide-react";
+import AdminPayouts from "@/components/admin/AdminPayouts";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "settings", label: "Settings", icon: Settings2 },
   { id: "monetization", label: "Monetization", icon: DollarSign },
+  { id: "payouts", label: "Payouts", icon: Wallet },
   { id: "ads", label: "Ads", icon: Megaphone },
   { id: "songs", label: "Songs", icon: Music },
   { id: "videos", label: "Videos", icon: Video },
@@ -192,6 +194,7 @@ const AdminPage = () => {
             {activeTab === "analytics" && <AdminAnalytics />}
             {activeTab === "settings" && <AdminSiteSettings />}
             {activeTab === "monetization" && <AdminMonetization />}
+            {activeTab === "payouts" && <AdminPayouts />}
             {activeTab === "ads" && <AdminAds />}
             {activeTab === "songs" && <AdminSongManagement />}
             {activeTab === "artists" && <AdminArtistManagement />}

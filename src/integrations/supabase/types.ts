@@ -151,6 +151,63 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_earnings: {
+        Row: {
+          amount_cents: number
+          artist_id: string
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          payer_user_id: string | null
+          song_id: string | null
+          source: string
+          stripe_session_id: string | null
+          stripe_subscription_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          artist_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          payer_user_id?: string | null
+          song_id?: string | null
+          source: string
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          artist_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          payer_user_id?: string | null
+          song_id?: string | null
+          source?: string
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_earnings_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artist_earnings_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artist_follows: {
         Row: {
           artist_id: string
@@ -180,6 +237,53 @@ export type Database = {
           },
         ]
       }
+      artist_payouts: {
+        Row: {
+          amount_cents: number
+          artist_id: string
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          paid_at: string
+          paid_by: string | null
+          payout_method: string | null
+          reference: string | null
+        }
+        Insert: {
+          amount_cents: number
+          artist_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string
+          paid_by?: string | null
+          payout_method?: string | null
+          reference?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          artist_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string
+          paid_by?: string | null
+          payout_method?: string | null
+          reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_payouts_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artists: {
         Row: {
           avatar_url: string | null
@@ -190,6 +294,9 @@ export type Database = {
           id: string
           is_verified: boolean | null
           name: string
+          supporter_enabled: boolean
+          supporter_price_cents: number
+          tip_jar_enabled: boolean
           updated_at: string
           user_id: string | null
           youtube_channel_url: string | null
@@ -203,6 +310,9 @@ export type Database = {
           id?: string
           is_verified?: boolean | null
           name: string
+          supporter_enabled?: boolean
+          supporter_price_cents?: number
+          tip_jar_enabled?: boolean
           updated_at?: string
           user_id?: string | null
           youtube_channel_url?: string | null
@@ -216,6 +326,9 @@ export type Database = {
           id?: string
           is_verified?: boolean | null
           name?: string
+          supporter_enabled?: boolean
+          supporter_price_cents?: number
+          tip_jar_enabled?: boolean
           updated_at?: string
           user_id?: string | null
           youtube_channel_url?: string | null
@@ -365,6 +478,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      paid_downloads: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          id: string
+          song_id: string
+          stripe_session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          id?: string
+          song_id: string
+          stripe_session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          song_id?: string
+          stripe_session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paid_downloads_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       playlist_songs: {
         Row: {
@@ -844,11 +992,13 @@ export type Database = {
           created_at: string
           description: string | null
           download_count: number | null
+          download_price_cents: number
           duration_seconds: number | null
           file_url: string
           genre: string | null
           id: string
           is_approved: boolean | null
+          is_paid_download: boolean
           lyrics: string | null
           play_count: number | null
           release_status: string
@@ -864,11 +1014,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           download_count?: number | null
+          download_price_cents?: number
           duration_seconds?: number | null
           file_url: string
           genre?: string | null
           id?: string
           is_approved?: boolean | null
+          is_paid_download?: boolean
           lyrics?: string | null
           play_count?: number | null
           release_status?: string
@@ -884,11 +1036,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           download_count?: number | null
+          download_price_cents?: number
           duration_seconds?: number | null
           file_url?: string
           genre?: string | null
           id?: string
           is_approved?: boolean | null
+          is_paid_download?: boolean
           lyrics?: string | null
           play_count?: number | null
           release_status?: string
@@ -907,6 +1061,53 @@ export type Database = {
           },
           {
             foreignKeyName: "songs_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      supporter_subscriptions: {
+        Row: {
+          amount_cents: number
+          artist_id: string
+          created_at: string
+          current_period_end: string | null
+          id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          artist_id: string
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          artist_id?: string
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supporter_subscriptions_artist_id_fkey"
             columns: ["artist_id"]
             isOneToOne: false
             referencedRelation: "artists"
@@ -1090,6 +1291,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_artists_with_balance: {
+        Args: never
+        Returns: {
+          artist_id: string
+          artist_name: string
+          avatar_url: string
+          balance_cents: number
+          total_earned_cents: number
+          total_paid_cents: number
+        }[]
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -1097,6 +1309,14 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_artist_balance: {
+        Args: { _artist_id: string }
+        Returns: {
+          balance_cents: number
+          total_earned_cents: number
+          total_paid_cents: number
+        }[]
       }
       get_artist_radio: {
         Args: { _artist_id: string; lim?: number }
@@ -1181,6 +1401,14 @@ export type Database = {
         Returns: undefined
       }
       increment_play_count: { Args: { song_uuid: string }; Returns: undefined }
+      is_active_supporter: {
+        Args: { _artist_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_song_purchased: {
+        Args: { _song_id: string; _user_id: string }
+        Returns: boolean
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
