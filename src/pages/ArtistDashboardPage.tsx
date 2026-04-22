@@ -651,7 +651,7 @@ const SongStatusBadge = ({ song }: { song: any }) => {
     return <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-secondary/40 text-secondary"><Clock className="h-2.5 w-2.5" />Scheduled</Badge>;
   }
   if (!song.is_approved) {
-    return <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-yellow-500/40 text-yellow-600 dark:text-yellow-400"><AlertCircle className="h-2.5 w-2.5" />Pending</Badge>;
+    return <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-accent/40 text-accent"><AlertCircle className="h-2.5 w-2.5" />Pending</Badge>;
   }
   return <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-primary/40 text-primary"><CheckCircle2 className="h-2.5 w-2.5" />Live</Badge>;
 };
