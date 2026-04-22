@@ -46,7 +46,9 @@ const ChartsPage = lazy(() => import("./pages/ChartsPage.tsx"));
 const ForYouPage = lazy(() => import("./pages/ForYouPage.tsx"));
 const ArtistRadioPage = lazy(() => import("./pages/ArtistRadioPage.tsx"));
 const NotificationsPage = lazy(() => import("./pages/NotificationsPage.tsx"));
+const PurchasesPage = lazy(() => import("./pages/PurchasesPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+import InstallPWA from "@/components/InstallPWA";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,6 +92,7 @@ const App = () => {
             <PlayerProvider>
               <Toaster />
               <Sonner />
+              <InstallPWA />
               {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
               <BrowserRouter>
                 <Suspense fallback={<PageLoader />}>
@@ -133,6 +136,7 @@ const App = () => {
                     <Route path="/for-you" element={<ForYouPage />} />
                     <Route path="/radio/:artistId" element={<ArtistRadioPage />} />
                     <Route path="/notifications" element={<NotificationsPage />} />
+                    <Route path="/purchases" element={<PurchasesPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
