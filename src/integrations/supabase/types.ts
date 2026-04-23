@@ -151,6 +151,69 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_collaborators: {
+        Row: {
+          artist_id: string
+          collaborator_email: string
+          collaborator_name: string | null
+          collaborator_user_id: string | null
+          created_at: string
+          id: string
+          invited_by: string | null
+          notes: string | null
+          role: string
+          song_id: string | null
+          split_percent: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          artist_id: string
+          collaborator_email: string
+          collaborator_name?: string | null
+          collaborator_user_id?: string | null
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          notes?: string | null
+          role?: string
+          song_id?: string | null
+          split_percent?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          artist_id?: string
+          collaborator_email?: string
+          collaborator_name?: string | null
+          collaborator_user_id?: string | null
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          notes?: string | null
+          role?: string
+          song_id?: string | null
+          split_percent?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_collaborators_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "artist_collaborators_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       artist_earnings: {
         Row: {
           amount_cents: number
@@ -277,6 +340,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "artist_payouts_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      artist_social_links: {
+        Row: {
+          artist_id: string
+          created_at: string
+          id: string
+          platform: string
+          position: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          id?: string
+          platform: string
+          position?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          id?: string
+          platform?: string
+          position?: number
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artist_social_links_artist_id_fkey"
             columns: ["artist_id"]
             isOneToOne: false
             referencedRelation: "artists"
@@ -478,6 +579,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      ownership_claims: {
+        Row: {
+          admin_notes: string | null
+          claim_type: string
+          claimant_email: string
+          claimant_id: string
+          claimant_name: string
+          created_at: string
+          description: string
+          evidence_url: string | null
+          id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          song_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          claim_type?: string
+          claimant_email: string
+          claimant_id: string
+          claimant_name: string
+          created_at?: string
+          description: string
+          evidence_url?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          song_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          claim_type?: string
+          claimant_email?: string
+          claimant_id?: string
+          claimant_name?: string
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          song_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ownership_claims_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       paid_downloads: {
         Row: {
