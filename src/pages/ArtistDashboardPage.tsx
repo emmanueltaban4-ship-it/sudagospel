@@ -19,13 +19,18 @@ import {
   LayoutDashboard, DollarSign, Settings as SettingsIcon, Library,
   CheckCircle2, Clock, AlertCircle, Wallet, Crown, Coins, Save,
   ExternalLink, ArrowDownToLine, Info, Palette, UserCog, Bell,
-  ShieldCheck, Megaphone,
+  ShieldCheck, Megaphone, Pin, ListOrdered, Trash2, EyeOff,
 } from "lucide-react";
 import BrandingSection from "@/components/artist-dashboard/BrandingSection";
 import CollaborationSection from "@/components/artist-dashboard/CollaborationSection";
 import PromotionSection from "@/components/artist-dashboard/PromotionSection";
 import NotificationsSection from "@/components/artist-dashboard/NotificationsSection";
 import RightsSection from "@/components/artist-dashboard/RightsSection";
+import LinksSection from "@/components/artist-dashboard/LinksSection";
+import TopTracksManager from "@/components/artist-dashboard/TopTracksManager";
+import ScheduleCalendar from "@/components/artist-dashboard/ScheduleCalendar";
+import { useBulkSongAction } from "@/hooks/use-artist-management";
+import { Checkbox } from "@/components/ui/checkbox";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, AreaChart, Area, PieChart, Pie, Cell } from "recharts";
 import { format, subDays, startOfDay } from "date-fns";
 import ShareKit from "@/components/ShareKit";
@@ -35,12 +40,14 @@ import { useArtistBalance, useArtistEarnings, useArtistPayouts, formatCents } fr
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-type Section = "overview" | "branding" | "music" | "monetization" | "audience" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
+type Section = "overview" | "branding" | "music" | "toptracks" | "monetization" | "audience" | "links" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
 
 const NAV: { id: Section; label: string; icon: any }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "branding", label: "Branding", icon: Palette },
   { id: "music", label: "Music", icon: Library },
+  { id: "toptracks", label: "Top Tracks", icon: Pin },
+  { id: "links", label: "Links", icon: LinkIcon },
   { id: "monetization", label: "Monetization", icon: DollarSign },
   { id: "audience", label: "Fans", icon: Users },
   { id: "collaboration", label: "Collaborators", icon: UserCog },
@@ -199,6 +206,8 @@ const ArtistDashboardPage = () => {
             {section === "overview" && <OverviewSection artist={myArtist} range={range} setRange={setRange} />}
             {section === "branding" && <BrandingSection artist={myArtist} />}
             {section === "music" && <MusicSection artist={myArtist} />}
+            {section === "toptracks" && <TopTracksManager artist={myArtist} />}
+            {section === "links" && <LinksSection artist={myArtist} />}
             {section === "monetization" && <MonetizationSection artist={myArtist} />}
             {section === "audience" && <AudienceSection artist={myArtist} range={range} setRange={setRange} />}
             {section === "collaboration" && <CollaborationSection artist={myArtist} />}
