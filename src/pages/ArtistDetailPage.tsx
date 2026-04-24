@@ -123,10 +123,28 @@ const ArtistDetailPage = () => {
     enabled: !!artistId,
   });
 
+  const { data: customLinks = [] } = useArtistLinks(artistId);
+  const { data: pinnedTopTracks = [] } = useTopTracks(artistId);
+
   const topSongs = useMemo(() => {
     if (!songs) return [];
+    // Use manual ordering if set, otherwise sort by plays
+    if (pinnedTopTracks.length > 0) {
+      const orderedIds = pinnedTopTracks.map((t: any) => t.song_id);
+      const ordered = orderedIds
+        .map((id: string) => songs.find((s) => s.id === id))
+        .filter(Boolean) as typeof songs;
+      const remaining = songs.filter((s) => !orderedIds.includes(s.id))
+        .sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+      return [...ordered, ...remaining];
+    }
     return [...songs].sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
-  }, [songs]);
+  }, [songs, pinnedTopTracks]);
+
+  const pinnedSong = useMemo(() => {
+    if (!artist?.pinned_song_id || !songs) return null;
+    return songs.find((s) => s.id === artist.pinned_song_id) || null;
+  }, [artist?.pinned_song_id, songs]);
 
   const displayedSongs = showAllTracks ? topSongs : topSongs.slice(0, 5);
 
