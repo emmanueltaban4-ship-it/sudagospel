@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { artistSlug, artistPath } from "@/lib/artist-slug";
+import { artistSlug } from "@/lib/artist-slug";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -10,7 +10,8 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio,
+  Pin, ShoppingBag, Calendar, Heart, Globe, Link as LinkIconLucide, ExternalLink,
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
@@ -18,6 +19,17 @@ import ShareDialog from "@/components/ShareDialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
+import { useArtistLinks, useTopTracks } from "@/hooks/use-artist-management";
+
+const linkTypeIcon = (t: string) => {
+  switch (t) {
+    case "merch": return ShoppingBag;
+    case "tour": return Calendar;
+    case "donate": return Heart;
+    case "website": return Globe;
+    default: return LinkIconLucide;
+  }
+};
 
 type TabKey = "all" | "top-tracks" | "albums";
 
