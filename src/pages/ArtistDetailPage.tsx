@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { artistSlug, artistPath } from "@/lib/artist-slug";
+import { artistSlug } from "@/lib/artist-slug";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -10,7 +10,8 @@ import MiniPlayer from "@/components/MiniPlayer";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Music, CheckCircle, Play, Pause, Shuffle,
-  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio
+  Download, Share2, Disc3, UserPlus, UserCheck, MoreHorizontal, BadgeCheck, Radio,
+  Pin, ShoppingBag, Calendar, Heart, Globe, Link as LinkIconLucide, ExternalLink,
 } from "lucide-react";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
@@ -18,6 +19,17 @@ import ShareDialog from "@/components/ShareDialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
+import { useArtistLinks, useTopTracks } from "@/hooks/use-artist-management";
+
+const linkTypeIcon = (t: string) => {
+  switch (t) {
+    case "merch": return ShoppingBag;
+    case "tour": return Calendar;
+    case "donate": return Heart;
+    case "website": return Globe;
+    default: return LinkIconLucide;
+  }
+};
 
 type TabKey = "all" | "top-tracks" | "albums";
 
@@ -111,10 +123,28 @@ const ArtistDetailPage = () => {
     enabled: !!artistId,
   });
 
+  const { data: customLinks = [] } = useArtistLinks(artistId);
+  const { data: pinnedTopTracks = [] } = useTopTracks(artistId);
+
   const topSongs = useMemo(() => {
     if (!songs) return [];
+    // Use manual ordering if set, otherwise sort by plays
+    if (pinnedTopTracks.length > 0) {
+      const orderedIds = pinnedTopTracks.map((t: any) => t.song_id);
+      const ordered = orderedIds
+        .map((id: string) => songs.find((s) => s.id === id))
+        .filter(Boolean) as typeof songs;
+      const remaining = songs.filter((s) => !orderedIds.includes(s.id))
+        .sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+      return [...ordered, ...remaining];
+    }
     return [...songs].sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
-  }, [songs]);
+  }, [songs, pinnedTopTracks]);
+
+  const pinnedSong = useMemo(() => {
+    if (!artist?.pinned_song_id || !songs) return null;
+    return songs.find((s) => s.id === artist.pinned_song_id) || null;
+  }, [artist?.pinned_song_id, songs]);
 
   const displayedSongs = showAllTracks ? topSongs : topSongs.slice(0, 5);
 
@@ -209,13 +239,22 @@ const ArtistDetailPage = () => {
     <Layout>
       <div className="pb-28">
         {/* === COVER BANNER === */}
-        <div className="relative h-[220px] md:h-[320px] overflow-hidden bg-card">
+        <div
+          className="relative h-[220px] md:h-[320px] overflow-hidden bg-card"
+          style={{ ['--artist-accent' as any]: artist.accent_color || '#DC2626' }}
+        >
           {(artist as any).cover_url || artist.avatar_url ? (
-            <img src={(artist as any).cover_url || artist.avatar_url!} alt="" className="h-full w-full object-cover object-top" />
+            <img
+              src={(artist as any).cover_url || artist.avatar_url!}
+              alt=""
+              className="h-full w-full object-cover"
+              style={{ objectPosition: artist.banner_position === 'top' ? 'top' : artist.banner_position === 'bottom' ? 'bottom' : 'center' }}
+            />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-primary/30 via-secondary/20 to-background" />
+            <div className="h-full w-full" style={{ background: `linear-gradient(135deg, ${artist.accent_color || '#DC2626'}40, hsl(var(--secondary)/0.2), hsl(var(--background)))` }} />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1" style={{ background: artist.accent_color || '#DC2626' }} />
 
           {/* Nav buttons */}
           <button

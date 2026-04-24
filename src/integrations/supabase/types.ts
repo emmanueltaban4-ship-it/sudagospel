@@ -300,6 +300,42 @@ export type Database = {
           },
         ]
       }
+      artist_links: {
+        Row: {
+          artist_id: string
+          created_at: string
+          icon: string | null
+          id: string
+          label: string
+          link_type: string
+          position: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          label: string
+          link_type?: string
+          position?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          label?: string
+          link_type?: string
+          position?: number
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       artist_payouts: {
         Row: {
           amount_cents: number
@@ -385,9 +421,35 @@ export type Database = {
           },
         ]
       }
+      artist_top_tracks: {
+        Row: {
+          artist_id: string
+          created_at: string
+          id: string
+          position: number
+          song_id: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          id?: string
+          position?: number
+          song_id: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          id?: string
+          position?: number
+          song_id?: string
+        }
+        Relationships: []
+      }
       artists: {
         Row: {
+          accent_color: string
           avatar_url: string | null
+          banner_position: string
           bio: string | null
           cover_url: string | null
           created_at: string
@@ -395,6 +457,7 @@ export type Database = {
           id: string
           is_verified: boolean | null
           name: string
+          pinned_song_id: string | null
           supporter_enabled: boolean
           supporter_price_cents: number
           tip_jar_enabled: boolean
@@ -403,7 +466,9 @@ export type Database = {
           youtube_channel_url: string | null
         }
         Insert: {
+          accent_color?: string
           avatar_url?: string | null
+          banner_position?: string
           bio?: string | null
           cover_url?: string | null
           created_at?: string
@@ -411,6 +476,7 @@ export type Database = {
           id?: string
           is_verified?: boolean | null
           name: string
+          pinned_song_id?: string | null
           supporter_enabled?: boolean
           supporter_price_cents?: number
           tip_jar_enabled?: boolean
@@ -419,7 +485,9 @@ export type Database = {
           youtube_channel_url?: string | null
         }
         Update: {
+          accent_color?: string
           avatar_url?: string | null
+          banner_position?: string
           bio?: string | null
           cover_url?: string | null
           created_at?: string
@@ -427,6 +495,7 @@ export type Database = {
           id?: string
           is_verified?: boolean | null
           name?: string
+          pinned_song_id?: string | null
           supporter_enabled?: boolean
           supporter_price_cents?: number
           tip_jar_enabled?: boolean
