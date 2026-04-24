@@ -6,13 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
-  Image as ImageIcon, Upload, Trash2, Plus, Save,
+  Image as ImageIcon, Upload, Trash2, Plus, Save, Palette,
   Instagram, Youtube, Twitter, Music2, Globe, Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useSocialLinks, useSaveSocialLink, useDeleteSocialLink } from "@/hooks/use-artist-management";
+import { useSocialLinks, useSaveSocialLink, useDeleteSocialLink, useUpdateArtistTheme } from "@/hooks/use-artist-management";
+
+const BANNER_POSITIONS = [
+  { value: "top", label: "Top" },
+  { value: "center", label: "Center" },
+  { value: "bottom", label: "Bottom" },
+];
+
+const PRESET_COLORS = ["#DC2626", "#2563EB", "#16A34A", "#9333EA", "#EA580C", "#0891B2", "#DB2777", "#CA8A04"];
 
 const PLATFORMS = [
   { value: "instagram", label: "Instagram", icon: Instagram },
@@ -135,9 +142,77 @@ const BrandingSection = ({ artist }: { artist: any }) => {
         </Button>
       </Card>
 
+      {/* Theme */}
+      <ThemeEditor artist={artist} />
+
       {/* Social links */}
       <SocialLinksEditor artistId={artist.id} />
     </div>
+  );
+};
+
+const ThemeEditor = ({ artist }: { artist: any }) => {
+  const updateTheme = useUpdateArtistTheme();
+  const [accent, setAccent] = useState(artist.accent_color || "#DC2626");
+  const [position, setPosition] = useState(artist.banner_position || "center");
+
+  return (
+    <Card className="p-4 md:p-6 space-y-4">
+      <div>
+        <h3 className="font-heading text-lg font-bold flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" /> Profile theme
+        </h3>
+        <p className="text-xs text-muted-foreground">Personalize how your public profile looks.</p>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs">Accent color</Label>
+        <div className="flex items-center gap-2 flex-wrap">
+          {PRESET_COLORS.map((c) => (
+            <button
+              key={c}
+              onClick={() => setAccent(c)}
+              className={`h-8 w-8 rounded-full ring-2 transition ${accent === c ? "ring-foreground scale-110" : "ring-transparent"}`}
+              style={{ background: c }}
+              aria-label={c}
+            />
+          ))}
+          <input
+            type="color"
+            value={accent}
+            onChange={(e) => setAccent(e.target.value)}
+            className="h-8 w-12 rounded-md border bg-background cursor-pointer"
+          />
+          <span className="text-xs text-muted-foreground font-mono">{accent}</span>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs">Banner position</Label>
+        <div className="flex items-center gap-2">
+          {BANNER_POSITIONS.map((p) => (
+            <button
+              key={p.value}
+              onClick={() => setPosition(p.value)}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold border transition ${
+                position === p.value ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted/40"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Button
+        onClick={() => updateTheme.mutate({ artist_id: artist.id, accent_color: accent, banner_position: position })}
+        disabled={updateTheme.isPending}
+        className="rounded-xl gap-1.5"
+        size="sm"
+      >
+        <Save className="h-4 w-4" /> Save theme
+      </Button>
+    </Card>
   );
 };
 
