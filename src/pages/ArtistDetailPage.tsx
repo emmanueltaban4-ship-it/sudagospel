@@ -239,13 +239,22 @@ const ArtistDetailPage = () => {
     <Layout>
       <div className="pb-28">
         {/* === COVER BANNER === */}
-        <div className="relative h-[220px] md:h-[320px] overflow-hidden bg-card">
+        <div
+          className="relative h-[220px] md:h-[320px] overflow-hidden bg-card"
+          style={{ ['--artist-accent' as any]: artist.accent_color || '#DC2626' }}
+        >
           {(artist as any).cover_url || artist.avatar_url ? (
-            <img src={(artist as any).cover_url || artist.avatar_url!} alt="" className="h-full w-full object-cover object-top" />
+            <img
+              src={(artist as any).cover_url || artist.avatar_url!}
+              alt=""
+              className="h-full w-full object-cover"
+              style={{ objectPosition: artist.banner_position === 'top' ? 'top' : artist.banner_position === 'bottom' ? 'bottom' : 'center' }}
+            />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-primary/30 via-secondary/20 to-background" />
+            <div className="h-full w-full" style={{ background: `linear-gradient(135deg, ${artist.accent_color || '#DC2626'}40, hsl(var(--secondary)/0.2), hsl(var(--background)))` }} />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1" style={{ background: artist.accent_color || '#DC2626' }} />
 
           {/* Nav buttons */}
           <button
