@@ -549,7 +549,9 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
 /* ======================== MUSIC ======================== */
 
 const MusicSection = ({ artist }: { artist: any }) => {
-  const [filter, setFilter] = useState<"all" | "live" | "pending" | "scheduled">("all");
+  const [filter, setFilter] = useState<"all" | "live" | "pending" | "scheduled" | "calendar">("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const bulk = useBulkSongAction();
 
   const { data: songs = [], isLoading } = useQuery({
     queryKey: ["studio-songs-full", artist.id],
@@ -581,7 +583,7 @@ const MusicSection = ({ artist }: { artist: any }) => {
   });
 
   const filtered = useMemo(() => {
-    if (filter === "all") return songs;
+    if (filter === "all" || filter === "calendar") return songs;
     if (filter === "live") return songs.filter((s) => s.is_approved && s.release_status === "published");
     if (filter === "pending") return songs.filter((s) => !s.is_approved && s.release_status === "published");
     if (filter === "scheduled") return songs.filter((s) => s.release_status === "scheduled");
@@ -595,6 +597,22 @@ const MusicSection = ({ artist }: { artist: any }) => {
     scheduled: songs.filter((s) => s.release_status === "scheduled").length,
   };
 
+  const toggleSel = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelected(next);
+  };
+  const toggleAll = () => {
+    if (selected.size === filtered.length) setSelected(new Set());
+    else setSelected(new Set(filtered.map((s) => s.id)));
+  };
+  const runBulk = (action: "delete" | "unpublish" | "publish") => {
+    if (action === "delete" && !window.confirm(`Delete ${selected.size} track(s)? This is permanent.`)) return;
+    bulk.mutate({ song_ids: Array.from(selected), action }, {
+      onSuccess: () => setSelected(new Set()),
+    });
+  };
+
   return (
     <div className="space-y-4">
       {/* Catalog tiles */}
@@ -604,69 +622,133 @@ const MusicSection = ({ artist }: { artist: any }) => {
         <CatalogTile icon={Video} label="Videos" count={videoCount} />
       </div>
 
-      <Card className="rounded-2xl border-border/50 overflow-hidden">
-        <div className="p-3 md:p-4 border-b border-border/50 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <h3 className="font-heading font-bold flex items-center gap-2"><Library className="h-4 w-4 text-primary" />Your Music</h3>
+      {filter === "calendar" ? (
+        <>
           <div className="flex items-center gap-1 bg-muted/40 rounded-xl p-1 overflow-x-auto">
-            {(["all", "live", "pending", "scheduled"] as const).map((f) => (
+            {(["all", "live", "pending", "scheduled", "calendar"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition",
+                  "px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition flex items-center gap-1",
                   filter === f ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)} ({counts[f]})
+                {f === "calendar" && <Calendar className="h-3 w-3" />}
+                {f === "calendar" ? "Calendar" : `${f.charAt(0).toUpperCase() + f.slice(1)} (${counts[f]})`}
               </button>
             ))}
           </div>
-        </div>
+          <ScheduleCalendar artistId={artist.id} />
+        </>
+      ) : (
+        <Card className="rounded-2xl border-border/50 overflow-hidden">
+          <div className="p-3 md:p-4 border-b border-border/50 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <h3 className="font-heading font-bold flex items-center gap-2"><Library className="h-4 w-4 text-primary" />Your Music</h3>
+            <div className="flex items-center gap-1 bg-muted/40 rounded-xl p-1 overflow-x-auto">
+              {(["all", "live", "pending", "scheduled", "calendar"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={cn(
+                    "px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition flex items-center gap-1",
+                    filter === f ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {f === "calendar" && <Calendar className="h-3 w-3" />}
+                  {f === "calendar" ? "Calendar" : `${f.charAt(0).toUpperCase() + f.slice(1)} (${counts[f]})`}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {isLoading ? (
-          <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>
-        ) : filtered.length === 0 ? (
-          <div className="p-10 text-center">
-            <Music className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground mb-3">No tracks in this view yet.</p>
-            <Button asChild size="sm" className="rounded-xl"><Link to="/upload">Upload a track</Link></Button>
-          </div>
-        ) : (
-          <div className="divide-y divide-border/50">
-            {filtered.map((song) => (
-              <div key={song.id} className="p-3 md:p-4 flex items-center gap-3 hover:bg-muted/30 transition">
-                <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                  {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <Link to={`/song/${song.id}`} className="block">
-                    <p className="text-sm font-semibold truncate hover:text-primary transition">{song.title}</p>
-                  </Link>
-                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                    <SongStatusBadge song={song} />
-                    {song.is_paid_download && (
-                      <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-primary/40 text-primary">
-                        <Coins className="h-2.5 w-2.5" />{formatCents(song.download_price_cents || 0)}
-                      </Badge>
-                    )}
-                    {song.genre && <span className="text-[10px] text-muted-foreground">{song.genre}</span>}
-                  </div>
-                </div>
-                <div className="hidden sm:flex items-center gap-4 text-[11px] text-muted-foreground flex-shrink-0">
-                  <div className="flex items-center gap-1"><Headphones className="h-3 w-3" />{(song.play_count || 0).toLocaleString()}</div>
-                  <div className="flex items-center gap-1"><Download className="h-3 w-3" />{(song.download_count || 0).toLocaleString()}</div>
-                </div>
-                <BoostSongDialog songId={song.id} songTitle={song.title}>
-                  <Button size="sm" variant="ghost" className="rounded-lg h-8 px-2 gap-1 text-xs">
-                    <Rocket className="h-3.5 w-3.5" />
-                    <span className="hidden md:inline">Boost</span>
-                  </Button>
-                </BoostSongDialog>
+          {/* Bulk action bar */}
+          {selected.size > 0 && (
+            <div className="px-3 md:px-4 py-2 bg-primary/10 border-b border-primary/30 flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-semibold text-primary">{selected.size} selected</span>
+              <div className="ml-auto flex items-center gap-1">
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs" onClick={() => runBulk("publish")}>
+                  <CheckCircle2 className="h-3 w-3" /> Publish
+                </Button>
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs" onClick={() => runBulk("unpublish")}>
+                  <EyeOff className="h-3 w-3" /> Unpublish
+                </Button>
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs text-destructive hover:text-destructive" onClick={() => runBulk("delete")}>
+                  <Trash2 className="h-3 w-3" /> Delete
+                </Button>
+                <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelected(new Set())}>
+                  Cancel
+                </Button>
               </div>
-            ))}
-          </div>
-        )}
-      </Card>
+            </div>
+          )}
+
+          {isLoading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading…</div>
+          ) : filtered.length === 0 ? (
+            <div className="p-10 text-center">
+              <Music className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground mb-3">No tracks in this view yet.</p>
+              <Button asChild size="sm" className="rounded-xl"><Link to="/upload">Upload a track</Link></Button>
+            </div>
+          ) : (
+            <div className="divide-y divide-border/50">
+              {/* Select all */}
+              <div className="px-3 md:px-4 py-2 flex items-center gap-3 text-xs text-muted-foreground bg-muted/20">
+                <Checkbox
+                  checked={selected.size === filtered.length && filtered.length > 0}
+                  onCheckedChange={toggleAll}
+                />
+                <span className="font-semibold">Select all</span>
+                {artist.pinned_song_id && (
+                  <span className="ml-auto flex items-center gap-1 text-primary">
+                    <Pin className="h-3 w-3" /> Pinned song set
+                  </span>
+                )}
+              </div>
+              {filtered.map((song) => {
+                const isPinned = artist.pinned_song_id === song.id;
+                return (
+                  <div key={song.id} className={cn("p-3 md:p-4 flex items-center gap-3 hover:bg-muted/30 transition", selected.has(song.id) && "bg-primary/5")}>
+                    <Checkbox
+                      checked={selected.has(song.id)}
+                      onCheckedChange={() => toggleSel(song.id)}
+                    />
+                    <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex-shrink-0 relative">
+                      {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
+                      {isPinned && <div className="absolute top-0.5 right-0.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center"><Pin className="h-2.5 w-2.5 text-primary-foreground fill-primary-foreground" /></div>}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Link to={`/song/${song.id}`} className="block">
+                        <p className="text-sm font-semibold truncate hover:text-primary transition">{song.title}</p>
+                      </Link>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <SongStatusBadge song={song} />
+                        {song.is_paid_download && (
+                          <Badge variant="outline" className="h-4 text-[9px] px-1.5 gap-0.5 border-primary/40 text-primary">
+                            <Coins className="h-2.5 w-2.5" />{formatCents(song.download_price_cents || 0)}
+                          </Badge>
+                        )}
+                        {song.genre && <span className="text-[10px] text-muted-foreground">{song.genre}</span>}
+                      </div>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-4 text-[11px] text-muted-foreground flex-shrink-0">
+                      <div className="flex items-center gap-1"><Headphones className="h-3 w-3" />{(song.play_count || 0).toLocaleString()}</div>
+                      <div className="flex items-center gap-1"><Download className="h-3 w-3" />{(song.download_count || 0).toLocaleString()}</div>
+                    </div>
+                    <BoostSongDialog songId={song.id} songTitle={song.title}>
+                      <Button size="sm" variant="ghost" className="rounded-lg h-8 px-2 gap-1 text-xs">
+                        <Rocket className="h-3.5 w-3.5" />
+                        <span className="hidden md:inline">Boost</span>
+                      </Button>
+                    </BoostSongDialog>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+      )}
     </div>
   );
 };
