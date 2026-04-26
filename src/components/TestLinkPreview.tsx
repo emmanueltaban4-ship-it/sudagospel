@@ -95,7 +95,7 @@ const TestLinkPreview = ({ type, id }: Props) => {
 
         {data && !loading && (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+            <div className="flex items-center gap-2 text-success text-xs font-semibold">
               <CheckCircle2 className="h-4 w-4" /> Open Graph tags detected
             </div>
 

@@ -315,6 +315,7 @@ const SongDetailPage = () => {
               shareUrl={ogShareUrl}
               type="song"
             />
+            <TestLinkPreview type="song" id={song.id} />
             <ShareStoryCard
               open={storyOpen}
               onOpenChange={setStoryOpen}
