@@ -16,6 +16,7 @@ import {
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import ShareDialog from "@/components/ShareDialog";
+import TestLinkPreview from "@/components/TestLinkPreview";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
