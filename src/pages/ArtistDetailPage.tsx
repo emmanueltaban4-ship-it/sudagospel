@@ -16,6 +16,7 @@ import {
 import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { useFollowArtist } from "@/hooks/use-follows";
 import ShareDialog from "@/components/ShareDialog";
+import TestLinkPreview from "@/components/TestLinkPreview";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
@@ -275,6 +276,7 @@ const ArtistDetailPage = () => {
                 </button>
               }
             />
+            {artist && <TestLinkPreview type="artist" id={artist.id} />}
             <button className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors active:scale-95">
               <MoreHorizontal className="h-5 w-5" />
             </button>

@@ -10,6 +10,7 @@ import { useDocumentMeta } from "@/hooks/use-document-meta";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
+import TestLinkPreview from "@/components/TestLinkPreview";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -315,6 +316,7 @@ const SongDetailPage = () => {
               shareUrl={ogShareUrl}
               type="song"
             />
+            <TestLinkPreview type="song" id={song.id} />
             <ShareStoryCard
               open={storyOpen}
               onOpenChange={setStoryOpen}
