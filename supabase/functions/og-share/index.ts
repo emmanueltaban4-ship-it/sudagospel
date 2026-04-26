@@ -76,13 +76,16 @@ Deno.serve(async (req) => {
 <head>
   <meta charset="UTF-8">
   <title>${escapeHtml(title)}</title>
+  <link rel="canonical" href="${escapeHtml(pageUrl)}">
   <meta name="description" content="${escapeHtml(description)}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:image" content="${escapeHtml(imageUrl)}">
+  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:type" content="music.song">
+  <meta property="og:image:alt" content="${escapeHtml(title)}">
+  <meta property="og:type" content="${type === "artist" ? "profile" : type === "article" ? "article" : "music.song"}">
   <meta property="og:url" content="${escapeHtml(pageUrl)}">
   <meta property="og:site_name" content="Sudagospel">
   <meta name="twitter:card" content="summary_large_image">
