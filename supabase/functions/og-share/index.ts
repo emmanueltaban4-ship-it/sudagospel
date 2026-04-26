@@ -22,10 +22,12 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  const SITE_ORIGIN = "https://sudagospel.com";
+
   let title = "Sudagospel";
   let description = "Stream and download gospel music from South Sudan.";
   let imageUrl = `${supabaseUrl}/storage/v1/object/public/covers/og-default.jpg`;
-  let pageUrl = supabaseUrl;
+  let pageUrl = SITE_ORIGIN;
 
   if (type === "song") {
     const { data: song } = await supabase
@@ -39,7 +41,7 @@ Deno.serve(async (req) => {
       title = `${song.title} by ${artistName}`;
       description = song.description || `Listen to ${song.title} by ${artistName} on Sudagospel. ${song.genre || "Gospel"} music from South Sudan.`;
       if (song.cover_url) imageUrl = song.cover_url;
-      pageUrl = `${url.origin}/song/${songId}`;
+      pageUrl = `${SITE_ORIGIN}/song/${songId}`;
     }
   } else if (type === "artist") {
     const { data: artist } = await supabase
@@ -52,12 +54,12 @@ Deno.serve(async (req) => {
       title = `${artist.name} - Sudagospel`;
       description = artist.bio || `Listen to ${artist.name}'s gospel music on Sudagospel. ${artist.genre || "Gospel"} artist from South Sudan.`;
       if (artist.avatar_url) imageUrl = artist.avatar_url;
-      pageUrl = `${url.origin}/artist/${songId}`;
+      pageUrl = `${SITE_ORIGIN}/artist/${songId}`;
     }
   } else if (type === "article") {
     const { data: article } = await supabase
       .from("articles")
-      .select("title, excerpt, cover_url")
+      .select("title, excerpt, cover_url, slug")
       .eq("id", songId)
       .single();
 
@@ -65,6 +67,7 @@ Deno.serve(async (req) => {
       title = `${article.title} - Sudagospel`;
       description = article.excerpt || "Read the latest gospel news on Sudagospel.";
       if (article.cover_url) imageUrl = article.cover_url;
+      pageUrl = `${SITE_ORIGIN}/news/${article.slug || songId}`;
     }
   }
 
@@ -73,13 +76,16 @@ Deno.serve(async (req) => {
 <head>
   <meta charset="UTF-8">
   <title>${escapeHtml(title)}</title>
+  <link rel="canonical" href="${escapeHtml(pageUrl)}">
   <meta name="description" content="${escapeHtml(description)}">
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:image" content="${escapeHtml(imageUrl)}">
+  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:type" content="music.song">
+  <meta property="og:image:alt" content="${escapeHtml(title)}">
+  <meta property="og:type" content="${type === "artist" ? "profile" : type === "article" ? "article" : "music.song"}">
   <meta property="og:url" content="${escapeHtml(pageUrl)}">
   <meta property="og:site_name" content="Sudagospel">
   <meta name="twitter:card" content="summary_large_image">
