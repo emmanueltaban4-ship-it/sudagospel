@@ -188,7 +188,7 @@ const ArtistDetailPage = () => {
     play(shuffled[0], shuffled);
     toast.success("Shuffling songs");
   };
-  const artistShareUrl = `https://sudagospel.com/artist/${artist?.id}`;
+  const artistShareUrl = artist ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-share?type=artist&id=${artist.id}` : "";
 
   const formatTime = (s: number | null) => {
     if (!s) return "--:--";
