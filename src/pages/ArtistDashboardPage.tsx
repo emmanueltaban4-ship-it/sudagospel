@@ -42,20 +42,45 @@ import { cn } from "@/lib/utils";
 
 type Section = "overview" | "branding" | "music" | "toptracks" | "monetization" | "audience" | "links" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
 
-const NAV: { id: Section; label: string; icon: any }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "branding", label: "Branding", icon: Palette },
-  { id: "music", label: "Music", icon: Library },
-  { id: "toptracks", label: "Top Tracks", icon: Pin },
-  { id: "links", label: "Links", icon: LinkIcon },
-  { id: "monetization", label: "Monetization", icon: DollarSign },
-  { id: "audience", label: "Fans", icon: Users },
-  { id: "collaboration", label: "Collaborators", icon: UserCog },
-  { id: "promotion", label: "Promotion", icon: Megaphone },
-  { id: "notifications", label: "Activity", icon: Bell },
-  { id: "rights", label: "Rights", icon: ShieldCheck },
-  { id: "settings", label: "Settings", icon: SettingsIcon },
+type NavItem = { id: Section; label: string; icon: any };
+type NavGroup = { label: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Studio",
+    items: [
+      { id: "overview", label: "Overview", icon: LayoutDashboard },
+      { id: "music", label: "Music", icon: Library },
+      { id: "toptracks", label: "Top Tracks", icon: Pin },
+      { id: "audience", label: "Fans", icon: Users },
+    ],
+  },
+  {
+    label: "Profile",
+    items: [
+      { id: "branding", label: "Branding", icon: Palette },
+      { id: "links", label: "Links", icon: LinkIcon },
+      { id: "collaboration", label: "Collaborators", icon: UserCog },
+    ],
+  },
+  {
+    label: "Grow",
+    items: [
+      { id: "monetization", label: "Monetization", icon: DollarSign },
+      { id: "promotion", label: "Promotion", icon: Megaphone },
+      { id: "notifications", label: "Activity", icon: Bell },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { id: "rights", label: "Rights", icon: ShieldCheck },
+      { id: "settings", label: "Settings", icon: SettingsIcon },
+    ],
+  },
 ];
+
+const NAV: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 
 const ArtistDashboardPage = () => {
   const navigate = useNavigate();
@@ -114,89 +139,141 @@ const ArtistDashboardPage = () => {
     );
   }
 
+  const activeNav = NAV.find((n) => n.id === section);
+
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-8">
-        {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 md:mb-6">
-          <div className="flex items-center gap-3 md:gap-4 min-w-0">
-            <div className="h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
+      {/* Hero header with cover gradient */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        {/* Cover image / gradient backdrop */}
+        <div className="absolute inset-0 -z-10">
+          {myArtist.cover_url ? (
+            <>
+              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+            </>
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-primary/20 via-background to-secondary/15" />
+          )}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-3 md:px-6 pt-5 md:pt-8 pb-4 md:pb-6">
+          <div className="flex items-start md:items-center gap-3 md:gap-5">
+            <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden flex-shrink-0 ring-2 ring-background shadow-xl shadow-primary/10">
               {myArtist.avatar_url ? (
                 <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover" />
               ) : (
-                <div className="h-full w-full flex items-center justify-center"><Music className="h-7 w-7 text-primary" /></div>
+                <div className="h-full w-full flex items-center justify-center"><Music className="h-8 w-8 text-primary" /></div>
               )}
             </div>
-            <div className="min-w-0">
-              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase text-primary">Creator Dashboard</p>
-              <h1 className="font-heading text-xl md:text-3xl font-extrabold flex items-center gap-2 truncate">
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase text-primary flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3" /> Creator Studio
+              </p>
+              <h1 className="font-heading text-2xl md:text-4xl font-extrabold flex items-center gap-2 truncate mt-0.5">
                 <span className="truncate">{myArtist.name}</span>
-                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 text-primary fill-primary/20 flex-shrink-0" />}
+                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 md:h-6 md:w-6 text-primary fill-primary/20 flex-shrink-0" />}
               </h1>
+              <p className="hidden md:block text-sm text-muted-foreground mt-1">
+                Manage your music, grow your audience, and track every play.
+              </p>
+            </div>
+            <div className="hidden md:flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60">
+                <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />View profile</Link>
+              </Button>
+              <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/20">
+                <Link to="/upload"><Music className="h-4 w-4" />Upload</Link>
+              </Button>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5">
-              <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />View profile</Link>
+
+          {/* Mobile quick actions */}
+          <div className="md:hidden grid grid-cols-2 gap-2 mt-4">
+            <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60 h-9">
+              <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />Profile</Link>
             </Button>
-            <Button asChild size="sm" className="rounded-xl gap-1.5">
+            <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/20 h-9">
               <Link to="/upload"><Music className="h-4 w-4" />Upload</Link>
             </Button>
           </div>
-        </header>
+        </div>
+      </div>
 
-        {/* Mobile tabs */}
+      <div className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-8">
+        {/* Mobile chip nav */}
         <nav className="md:hidden -mx-3 px-3 mb-4 overflow-x-auto scrollbar-hide">
-          <div className="flex items-center gap-1 bg-muted/40 rounded-xl p-1 w-max min-w-full">
-            {NAV.map((n) => (
-              <button
-                key={n.id}
-                onClick={() => setSection(n.id)}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition",
-                  section === n.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-                )}
-              >
-                <n.icon className="h-3.5 w-3.5" />
-                {n.label}
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        <div className="md:grid md:grid-cols-[220px_1fr] md:gap-6">
-          {/* Desktop sidebar */}
-          <aside className="hidden md:block">
-            <nav className="sticky top-20 space-y-1">
-              {NAV.map((n) => (
+          <div className="flex items-center gap-1.5 w-max min-w-full">
+            {NAV.map((n) => {
+              const active = section === n.id;
+              return (
                 <button
                   key={n.id}
                   onClick={() => setSection(n.id)}
                   className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition",
-                    section === n.id
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    "flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border",
+                    active
+                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
+                      : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-primary/40"
                   )}
                 >
-                  <n.icon className="h-4 w-4" />
+                  <n.icon className="h-3.5 w-3.5" />
                   {n.label}
                 </button>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Mobile section title */}
+        {activeNav && (
+          <div className="md:hidden mb-3 flex items-center gap-2">
+            <activeNav.icon className="h-4 w-4 text-primary" />
+            <h2 className="font-heading font-extrabold text-lg">{activeNav.label}</h2>
+          </div>
+        )}
+
+        <div className="md:grid md:grid-cols-[240px_1fr] md:gap-8">
+          {/* Desktop grouped sidebar */}
+          <aside className="hidden md:block">
+            <nav className="sticky top-20 space-y-5">
+              {NAV_GROUPS.map((group) => (
+                <div key={group.label}>
+                  <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-muted-foreground/70 px-3 mb-1.5">
+                    {group.label}
+                  </p>
+                  <div className="space-y-0.5">
+                    {group.items.map((n) => {
+                      const active = section === n.id;
+                      return (
+                        <button
+                          key={n.id}
+                          onClick={() => setSection(n.id)}
+                          className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition relative group",
+                            active
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                          )}
+                        >
+                          {active && (
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-primary" />
+                          )}
+                          <n.icon className={cn("h-4 w-4", active && "text-primary")} />
+                          {n.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
-              <Separator className="my-3" />
+              <Separator />
               <Link
                 to="/upload"
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted/50 hover:text-foreground transition"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition shadow-md shadow-primary/20"
               >
                 <Music className="h-4 w-4" />
                 Upload track
-              </Link>
-              <Link
-                to={artistPath(myArtist.name)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted/50 hover:text-foreground transition"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Public page
               </Link>
             </nav>
           </aside>
@@ -1184,14 +1261,21 @@ const SettingsSection = ({ artist }: { artist: any }) => {
 /* ======================== SHARED ======================== */
 
 const KpiCard = ({ icon: Icon, label, value, delta, hint, accent }: { icon: any; label: string; value: string; delta?: string; hint?: string; accent?: string }) => (
-  <Card className="p-4 rounded-2xl border-border/50 hover:border-primary/30 transition">
-    <div className="flex items-center justify-between mb-2">
+  <Card className="relative overflow-hidden p-4 rounded-2xl border-border/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition group">
+    <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-primary/5 group-hover:bg-primary/10 transition" />
+    <div className="relative flex items-center justify-between mb-2">
       <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-      <Icon className={cn("h-4 w-4", accent || "text-muted-foreground")} />
+      <div className={cn("h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60", accent && "bg-primary/10")}>
+        <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
+      </div>
     </div>
-    <p className="font-heading font-extrabold text-2xl">{value}</p>
-    {delta && <p className="text-[11px] text-primary font-semibold mt-1">{delta}</p>}
-    {hint && <p className="text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
+    <p className="relative font-heading font-extrabold text-2xl tracking-tight">{value}</p>
+    {delta && (
+      <p className="relative text-[11px] text-primary font-semibold mt-1 flex items-center gap-1">
+        <ArrowUpRight className="h-3 w-3" />{delta}
+      </p>
+    )}
+    {hint && <p className="relative text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
   </Card>
 );
 
