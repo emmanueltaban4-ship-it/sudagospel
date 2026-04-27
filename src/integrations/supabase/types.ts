@@ -458,6 +458,10 @@ export type Database = {
           is_verified: boolean | null
           name: string
           pinned_song_id: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
           supporter_enabled: boolean
           supporter_price_cents: number
           tip_jar_enabled: boolean
@@ -477,6 +481,10 @@ export type Database = {
           is_verified?: boolean | null
           name: string
           pinned_song_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           supporter_enabled?: boolean
           supporter_price_cents?: number
           tip_jar_enabled?: boolean
@@ -496,6 +504,10 @@ export type Database = {
           is_verified?: boolean | null
           name?: string
           pinned_song_id?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           supporter_enabled?: boolean
           supporter_price_cents?: number
           tip_jar_enabled?: boolean
@@ -1634,6 +1646,7 @@ export type Database = {
         Args: { _artist_id: string; _user_id: string }
         Returns: boolean
       }
+      is_artist_approved: { Args: { _artist_id: string }; Returns: boolean }
       is_song_purchased: {
         Args: { _song_id: string; _user_id: string }
         Returns: boolean
