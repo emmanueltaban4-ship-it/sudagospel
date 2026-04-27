@@ -42,20 +42,45 @@ import { cn } from "@/lib/utils";
 
 type Section = "overview" | "branding" | "music" | "toptracks" | "monetization" | "audience" | "links" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
 
-const NAV: { id: Section; label: string; icon: any }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "branding", label: "Branding", icon: Palette },
-  { id: "music", label: "Music", icon: Library },
-  { id: "toptracks", label: "Top Tracks", icon: Pin },
-  { id: "links", label: "Links", icon: LinkIcon },
-  { id: "monetization", label: "Monetization", icon: DollarSign },
-  { id: "audience", label: "Fans", icon: Users },
-  { id: "collaboration", label: "Collaborators", icon: UserCog },
-  { id: "promotion", label: "Promotion", icon: Megaphone },
-  { id: "notifications", label: "Activity", icon: Bell },
-  { id: "rights", label: "Rights", icon: ShieldCheck },
-  { id: "settings", label: "Settings", icon: SettingsIcon },
+type NavItem = { id: Section; label: string; icon: any };
+type NavGroup = { label: string; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Studio",
+    items: [
+      { id: "overview", label: "Overview", icon: LayoutDashboard },
+      { id: "music", label: "Music", icon: Library },
+      { id: "toptracks", label: "Top Tracks", icon: Pin },
+      { id: "audience", label: "Fans", icon: Users },
+    ],
+  },
+  {
+    label: "Profile",
+    items: [
+      { id: "branding", label: "Branding", icon: Palette },
+      { id: "links", label: "Links", icon: LinkIcon },
+      { id: "collaboration", label: "Collaborators", icon: UserCog },
+    ],
+  },
+  {
+    label: "Grow",
+    items: [
+      { id: "monetization", label: "Monetization", icon: DollarSign },
+      { id: "promotion", label: "Promotion", icon: Megaphone },
+      { id: "notifications", label: "Activity", icon: Bell },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { id: "rights", label: "Rights", icon: ShieldCheck },
+      { id: "settings", label: "Settings", icon: SettingsIcon },
+    ],
+  },
 ];
+
+const NAV: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 
 const ArtistDashboardPage = () => {
   const navigate = useNavigate();
