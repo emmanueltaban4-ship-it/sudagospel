@@ -20,6 +20,7 @@ import AdminFeaturedContent from "@/components/admin/AdminFeaturedContent";
 import AdminEmailLogs from "@/components/admin/AdminEmailLogs";
 import AdminVideoManagement from "@/components/admin/AdminVideoManagement";
 import AdminVerificationRequests from "@/components/admin/AdminVerificationRequests";
+import AdminArtistApprovals from "@/components/admin/AdminArtistApprovals";
 import AdminPolls from "@/components/admin/AdminPolls";
 import AdminPayouts from "@/components/admin/AdminPayouts";
 import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet } from "lucide-react";
@@ -34,6 +35,7 @@ const tabs = [
   { id: "songs", label: "Songs", icon: Music },
   { id: "videos", label: "Videos", icon: Video },
   { id: "artists", label: "Artists", icon: Mic2 },
+  { id: "artist-approvals", label: "Artist Approvals", icon: BadgeCheck },
   { id: "albums", label: "Albums", icon: Disc3 },
   { id: "genres", label: "Genres", icon: Tag },
   { id: "articles", label: "Articles", icon: FileText },
@@ -198,6 +200,7 @@ const AdminPage = () => {
             {activeTab === "ads" && <AdminAds />}
             {activeTab === "songs" && <AdminSongManagement />}
             {activeTab === "artists" && <AdminArtistManagement />}
+            {activeTab === "artist-approvals" && <AdminArtistApprovals />}
             {activeTab === "videos" && <AdminVideoManagement />}
             {activeTab === "albums" && <AdminAlbumManagement />}
             {activeTab === "genres" && <AdminGenreManagement />}

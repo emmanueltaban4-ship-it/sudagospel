@@ -51,14 +51,23 @@ const UploadPage = () => {
   const [scheduledTime, setScheduledTime] = useState("12:00");
 
   const { data: artists } = useQuery({
-    queryKey: ["my-artists"],
+    queryKey: ["my-artists", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("artists").select("id, name").eq("user_id", user!.id);
+      const { data, error } = await supabase
+        .from("artists")
+        .select("id, name, status")
+        .eq("user_id", user!.id);
       if (error) throw error;
-      return data;
+      return data as { id: string; name: string; status: string }[];
     },
     enabled: !!user,
   });
+
+  const approvedArtists = artists?.filter((a) => a.status === "approved") ?? [];
+  const pendingArtists = artists?.filter((a) => a.status === "pending") ?? [];
+  const rejectedArtists = artists?.filter((a) => a.status === "rejected") ?? [];
+  const hasArtists = (artists?.length ?? 0) > 0;
+  const hasApproved = approvedArtists.length > 0;
 
   const { data: albums } = useQuery({
     queryKey: ["my-albums", artistId],
@@ -92,10 +101,9 @@ const UploadPage = () => {
     if (!newArtistName.trim()) return;
     const { data, error } = await supabase.from("artists").insert({ name: newArtistName.trim(), user_id: user!.id, genre }).select().single();
     if (error) { toast.error(error.message); return; }
-    setArtistId(data.id);
     setShowNewArtist(false);
     setNewArtistName("");
-    toast.success("Artist profile created!");
+    toast.success("Artist profile submitted! An admin must approve it before you can upload.");
   };
 
   const handleCreateAlbum = async () => {
@@ -321,10 +329,12 @@ const UploadPage = () => {
                   <Label className="text-foreground">Artist *</Label>
                   {!showNewArtist ? (
                     <div className="flex gap-2 mt-1">
-                      <Select value={artistId} onValueChange={setArtistId}>
-                        <SelectTrigger className="flex-1"><SelectValue placeholder="Select artist" /></SelectTrigger>
+                      <Select value={artistId} onValueChange={setArtistId} disabled={!hasApproved}>
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder={hasApproved ? "Select artist" : "No approved artists yet"} />
+                        </SelectTrigger>
                         <SelectContent>
-                          {artists?.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
+                          {approvedArtists.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
                         </SelectContent>
                       </Select>
                       <Button type="button" variant="outline" size="icon" onClick={() => setShowNewArtist(true)} className="shrink-0"><Plus className="h-4 w-4" /></Button>
@@ -332,9 +342,23 @@ const UploadPage = () => {
                   ) : (
                     <div className="flex gap-2 mt-1">
                       <Input value={newArtistName} onChange={(e) => setNewArtistName(e.target.value)} placeholder="Artist name" className="flex-1" />
-                      <Button type="button" onClick={handleCreateArtist} size="sm" className="bg-secondary text-secondary-foreground">Create</Button>
+                      <Button type="button" onClick={handleCreateArtist} size="sm" className="bg-secondary text-secondary-foreground">Submit for Approval</Button>
                       <Button type="button" variant="ghost" size="sm" onClick={() => setShowNewArtist(false)}>Cancel</Button>
                     </div>
+                  )}
+
+                  {pendingArtists.length > 0 && (
+                    <div className="mt-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 p-2.5 text-xs text-yellow-700 dark:text-yellow-400">
+                      <strong>Awaiting approval:</strong> {pendingArtists.map((a) => a.name).join(", ")}. You can upload music once an admin approves.
+                    </div>
+                  )}
+                  {rejectedArtists.length > 0 && (
+                    <div className="mt-2 rounded-lg bg-destructive/10 border border-destructive/30 p-2.5 text-xs text-destructive">
+                      <strong>Rejected:</strong> {rejectedArtists.map((a) => a.name).join(", ")}.
+                    </div>
+                  )}
+                  {!hasArtists && !showNewArtist && (
+                    <p className="mt-2 text-xs text-muted-foreground">Click + to submit your first artist profile for admin approval.</p>
                   )}
                 </div>
 
