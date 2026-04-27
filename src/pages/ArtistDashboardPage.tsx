@@ -1261,14 +1261,21 @@ const SettingsSection = ({ artist }: { artist: any }) => {
 /* ======================== SHARED ======================== */
 
 const KpiCard = ({ icon: Icon, label, value, delta, hint, accent }: { icon: any; label: string; value: string; delta?: string; hint?: string; accent?: string }) => (
-  <Card className="p-4 rounded-2xl border-border/50 hover:border-primary/30 transition">
-    <div className="flex items-center justify-between mb-2">
+  <Card className="relative overflow-hidden p-4 rounded-2xl border-border/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition group">
+    <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-primary/5 group-hover:bg-primary/10 transition" />
+    <div className="relative flex items-center justify-between mb-2">
       <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-      <Icon className={cn("h-4 w-4", accent || "text-muted-foreground")} />
+      <div className={cn("h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60", accent && "bg-primary/10")}>
+        <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
+      </div>
     </div>
-    <p className="font-heading font-extrabold text-2xl">{value}</p>
-    {delta && <p className="text-[11px] text-primary font-semibold mt-1">{delta}</p>}
-    {hint && <p className="text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
+    <p className="relative font-heading font-extrabold text-2xl tracking-tight">{value}</p>
+    {delta && (
+      <p className="relative text-[11px] text-primary font-semibold mt-1 flex items-center gap-1">
+        <ArrowUpRight className="h-3 w-3" />{delta}
+      </p>
+    )}
+    {hint && <p className="relative text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
   </Card>
 );
 
