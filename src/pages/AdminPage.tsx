@@ -23,7 +23,8 @@ import AdminVerificationRequests from "@/components/admin/AdminVerificationReque
 import AdminArtistApprovals from "@/components/admin/AdminArtistApprovals";
 import AdminPolls from "@/components/admin/AdminPolls";
 import AdminPayouts from "@/components/admin/AdminPayouts";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet } from "lucide-react";
+import AdminUploadReview from "@/components/admin/AdminUploadReview";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet, Upload } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
@@ -40,6 +41,7 @@ const tabs = [
   { id: "genres", label: "Genres", icon: Tag },
   { id: "articles", label: "Articles", icon: FileText },
   { id: "approvals", label: "Approvals", icon: CheckSquare },
+  { id: "upload-review", label: "Upload Review", icon: Upload },
   { id: "users", label: "Users", icon: Users },
   { id: "moderation", label: "Moderation", icon: MessageCircle },
   { id: "reports", label: "Reports", icon: Flag },
@@ -206,6 +208,7 @@ const AdminPage = () => {
             {activeTab === "genres" && <AdminGenreManagement />}
             {activeTab === "articles" && <AdminArticles />}
             {activeTab === "approvals" && <AdminApprovalQueue />}
+            {activeTab === "upload-review" && <AdminUploadReview />}
             {activeTab === "users" && <AdminUserManagement />}
             {activeTab === "moderation" && <AdminModeration />}
             {activeTab === "reports" && <AdminReports />}
