@@ -88,6 +88,15 @@ export default {
           "0%, 100%": { height: "4px" },
           "50%": { height: "16px" },
         },
+        "ken-burns": {
+          "0%": { transform: "scale(1.05) translate(0, 0)" },
+          "50%": { transform: "scale(1.15) translate(-1.5%, -1%)" },
+          "100%": { transform: "scale(1.05) translate(0, 0)" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -95,6 +104,8 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "slide-up": "slide-up 0.5s ease-out",
         "eq-bar": "eq-bar 0.6s ease-in-out infinite",
+        "ken-burns": "ken-burns 14s ease-in-out infinite",
+        "fade-in": "fade-in 0.5s ease-out",
       },
     },
   },
