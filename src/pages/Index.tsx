@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
+import MadeForYouCarousel from "@/components/MadeForYouCarousel";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -322,18 +323,13 @@ const Index = () => {
         </section>
       )}
 
-      {/* Recommended */}
+      {/* Made for You — premium carousel */}
       {recommendedSongs && recommendedSongs.length > 0 && (
-        <section className="py-6">
-          <SectionHeader title="Made for You" icon={<Sparkles className="h-5 w-5 text-secondary" />} linkTo="/music" />
-          <div className="px-4 lg:px-6 overflow-x-auto scrollbar-hide">
-            <div className="flex gap-4 pb-1">
-              {recommendedSongs.map((song: any) => (
-                <SongCard key={song.id} song={song} onPlay={playSong} currentTrack={currentTrack} isPlaying={isPlaying} />
-              ))}
-            </div>
-          </div>
-        </section>
+        <MadeForYouCarousel
+          songs={recommendedSongs as any}
+          title={user ? "Made for You" : "Discover Today"}
+          subtitle={user ? "Picks based on what you love" : "Handpicked gospel for you"}
+        />
       )}
 
       {/* Weekly Top 10 */}
