@@ -1,57 +1,99 @@
-import { useState, useEffect } from "react";
-import { Play, Pause, ChevronRight, Headphones } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Play, Pause, ChevronLeft, ChevronRight, Headphones, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
-import heroListenerImg from "@/assets/hero-listener.jpg";
-import heroSingerImg from "@/assets/hero-singer.jpg";
-import heroChoirImg from "@/assets/hero-choir.jpg";
-import heroGuitaristImg from "@/assets/hero-guitarist.jpg";
-import heroDancingImg from "@/assets/hero-dancing.jpg";
 
-const heroSlides = [
-  { image: heroListenerImg, headline: ["Where Faith", "Meets the", "Beat."], alt: "Woman enjoying gospel music with headphones" },
-  { image: heroSingerImg, headline: ["Lift Your", "Voice in", "Worship."], alt: "Man singing passionately in studio" },
-  { image: heroChoirImg, headline: ["Unite in", "Praise &", "Song."], alt: "Gospel choir singing together" },
-  { image: heroGuitaristImg, headline: ["Music That", "Touches the", "Soul."], alt: "Woman playing guitar in church" },
-  { image: heroDancingImg, headline: ["Dance to", "His", "Glory."], alt: "Couple dancing to gospel music" },
-];
+const AUTOPLAY_MS = 6500;
 
 const HeroSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStart = useRef<number | null>(null);
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();
 
   const { data: featuredSongs } = useQuery({
     queryKey: ["featured-hero-songs"],
     queryFn: async () => {
+      // Try curated featured first
+      const { data: featured } = await supabase
+        .from("featured_content")
+        .select("content_id, position")
+        .eq("content_type", "hero")
+        .order("position", { ascending: true })
+        .limit(6);
+
+      if (featured && featured.length > 0) {
+        const ids = featured.map((f) => f.content_id);
+        const { data } = await supabase
+          .from("songs")
+          .select("*, artists(id, name, avatar_url, is_verified)")
+          .in("id", ids)
+          .eq("is_approved", true);
+        // preserve order
+        return ids
+          .map((id) => data?.find((s) => s.id === id))
+          .filter(Boolean) as any[];
+      }
+
+      // Fallback to top songs
       const { data, error } = await supabase
         .from("songs")
-        .select("*, artists(id, name, avatar_url)")
+        .select("*, artists(id, name, avatar_url, is_verified)")
         .eq("is_approved", true)
         .order("play_count", { ascending: false })
-        .limit(5);
+        .limit(6);
       if (error) throw error;
       return data;
     },
   });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setActiveIndex((prev) => (prev + 1) % heroSlides.length);
-        setIsTransitioning(false);
-      }, 500);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentSlide = heroSlides[activeIndex];
-  const activeSong = featuredSongs?.[activeIndex % (featuredSongs?.length || 1)];
+  const slides = featuredSongs ?? [];
+  const total = slides.length;
+  const activeSong: any = slides[activeIndex];
   const artist = activeSong?.artists as any;
+
+  // Autoplay + progress tick
+  useEffect(() => {
+    if (paused || total < 2) return;
+    setProgress(0);
+    const start = Date.now();
+    const tick = setInterval(() => {
+      const p = Math.min(100, ((Date.now() - start) / AUTOPLAY_MS) * 100);
+      setProgress(p);
+    }, 50);
+    const advance = setTimeout(() => {
+      setActiveIndex((i) => (i + 1) % total);
+    }, AUTOPLAY_MS);
+    return () => {
+      clearInterval(tick);
+      clearTimeout(advance);
+    };
+  }, [activeIndex, paused, total]);
+
+  const goTo = useCallback(
+    (i: number) => {
+      if (total === 0) return;
+      setActiveIndex(((i % total) + total) % total);
+    },
+    [total],
+  );
+
+  const next = () => goTo(activeIndex + 1);
+  const prev = () => goTo(activeIndex - 1);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current;
+    if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
+    touchStart.current = null;
+  };
 
   const handlePlay = () => {
     if (!activeSong) return;
@@ -68,127 +110,203 @@ const HeroSection = () => {
 
   const isCurrent = currentTrack?.id === activeSong?.id;
 
+  if (total === 0) {
+    return (
+      <section className="relative px-4 lg:px-6 pt-4 pb-3">
+        <div className="relative rounded-3xl overflow-hidden min-h-[320px] md:min-h-[400px] bg-gradient-to-br from-secondary/20 via-card to-primary/15 border border-border/40 flex items-center justify-center">
+          <div className="text-center px-8">
+            <Sparkles className="h-10 w-10 mx-auto mb-3 text-primary" />
+            <h1 className="font-heading text-2xl md:text-4xl font-black text-foreground mb-2">
+              Where Faith Meets the <span className="text-gradient-brand">Beat.</span>
+            </h1>
+            <p className="text-muted-foreground text-sm">Loading featured tracks…</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative px-4 lg:px-6 pt-4 pb-3">
-      <div className="relative rounded-3xl overflow-hidden min-h-[360px] md:min-h-[440px] bg-[hsl(270,15%,6%)]">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 via-[hsl(270,15%,6%)] to-primary/15" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/8 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-secondary/12 rounded-full blur-[100px] animate-pulse [animation-delay:1.5s]" />
+      <div
+        className="relative rounded-3xl overflow-hidden min-h-[380px] md:min-h-[460px] bg-[hsl(270,15%,5%)] group/hero"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Layered cover-art backdrops */}
+        {slides.map((s: any, i) => (
+          <div
+            key={s.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-out ${
+              i === activeIndex ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+            aria-hidden={i !== activeIndex}
+          >
+            {s.cover_url ? (
+              <img
+                src={s.cover_url}
+                alt=""
+                className={`absolute inset-0 w-full h-full object-cover ${
+                  i === activeIndex ? "animate-ken-burns" : ""
+                }`}
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/20 to-card" />
+            )}
+            {/* Multi-layer scrim for legibility */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(270,15%,5%)]/95 via-[hsl(270,15%,5%)]/70 to-[hsl(270,15%,5%)]/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[hsl(270,15%,5%)] via-transparent to-transparent" />
+            <div className="absolute -top-20 -right-20 w-[420px] h-[420px] bg-primary/15 rounded-full blur-[140px]" />
+            <div className="absolute -bottom-20 left-1/4 w-[340px] h-[340px] bg-secondary/15 rounded-full blur-[120px]" />
+          </div>
+        ))}
 
-        <div className="relative flex flex-col md:flex-row items-center min-h-[360px] md:min-h-[440px]">
-          {/* Text content */}
-          <div className={`flex-1 p-8 md:p-12 lg:p-16 text-center md:text-left z-10 transition-all duration-700 ${isTransitioning ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"}`}>
-            <div className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5 mb-6">
+        {/* Foreground content */}
+        <div className="relative flex flex-col md:flex-row items-stretch min-h-[380px] md:min-h-[460px]">
+          {/* Text */}
+          <div className="flex-1 p-6 sm:p-8 md:p-12 lg:p-14 flex flex-col justify-end md:justify-center z-10">
+            <div className="inline-flex w-fit items-center gap-1.5 bg-primary/15 border border-primary/30 backdrop-blur-md rounded-full px-3 py-1.5 mb-4 md:mb-5">
               <Headphones className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-                South Sudan's #1 Gospel Platform
+              <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+                Featured · South Sudan Gospel
               </span>
             </div>
 
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight leading-[1.05]">
-              {currentSlide.headline[0]}
-              <br />
-              {currentSlide.headline[1]}
-              <br />
-              <span className="text-gradient-brand">{currentSlide.headline[2]}</span>
+            <h1
+              key={activeIndex /* re-trigger animation */}
+              className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 tracking-tight leading-[1.05] animate-fade-in"
+            >
+              {activeSong.title}
             </h1>
 
-            <p className="text-white/60 text-sm md:text-base max-w-md mb-8 leading-relaxed mx-auto md:mx-0">
-              Stream thousands of gospel hits, discover new artists, and let worship move your soul — anytime, anywhere.
-            </p>
+            <Link
+              to={artist?.name ? artistPath(artist.name) : "/artists"}
+              className="text-white/70 hover:text-primary transition-colors text-sm md:text-base font-medium mb-5 md:mb-7"
+            >
+              {artist?.name || "Unknown Artist"}
+              {activeSong.genre && <span className="text-white/40"> · {activeSong.genre}</span>}
+            </Link>
 
-            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-              {activeSong ? (
-                <button
-                  onClick={handlePlay}
-                  className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground font-bold text-sm rounded-full px-8 py-3.5 transition-all active:scale-95 shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-[1.02]"
-                >
-                  {isCurrent && isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" fill="currentColor" />}
-                  {isCurrent && isPlaying ? "Pause" : "Play Now"}
-                </button>
-              ) : (
-                <Link
-                  to="/music"
-                  className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground font-bold text-sm rounded-full px-8 py-3.5 transition-all active:scale-95 shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-[1.02]"
-                >
-                  <Play className="h-4 w-4" fill="currentColor" /> Start Listening
-                </Link>
-              )}
-              <Link
-                to="/upload"
-                className="inline-flex items-center gap-1.5 border border-white/20 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-semibold text-sm rounded-full px-6 py-3.5 transition-all"
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={handlePlay}
+                className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground font-bold text-sm rounded-full pl-5 pr-6 py-3 transition-all active:scale-95 shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-[1.03]"
               >
-                Upload Music <ChevronRight className="h-4 w-4" />
+                {isCurrent && isPlaying ? (
+                  <Pause className="h-4 w-4" fill="currentColor" />
+                ) : (
+                  <Play className="h-4 w-4" fill="currentColor" />
+                )}
+                {isCurrent && isPlaying ? "Pause" : "Play Now"}
+              </button>
+              <Link
+                to={`/song/${activeSong.id}`}
+                className="inline-flex items-center gap-1.5 border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 font-semibold text-sm rounded-full px-5 py-3 transition-all"
+              >
+                Details <ChevronRight className="h-4 w-4" />
               </Link>
-            </div>
 
-            {/* Now playing song info */}
-            {activeSong && (
-              <div className={`mt-6 flex items-center gap-3 justify-center md:justify-start transition-all duration-500 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-muted shadow-md ring-1 ring-border/50 flex-shrink-0">
-                  {activeSong.cover_url ? (
-                    <img src={activeSong.cover_url} alt={activeSong.title} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center text-xs font-bold text-muted-foreground">
-                      {activeSong.title[0]}
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-white truncate max-w-[200px]">
-                    {isCurrent && (
-                      <span className="inline-flex gap-[2px] mr-1.5 align-middle">
-                        <span className="w-[2px] h-2 bg-primary rounded-full inline-block animate-eq-bar" />
-                        <span className="w-[2px] h-3 bg-primary rounded-full inline-block animate-eq-bar [animation-delay:150ms]" />
-                        <span className="w-[2px] h-1.5 bg-primary rounded-full inline-block animate-eq-bar [animation-delay:300ms]" />
-                      </span>
+              {isCurrent && isPlaying && (
+                <span className="inline-flex items-end gap-[2px] h-5 ml-1">
+                  <span className="w-[3px] bg-primary rounded-full animate-eq-bar h-2" />
+                  <span className="w-[3px] bg-primary rounded-full animate-eq-bar h-4 [animation-delay:120ms]" />
+                  <span className="w-[3px] bg-primary rounded-full animate-eq-bar h-3 [animation-delay:240ms]" />
+                  <span className="w-[3px] bg-primary rounded-full animate-eq-bar h-5 [animation-delay:360ms]" />
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Cover stack (desktop) */}
+          <div className="hidden md:flex w-[42%] lg:w-[38%] items-center justify-center p-8 lg:p-12 relative">
+            <div className="relative w-full max-w-[320px] aspect-square">
+              {slides.map((s: any, i) => {
+                const offset = i - activeIndex;
+                const abs = Math.abs(offset);
+                if (abs > 2) return null;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => goTo(i)}
+                    className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-700 ease-out shadow-2xl"
+                    style={{
+                      transform: `translateX(${offset * 22}%) translateY(${abs * 8}px) rotate(${offset * 4}deg) scale(${1 - abs * 0.12})`,
+                      opacity: abs === 0 ? 1 : 0.55 - abs * 0.15,
+                      zIndex: 10 - abs,
+                      filter: abs === 0 ? "none" : "blur(1px)",
+                    }}
+                    aria-label={`Show ${s.title}`}
+                  >
+                    {s.cover_url ? (
+                      <img
+                        src={s.cover_url}
+                        alt={s.title}
+                        className="w-full h-full object-cover"
+                        loading={abs === 0 ? "eager" : "lazy"}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center text-5xl font-heading font-black text-white/80">
+                        {s.title[0]}
+                      </div>
                     )}
-                    {activeSong.title}
-                  </p>
-                  <Link to={artistPath(artist?.name || '')} className="text-[11px] text-white/50 hover:text-primary transition-colors">
-                    {artist?.name || "Unknown"} • {activeSong.genre || "Gospel"}
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Hero image — rotates with slides */}
-          <div className="relative w-full md:w-[45%] lg:w-[42%] flex-shrink-0 self-end">
-            <div className="relative">
-              <div className="absolute -inset-10 bg-primary/10 rounded-full blur-[80px] opacity-60" />
-              <img
-                src={currentSlide.image}
-                alt={currentSlide.alt}
-                className={`relative w-full h-auto object-cover rounded-t-3xl md:rounded-3xl md:mr-6 max-h-[350px] md:max-h-[420px] object-top transition-all duration-700 ${
-                  isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"
-                }`}
-                width={896}
-                height={1152}
-              />
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/80 to-transparent md:hidden" />
+                    {abs === 0 && (
+                      <div className="absolute inset-0 ring-2 ring-primary/40 rounded-2xl pointer-events-none" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Carousel dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-          {heroSlides.map((_, i) => (
+        {/* Nav arrows */}
+        {total > 1 && (
+          <>
             <button
-              key={i}
-              onClick={() => {
-                setIsTransitioning(true);
-                setTimeout(() => { setActiveIndex(i); setIsTransitioning(false); }, 500);
-              }}
-              className={`rounded-full transition-all duration-500 ${
-                i === activeIndex
-                  ? "w-8 h-2 bg-primary shadow-lg shadow-primary/40"
-                  : "w-2 h-2 bg-foreground/15 hover:bg-foreground/30"
-              }`}
-            />
-          ))}
-        </div>
+              onClick={prev}
+              aria-label="Previous"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white grid place-items-center opacity-0 group-hover/hero:opacity-100 transition-opacity"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white grid place-items-center opacity-0 group-hover/hero:opacity-100 transition-opacity"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
+
+        {/* Progress dots */}
+        {total > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+            {slides.map((_: any, i) => {
+              const isActive = i === activeIndex;
+              return (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-500 ${
+                    isActive ? "w-10 bg-white/20" : "w-1.5 bg-white/25 hover:bg-white/40"
+                  }`}
+                >
+                  {isActive && (
+                    <span
+                      className="absolute inset-y-0 left-0 bg-primary rounded-full transition-[width] duration-100 ease-linear"
+                      style={{ width: `${progress}%` }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
