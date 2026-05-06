@@ -143,46 +143,63 @@ const ArtistDashboardPage = () => {
 
   return (
     <Layout>
-      {/* Hero header with cover gradient */}
+      {/* Cinematic hero header */}
       <div className="relative overflow-hidden border-b border-border/50">
-        {/* Cover image / gradient backdrop */}
         <div className="absolute inset-0 -z-10">
           {myArtist.cover_url ? (
             <>
-              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover opacity-40"  loading="lazy" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover scale-110 blur-[2px] opacity-50" loading="lazy" decoding="async" />
+              <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/75 to-background" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.25),transparent_55%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--secondary)/0.18),transparent_55%)]" />
             </>
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-primary/20 via-background to-secondary/15" />
+            <>
+              <div className="h-full w-full bg-gradient-to-br from-primary/25 via-background to-secondary/20" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.3),transparent_55%)]" />
+            </>
           )}
+          {/* film grain / scanlines */}
+          <div className="absolute inset-0 opacity-[0.04] [background-image:repeating-linear-gradient(0deg,#fff_0,#fff_1px,transparent_1px,transparent_3px)]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-3 md:px-6 pt-5 md:pt-8 pb-4 md:pb-6">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 pt-6 md:pt-10 pb-5 md:pb-8 animate-fade-in">
           <div className="flex items-start md:items-center gap-3 md:gap-5">
-            <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden flex-shrink-0 ring-2 ring-background shadow-xl shadow-primary/10">
-              {myArtist.avatar_url ? (
-                <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
-              ) : (
-                <div className="h-full w-full flex items-center justify-center"><Music className="h-8 w-8 text-primary" /></div>
-              )}
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary via-primary/40 to-secondary opacity-60 blur-md" />
+              <div className="relative h-16 w-16 md:h-24 md:w-24 rounded-2xl bg-card overflow-hidden ring-2 ring-background shadow-2xl">
+                {myArtist.avatar_url ? (
+                  <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center"><Music className="h-9 w-9 text-primary" /></div>
+                )}
+              </div>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase text-primary flex items-center gap-1.5">
+              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.22em] uppercase text-primary flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3" /> Creator Studio
               </p>
-              <h1 className="font-heading text-2xl md:text-4xl font-extrabold flex items-center gap-2 truncate mt-0.5">
-                <span className="truncate">{myArtist.name}</span>
-                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 md:h-6 md:w-6 text-primary fill-primary/20 flex-shrink-0" />}
+              <h1 className="font-heading text-2xl md:text-5xl font-extrabold flex items-center gap-2 truncate mt-1 leading-[1.05]">
+                <span className="truncate bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">{myArtist.name}</span>
+                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 md:h-7 md:w-7 text-primary fill-primary/20 flex-shrink-0" />}
               </h1>
-              <p className="hidden md:block text-sm text-muted-foreground mt-1">
-                Manage your music, grow your audience, and track every play.
-              </p>
+              <div className="hidden md:flex items-center gap-2 mt-3 flex-wrap">
+                <Badge variant="outline" className="rounded-full bg-background/60 backdrop-blur border-border/60 gap-1.5 px-2.5 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  Live studio
+                </Badge>
+                {myArtist.genre && (
+                  <Badge variant="outline" className="rounded-full bg-background/60 backdrop-blur border-border/60 gap-1.5 px-2.5 py-1">
+                    <Disc3 className="h-3 w-3" />{myArtist.genre}
+                  </Badge>
+                )}
+              </div>
             </div>
             <div className="hidden md:flex flex-wrap gap-2">
-              <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60">
+              <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60 border-border/60">
                 <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />View profile</Link>
               </Button>
-              <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/20">
+              <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/30">
                 <Link to="/upload"><Music className="h-4 w-4" />Upload</Link>
               </Button>
             </div>
@@ -430,10 +447,10 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
     <div className="space-y-4 md:space-y-6">
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard icon={Headphones} label="Total plays" value={totalPlays.toLocaleString()} delta={newPlaysInRange ? `+${newPlaysInRange.toLocaleString()} (${range}d)` : undefined} accent="text-primary" />
-        <KpiCard icon={Download} label="Downloads" value={totalDownloads.toLocaleString()} delta={newDownloadsInRange ? `+${newDownloadsInRange} (${range}d)` : undefined} />
-        <KpiCard icon={Users} label="Followers" value={followerCount.toLocaleString()} delta={newFollowersInRange ? `+${newFollowersInRange} (${range}d)` : undefined} />
-        <KpiCard icon={Music} label="Released" value={approvedSongs.length.toLocaleString()} hint={`${pendingSongs.length} pending · ${scheduledSongs.length} scheduled`} />
+        <KpiCard icon={Headphones} tone="primary"   label="Total plays" value={totalPlays.toLocaleString()}     delta={newPlaysInRange ? `+${newPlaysInRange.toLocaleString()} (${range}d)` : undefined} series={dailySeries.map(d => ({ v: d.plays }))} />
+        <KpiCard icon={Download}   tone="secondary" label="Downloads"   value={totalDownloads.toLocaleString()} delta={newDownloadsInRange ? `+${newDownloadsInRange} (${range}d)` : undefined}             series={dailySeries.map(d => ({ v: d.downloads }))} />
+        <KpiCard icon={Users}      tone="accent"    label="Followers"   value={followerCount.toLocaleString()}   delta={newFollowersInRange ? `+${newFollowersInRange} (${range}d)` : undefined}             series={dailySeries.map(d => ({ v: d.followers }))} />
+        <KpiCard icon={Music}      tone="neutral"   label="Released"    value={approvedSongs.length.toLocaleString()} hint={`${pendingSongs.length} pending · ${scheduledSongs.length} scheduled`} />
       </div>
 
       {/* Range */}
@@ -1260,24 +1277,72 @@ const SettingsSection = ({ artist }: { artist: any }) => {
 
 /* ======================== SHARED ======================== */
 
-const KpiCard = ({ icon: Icon, label, value, delta, hint, accent }: { icon: any; label: string; value: string; delta?: string; hint?: string; accent?: string }) => (
-  <Card className="relative overflow-hidden p-4 rounded-2xl border-border/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition group">
-    <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-primary/5 group-hover:bg-primary/10 transition" />
-    <div className="relative flex items-center justify-between mb-2">
-      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-      <div className={cn("h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60", accent && "bg-primary/10")}>
-        <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
+const TONE_MAP: Record<string, { bg: string; ring: string; text: string; stroke: string; gradId: string }> = {
+  primary:   { bg: "bg-primary/10",   ring: "ring-primary/20",   text: "text-primary",         stroke: "hsl(var(--primary))",   gradId: "spk-p" },
+  secondary: { bg: "bg-secondary/15", ring: "ring-secondary/25", text: "text-secondary",       stroke: "hsl(var(--secondary))", gradId: "spk-s" },
+  accent:    { bg: "bg-accent/15",    ring: "ring-accent/25",    text: "text-accent-foreground",stroke: "hsl(var(--accent))",   gradId: "spk-a" },
+  neutral:   { bg: "bg-muted/60",     ring: "ring-border",       text: "text-muted-foreground",stroke: "hsl(var(--muted-foreground))", gradId: "spk-n" },
+};
+
+const KpiCard = ({
+  icon: Icon, label, value, delta, hint, tone = "neutral", series,
+}: {
+  icon: any; label: string; value: string; delta?: string; hint?: string;
+  tone?: "primary" | "secondary" | "accent" | "neutral";
+  series?: { v: number }[];
+  /** @deprecated kept for backwards-compat */
+  accent?: string;
+}) => {
+  const t = TONE_MAP[tone];
+  const gradId = `${t.gradId}-${label.replace(/\s+/g, "")}`;
+  const isPositive = !!delta && delta.trim().startsWith("+");
+  return (
+    <Card className={cn(
+      "relative overflow-hidden p-4 rounded-2xl border-border/60 transition group",
+      "hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/40"
+    )}>
+      {/* corner glow */}
+      <div className={cn("absolute -top-10 -right-10 h-28 w-28 rounded-full blur-2xl opacity-60 group-hover:opacity-100 transition", t.bg)} />
+      <div className="relative flex items-start justify-between mb-3">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.14em]">{label}</p>
+          <p className="font-heading font-extrabold text-[26px] leading-tight tracking-tight mt-1">{value}</p>
+        </div>
+        <div className={cn("h-9 w-9 rounded-xl flex items-center justify-center ring-1", t.bg, t.ring)}>
+          <Icon className={cn("h-4 w-4", t.text)} />
+        </div>
       </div>
-    </div>
-    <p className="relative font-heading font-extrabold text-2xl tracking-tight">{value}</p>
-    {delta && (
-      <p className="relative text-[11px] text-primary font-semibold mt-1 flex items-center gap-1">
-        <ArrowUpRight className="h-3 w-3" />{delta}
-      </p>
-    )}
-    {hint && <p className="relative text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
-  </Card>
-);
+      {/* sparkline */}
+      {series && series.length > 1 && (
+        <div className="relative h-10 -mx-1 mb-1 opacity-90">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={series} margin={{ top: 2, right: 2, left: 2, bottom: 0 }}>
+              <defs>
+                <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={t.stroke} stopOpacity={0.45} />
+                  <stop offset="100%" stopColor={t.stroke} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area type="monotone" dataKey="v" stroke={t.stroke} strokeWidth={1.75} fill={`url(#${gradId})`} isAnimationActive={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+      <div className="relative flex items-center justify-between gap-2 mt-1">
+        {delta ? (
+          <span className={cn(
+            "inline-flex items-center gap-1 text-[10.5px] font-bold rounded-full px-1.5 py-0.5",
+            isPositive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+          )}>
+            <ArrowUpRight className="h-3 w-3" />{delta}
+          </span>
+        ) : <span />}
+        {hint && <p className="text-[10px] text-muted-foreground truncate">{hint}</p>}
+      </div>
+    </Card>
+  );
+};
+
 
 const CatalogTile = ({ icon: Icon, label, count }: { icon: any; label: string; count: number }) => (
   <Card className="p-4 rounded-2xl border-border/50 flex flex-col items-start gap-2">
