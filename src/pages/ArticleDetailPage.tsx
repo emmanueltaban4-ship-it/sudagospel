@@ -45,7 +45,7 @@ const ArticleDetailPage = () => {
               src={article.cover_url}
               alt={article.title}
               className="w-full h-full object-cover"
-            />
+            / loading="lazy" decoding="async">
           </div>
         )}
 

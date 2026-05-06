@@ -108,9 +108,13 @@ Deno.serve(async (req) => {
     const headers = new Headers(corsHeaders)
     headers.set('Content-Type', response.headers.get('content-type') || 'audio/mpeg')
     headers.set('Accept-Ranges', 'bytes')
-    headers.set('Cache-Control', 'public, max-age=86400, immutable')
+    // Long edge + browser cache; immutable since track URLs are content-addressed
+    headers.set('Cache-Control', 'public, max-age=2592000, s-maxage=2592000, immutable, stale-while-revalidate=86400')
+    headers.set('Vary', 'Range')
+    headers.set('X-Content-Type-Options', 'nosniff')
 
-    const passthroughHeaders = ['content-length', 'content-range']
+    // Pass through caching/streaming headers when available
+    const passthroughHeaders = ['content-length', 'content-range', 'etag', 'last-modified']
     for (const header of passthroughHeaders) {
       const value = response.headers.get(header)
       if (value) headers.set(header, value)

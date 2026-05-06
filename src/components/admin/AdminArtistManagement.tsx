@@ -242,7 +242,7 @@ const AdminArtistManagement = () => {
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full flex-shrink-0 overflow-hidden bg-muted">
                 {artist.avatar_url ? (
-                  <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" />
+                  <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                 ) : (
                   <div className="h-full w-full flex items-center justify-center"><Mic2 className="h-4 w-4 text-muted-foreground" /></div>
                 )}

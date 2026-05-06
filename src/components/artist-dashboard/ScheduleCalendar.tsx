@@ -97,7 +97,7 @@ const ScheduleCalendar = ({ artistId }: { artistId: string }) => {
           {upcoming.map((s) => (
             <Link key={s.id} to={`/song/${s.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition">
               <div className="h-9 w-9 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" /> :
+                {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" / loading="lazy" decoding="async"> :
                   <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-3.5 w-3.5 text-primary" /></div>}
               </div>
               <div className="flex-1 min-w-0">

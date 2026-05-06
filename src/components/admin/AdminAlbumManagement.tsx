@@ -74,7 +74,7 @@ const AdminAlbumManagement = () => {
         {filtered.map((album: any) => (
           <div key={album.id} className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border">
             <div className="h-12 w-12 rounded-md bg-muted overflow-hidden flex-shrink-0 flex items-center justify-center">
-              {album.cover_url ? <img src={album.cover_url} alt="" className="h-full w-full object-cover" /> : <Disc3 className="h-5 w-5 text-muted-foreground" />}
+              {album.cover_url ? <img src={album.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <Disc3 className="h-5 w-5 text-muted-foreground" />}
             </div>
             {editingId === album.id ? (
               <div className="flex-1 flex items-center gap-2 flex-wrap">

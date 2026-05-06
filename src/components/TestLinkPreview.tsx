@@ -102,7 +102,7 @@ const TestLinkPreview = ({ type, id }: Props) => {
             {/* Preview card mock */}
             <div className="rounded-xl overflow-hidden border bg-card">
               {data.image ? (
-                <img src={data.image} alt="OG" className="w-full aspect-[1.91/1] object-cover bg-muted" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+                <img src={data.image} alt="OG" className="w-full aspect-[1.91/1] object-cover bg-muted" onError={(e) = loading="lazy" decoding="async"> { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
               ) : (
                 <div className="w-full aspect-[1.91/1] bg-muted flex items-center justify-center text-xs text-muted-foreground">No image</div>
               )}

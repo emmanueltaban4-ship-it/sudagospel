@@ -118,7 +118,7 @@ const AdminSiteSettings = () => {
           <label className="text-xs font-semibold text-muted-foreground mb-1 block">Logo</label>
           <div className="flex items-center gap-3">
             {form.logo_url ? (
-              <img src={form.logo_url} alt="Logo" className="h-12 w-12 rounded-lg object-contain bg-muted p-1" />
+              <img src={form.logo_url} alt="Logo" className="h-12 w-12 rounded-lg object-contain bg-muted p-1" / loading="lazy" decoding="async">
             ) : (
               <div className="h-12 w-12 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-xs">
                 No logo

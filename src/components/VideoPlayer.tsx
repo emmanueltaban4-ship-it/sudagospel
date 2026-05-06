@@ -36,7 +36,7 @@ const VideoPlayer = ({ videoUrl, thumbnailUrl, title, inline }: VideoPlayerProps
       <div className="relative aspect-video rounded-xl overflow-hidden bg-black">
         {!playing ? (
           <div className="relative h-full w-full cursor-pointer group" onClick={() => setPlaying(true)}>
-            {thumb && <img src={thumb} alt={title} className="h-full w-full object-cover" />}
+            {thumb && <img src={thumb} alt={title} className="h-full w-full object-cover" / loading="lazy" decoding="async">}
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
               <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 transition-transform">
                 <Play className="h-7 w-7 text-primary-foreground ml-1" fill="currentColor" />
@@ -67,7 +67,7 @@ const VideoPlayer = ({ videoUrl, thumbnailUrl, title, inline }: VideoPlayerProps
 
   return (
     <div className="relative aspect-video rounded-xl overflow-hidden bg-black cursor-pointer group" onClick={() => setPlaying(true)}>
-      {thumb && <img src={thumb} alt={title} className="h-full w-full object-cover" />}
+      {thumb && <img src={thumb} alt={title} className="h-full w-full object-cover" / loading="lazy" decoding="async">}
       <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
         <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 transition-transform">
           <Play className="h-7 w-7 text-primary-foreground ml-1" fill="currentColor" />
