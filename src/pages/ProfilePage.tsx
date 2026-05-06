@@ -395,7 +395,7 @@ const ProfilePage = () => {
     return (
       <div key={song.id} className={`flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors ${options?.showStatus ? "bg-yellow-500/5 border border-yellow-500/20" : ""}`}>
         <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
-          {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" /> : <div className="h-full w-full bg-muted flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}
+          {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-muted flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}
         </div>
         <div className="flex-1 min-w-0">
           <Link to={`/song/${song.id}`} className="text-sm font-medium text-foreground truncate block hover:underline">{song.title}</Link>
@@ -426,7 +426,7 @@ const ProfilePage = () => {
               <div className="flex items-start gap-5">
                 <div className="relative flex-shrink-0">
                   <div className="h-24 w-24 rounded-full overflow-hidden ring-4 ring-background shadow-2xl">
-                    {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" /> : (
+                    {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : (
                       <div className="h-full w-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground font-heading text-2xl font-extrabold">{initials}</div>
                     )}
                   </div>
@@ -550,7 +550,7 @@ const ProfilePage = () => {
                           <Link key={song.id} to={`/song/${song.id}`} className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors ${i < 4 ? "border-b border-border" : ""}`}>
                             <span className="text-sm font-bold text-muted-foreground w-6 text-center">{i + 1}</span>
                             <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
-                              {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" /> : <div className="h-full w-full flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}
+                              {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-foreground truncate">{song.title}</p>
@@ -623,7 +623,7 @@ const ProfilePage = () => {
                       {artistAlbums.map((album: any) => (
                         <Link key={album.id} to={`/album/${album.id}`} className="rounded-lg bg-card border border-border p-3 group relative hover:border-primary/30 transition-colors">
                           <div className="aspect-square rounded-md bg-muted mb-2 overflow-hidden flex items-center justify-center">
-                            {album.cover_url ? <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" /> : <Disc3 className="h-8 w-8 text-muted-foreground/30" />}
+                            {album.cover_url ? <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <Disc3 className="h-8 w-8 text-muted-foreground/30" />}
                           </div>
                           <div className="flex items-center gap-1.5">
                             <p className="text-sm font-semibold text-foreground truncate">{album.title}</p>
@@ -675,7 +675,7 @@ const ProfilePage = () => {
                       )}
                       <Textarea value={videoDesc} onChange={(e) => setVideoDesc(e.target.value)} placeholder="Description (optional)" rows={2} className="bg-background" />
                       {videoThumbnail && (
-                        <img src={videoThumbnail} alt="Thumbnail" className="h-16 rounded-lg object-cover border border-border" />
+                        <img src={videoThumbnail} alt="Thumbnail" className="h-16 rounded-lg object-cover border border-border" / loading="lazy" decoding="async">
                       )}
                       <Select value={videoType} onValueChange={setVideoType}>
                         <SelectTrigger className="bg-background"><SelectValue /></SelectTrigger>
@@ -696,7 +696,7 @@ const ProfilePage = () => {
                       {artistVideos.map((video) => (
                         <div key={video.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-card transition-colors">
                           <div className="h-10 w-16 rounded overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center">
-                            {video.thumbnail_url ? <img src={video.thumbnail_url} alt="" className="h-full w-full object-cover" /> : <Video className="h-4 w-4 text-muted-foreground" />}
+                            {video.thumbnail_url ? <img src={video.thumbnail_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <Video className="h-4 w-4 text-muted-foreground" />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">{video.title}</p>
@@ -823,7 +823,7 @@ const ProfilePage = () => {
                         {followedArtists.map((artist: any) => (
                           <Link key={artist.id} to={artistPath(artist.name)} className="flex-shrink-0 flex flex-col items-center gap-1.5 w-[68px] group">
                             <div className="h-14 w-14 rounded-full overflow-hidden bg-muted ring-2 ring-transparent group-hover:ring-primary/50 transition-all shadow-md">
-                              {artist.avatar_url ? <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" /> : (
+                              {artist.avatar_url ? <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async"> : (
                                 <div className="h-full w-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-sm font-bold text-primary-foreground">{artist.name?.[0]}</div>
                               )}
                             </div>
@@ -856,7 +856,7 @@ const ProfilePage = () => {
                       {followedArtists.map((artist: any) => (
                         <Link key={artist.id} to={artistPath(artist.name)} className="flex-shrink-0 flex flex-col items-center gap-1.5 w-[68px] group">
                           <div className="h-14 w-14 rounded-full overflow-hidden bg-muted ring-2 ring-transparent group-hover:ring-primary/50 transition-all shadow-md">
-                            {artist.avatar_url ? <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" /> : (
+                            {artist.avatar_url ? <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async"> : (
                               <div className="h-full w-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-sm font-bold text-primary-foreground">{artist.name?.[0]}</div>
                             )}
                           </div>

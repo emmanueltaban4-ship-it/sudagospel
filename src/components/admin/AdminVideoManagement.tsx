@@ -225,7 +225,7 @@ const AdminVideoManagement = () => {
                   <Label className="text-xs">Thumbnail URL</Label>
                   <Input value={form.thumbnail_url} onChange={e => setForm(f => ({ ...f, thumbnail_url: e.target.value }))} placeholder="Auto-filled from YouTube" />
                   {form.thumbnail_url && (
-                    <img src={form.thumbnail_url} alt="Thumbnail preview" className="mt-2 rounded-lg h-20 object-cover border border-border" />
+                    <img src={form.thumbnail_url} alt="Thumbnail preview" className="mt-2 rounded-lg h-20 object-cover border border-border" / loading="lazy" decoding="async">
                   )}
                 </div>
                 <div>
@@ -307,7 +307,7 @@ const AdminVideoManagement = () => {
                             src={v.thumbnail_url || getYouTubeThumbnail(ytId)}
                             alt={v.title}
                             className="w-24 h-14 rounded-md object-cover border border-border hover:ring-2 hover:ring-primary/40 transition-all"
-                          />
+                          / loading="lazy" decoding="async">
                         </a>
                       ) : (
                         <div className="w-24 h-14 rounded-md bg-muted flex items-center justify-center">

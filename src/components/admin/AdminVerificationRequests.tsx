@@ -85,7 +85,7 @@ const AdminVerificationRequests = () => {
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-full overflow-hidden bg-muted flex-shrink-0">
                 {artist?.avatar_url ? (
-                  <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" />
+                  <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                 ) : (
                   <div className="h-full w-full flex items-center justify-center"><User className="h-5 w-5 text-muted-foreground" /></div>
                 )}
@@ -146,7 +146,7 @@ const AdminVerificationRequests = () => {
               <div key={req.id} className="rounded-xl bg-card/50 border border-border/50 p-3 flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full overflow-hidden bg-muted flex-shrink-0">
                   {artist?.avatar_url ? (
-                    <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" />
+                    <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                   ) : (
                     <div className="h-full w-full flex items-center justify-center text-xs font-bold text-muted-foreground">{artist?.name?.[0]}</div>
                   )}

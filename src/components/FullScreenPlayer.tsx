@@ -169,7 +169,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                           </span>
                           <div className="h-10 w-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                             {track.coverUrl ? (
-                              <img src={track.coverUrl} alt="" className="h-full w-full object-cover" />
+                              <img src={track.coverUrl} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                             ) : (
                               <div className="h-full w-full bg-gradient-to-br from-secondary/20 to-primary/10 flex items-center justify-center">
                                 <Music className="h-4 w-4 text-muted-foreground/40" />
@@ -221,7 +221,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                       className="w-full max-w-[320px] aspect-square rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/5"
                     >
                       {currentTrack.coverUrl ? (
-                        <img src={currentTrack.coverUrl} alt={currentTrack.title} className="h-full w-full object-cover" />
+                        <img src={currentTrack.coverUrl} alt={currentTrack.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
                       ) : (
                         <div className="h-full w-full bg-gradient-to-br from-secondary/30 to-primary/20 flex items-center justify-center">
                           <Music className="h-20 w-20 text-muted-foreground/30" />

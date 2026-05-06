@@ -79,7 +79,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               src={logoImg}
               alt="SudaGospel"
               className="h-20 sm:h-24 object-contain drop-shadow-2xl relative z-10"
-            />
+            / loading="lazy" decoding="async">
           </div>
         </div>
 

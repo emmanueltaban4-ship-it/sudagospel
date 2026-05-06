@@ -194,7 +194,7 @@ const AdminPolls = () => {
                     <div className="relative flex items-center gap-2">
                       <div className="h-7 w-7 rounded-full overflow-hidden bg-muted flex-shrink-0">
                         {opt.artists?.avatar_url ? (
-                          <img src={opt.artists.avatar_url} alt="" className="h-full w-full object-cover" />
+                          <img src={opt.artists.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                         ) : (
                           <div className="h-full w-full flex items-center justify-center"><User className="h-3 w-3 text-muted-foreground" /></div>
                         )}

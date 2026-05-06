@@ -48,7 +48,7 @@ const CoverImageUpload = ({ coverUrl, onCoverChange }: { coverUrl: string; onCov
       <label className="text-xs font-semibold text-muted-foreground mb-1 block">Cover Image</label>
       {coverUrl ? (
         <div className="relative">
-          <img src={coverUrl} alt="Cover preview" className="h-40 w-full object-cover rounded-lg" />
+          <img src={coverUrl} alt="Cover preview" className="h-40 w-full object-cover rounded-lg" / loading="lazy" decoding="async">
           <button
             onClick={() => onCoverChange("")}
             className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80 transition-colors"

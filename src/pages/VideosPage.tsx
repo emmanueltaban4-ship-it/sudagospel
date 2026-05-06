@@ -109,7 +109,7 @@ const VideosPage = () => {
                   >
                     <div className="h-8 w-8 rounded-full overflow-hidden bg-muted">
                       {(featuredVideo.artists as any).avatar_url ? (
-                        <img src={(featuredVideo.artists as any).avatar_url} alt="" className="h-full w-full object-cover" />
+                        <img src={(featuredVideo.artists as any).avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                       ) : (
                         <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs font-bold text-primary-foreground">
                           {(featuredVideo.artists as any).name[0]}
@@ -165,7 +165,7 @@ const VideosPage = () => {
                       <Link to={artistPath(artist.name)} className="flex-shrink-0">
                         <div className="h-9 w-9 rounded-full overflow-hidden bg-muted">
                           {artist.avatar_url ? (
-                            <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" />
+                            <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                           ) : (
                             <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs font-bold text-primary-foreground">
                               {artist.name[0]}
@@ -219,7 +219,7 @@ const VideosPage = () => {
                 >
                   <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex-shrink-0">
                     {artist.avatar_url ? (
-                      <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" />
+                      <img src={artist.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                     ) : (
                       <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-bold text-primary-foreground">
                         {artist.name[0]}

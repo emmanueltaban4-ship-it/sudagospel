@@ -95,7 +95,7 @@ const TopTracksManager = ({ artist }: { artist: any }) => {
               }`}
             >
               <div className="h-10 w-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" /> :
+                {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" / loading="lazy" decoding="async"> :
                   <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
               </div>
               <span className="text-sm font-semibold truncate flex-1 text-left">{s.title}</span>
@@ -131,7 +131,7 @@ const TopTracksManager = ({ artist }: { artist: any }) => {
               <div key={id} className="flex items-center gap-2 p-2 rounded-xl border bg-muted/20">
                 <span className="w-6 text-center text-sm font-bold text-muted-foreground">{i + 1}</span>
                 <div className="h-10 w-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                  {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" /> :
+                  {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" / loading="lazy" decoding="async"> :
                     <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
                 </div>
                 <span className="text-sm font-semibold truncate flex-1">{s.title}</span>
@@ -161,7 +161,7 @@ const TopTracksManager = ({ artist }: { artist: any }) => {
                 >
                   <Plus className="h-3.5 w-3.5 text-primary" />
                   <div className="h-8 w-8 rounded bg-muted overflow-hidden flex-shrink-0">
-                    {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" /> : null}
+                    {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover" / loading="lazy" decoding="async"> : null}
                   </div>
                   <span className="text-xs font-semibold truncate flex-1">{s.title}</span>
                 </button>

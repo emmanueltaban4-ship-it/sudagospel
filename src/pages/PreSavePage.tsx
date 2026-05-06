@@ -97,7 +97,7 @@ const PreSavePage = () => {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {song.cover_url && (
             <>
-              <img src={song.cover_url} alt="" className="w-full h-full object-cover opacity-20 blur-3xl scale-125" />
+              <img src={song.cover_url} alt="" className="w-full h-full object-cover opacity-20 blur-3xl scale-125" / loading="lazy" decoding="async">
               <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
             </>
           )}
@@ -116,7 +116,7 @@ const PreSavePage = () => {
             <div className="relative mb-6">
               <div className="h-56 w-56 md:h-64 md:w-64 rounded-3xl overflow-hidden bg-muted shadow-2xl shadow-primary/20 ring-1 ring-border/50">
                 {song.cover_url ? (
-                  <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" />
+                  <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
                 ) : (
                   <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center">
                     <Music className="h-16 w-16 text-primary" />

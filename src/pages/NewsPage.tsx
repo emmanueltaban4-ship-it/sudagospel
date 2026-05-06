@@ -38,7 +38,7 @@ const NewsPage = () => {
                       src={article.cover_url}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    / loading="lazy" decoding="async">
                   </div>
                 )}
                 <div className="p-4">

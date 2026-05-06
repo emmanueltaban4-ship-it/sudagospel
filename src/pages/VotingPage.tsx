@@ -160,7 +160,7 @@ const VotingPage = () => {
                         <div className="relative flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex-shrink-0">
                             {opt.artists?.avatar_url ? (
-                              <img src={opt.artists.avatar_url} alt="" className="h-full w-full object-cover" />
+                              <img src={opt.artists.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
                             ) : (
                               <div className="h-full w-full flex items-center justify-center">
                                 <User className="h-4 w-4 text-muted-foreground" />
