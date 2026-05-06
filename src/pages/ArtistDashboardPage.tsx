@@ -1260,24 +1260,72 @@ const SettingsSection = ({ artist }: { artist: any }) => {
 
 /* ======================== SHARED ======================== */
 
-const KpiCard = ({ icon: Icon, label, value, delta, hint, accent }: { icon: any; label: string; value: string; delta?: string; hint?: string; accent?: string }) => (
-  <Card className="relative overflow-hidden p-4 rounded-2xl border-border/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition group">
-    <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-primary/5 group-hover:bg-primary/10 transition" />
-    <div className="relative flex items-center justify-between mb-2">
-      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-      <div className={cn("h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60", accent && "bg-primary/10")}>
-        <Icon className={cn("h-3.5 w-3.5", accent || "text-muted-foreground")} />
+const TONE_MAP: Record<string, { bg: string; ring: string; text: string; stroke: string; gradId: string }> = {
+  primary:   { bg: "bg-primary/10",   ring: "ring-primary/20",   text: "text-primary",         stroke: "hsl(var(--primary))",   gradId: "spk-p" },
+  secondary: { bg: "bg-secondary/15", ring: "ring-secondary/25", text: "text-secondary",       stroke: "hsl(var(--secondary))", gradId: "spk-s" },
+  accent:    { bg: "bg-accent/15",    ring: "ring-accent/25",    text: "text-accent-foreground",stroke: "hsl(var(--accent))",   gradId: "spk-a" },
+  neutral:   { bg: "bg-muted/60",     ring: "ring-border",       text: "text-muted-foreground",stroke: "hsl(var(--muted-foreground))", gradId: "spk-n" },
+};
+
+const KpiCard = ({
+  icon: Icon, label, value, delta, hint, tone = "neutral", series,
+}: {
+  icon: any; label: string; value: string; delta?: string; hint?: string;
+  tone?: "primary" | "secondary" | "accent" | "neutral";
+  series?: { v: number }[];
+  /** @deprecated kept for backwards-compat */
+  accent?: string;
+}) => {
+  const t = TONE_MAP[tone];
+  const gradId = `${t.gradId}-${label.replace(/\s+/g, "")}`;
+  const isPositive = !!delta && delta.trim().startsWith("+");
+  return (
+    <Card className={cn(
+      "relative overflow-hidden p-4 rounded-2xl border-border/60 transition group",
+      "hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/40"
+    )}>
+      {/* corner glow */}
+      <div className={cn("absolute -top-10 -right-10 h-28 w-28 rounded-full blur-2xl opacity-60 group-hover:opacity-100 transition", t.bg)} />
+      <div className="relative flex items-start justify-between mb-3">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.14em]">{label}</p>
+          <p className="font-heading font-extrabold text-[26px] leading-tight tracking-tight mt-1">{value}</p>
+        </div>
+        <div className={cn("h-9 w-9 rounded-xl flex items-center justify-center ring-1", t.bg, t.ring)}>
+          <Icon className={cn("h-4 w-4", t.text)} />
+        </div>
       </div>
-    </div>
-    <p className="relative font-heading font-extrabold text-2xl tracking-tight">{value}</p>
-    {delta && (
-      <p className="relative text-[11px] text-primary font-semibold mt-1 flex items-center gap-1">
-        <ArrowUpRight className="h-3 w-3" />{delta}
-      </p>
-    )}
-    {hint && <p className="relative text-[10px] text-muted-foreground mt-1 truncate">{hint}</p>}
-  </Card>
-);
+      {/* sparkline */}
+      {series && series.length > 1 && (
+        <div className="relative h-10 -mx-1 mb-1 opacity-90">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={series} margin={{ top: 2, right: 2, left: 2, bottom: 0 }}>
+              <defs>
+                <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={t.stroke} stopOpacity={0.45} />
+                  <stop offset="100%" stopColor={t.stroke} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area type="monotone" dataKey="v" stroke={t.stroke} strokeWidth={1.75} fill={`url(#${gradId})`} isAnimationActive={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+      <div className="relative flex items-center justify-between gap-2 mt-1">
+        {delta ? (
+          <span className={cn(
+            "inline-flex items-center gap-1 text-[10.5px] font-bold rounded-full px-1.5 py-0.5",
+            isPositive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+          )}>
+            <ArrowUpRight className="h-3 w-3" />{delta}
+          </span>
+        ) : <span />}
+        {hint && <p className="text-[10px] text-muted-foreground truncate">{hint}</p>}
+      </div>
+    </Card>
+  );
+};
+
 
 const CatalogTile = ({ icon: Icon, label, count }: { icon: any; label: string; count: number }) => (
   <Card className="p-4 rounded-2xl border-border/50 flex flex-col items-start gap-2">
