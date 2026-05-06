@@ -153,7 +153,7 @@ const AdminUploadReview = () => {
               <div className="flex gap-3">
                 <div className="h-16 w-16 rounded-lg bg-muted flex-shrink-0 overflow-hidden flex items-center justify-center">
                   {song.cover_url ? (
-                    <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <Music className="h-5 w-5 text-muted-foreground" />
                   )}

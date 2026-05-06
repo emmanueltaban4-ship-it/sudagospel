@@ -189,7 +189,7 @@ const AdminAds = () => {
               {/* Thumbnail */}
               <div className="w-24 h-16 rounded-md overflow-hidden bg-muted flex-shrink-0">
                 {ad.image_url ? (
-                  <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover" / loading="lazy" decoding="async">
+                  <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <Image className="h-5 w-5 text-muted-foreground/40" />
@@ -256,7 +256,7 @@ const AdminAds = () => {
             <div>
               <Label>Ad Image</Label>
               {(editingAd?.image_url && !imageFile) && (
-                <img src={editingAd.image_url} alt="" className="w-full h-32 object-cover rounded-md mb-2" / loading="lazy" decoding="async">
+                <img src={editingAd.image_url} alt="" className="w-full h-32 object-cover rounded-md mb-2"  loading="lazy" decoding="async" />
               )}
               <Input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
             </div>

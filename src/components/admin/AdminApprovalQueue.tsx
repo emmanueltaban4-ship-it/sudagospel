@@ -67,7 +67,7 @@ const AdminApprovalQueue = () => {
                 {/* Cover */}
                 <div className="h-16 w-16 rounded-lg bg-gradient-brand flex-shrink-0 flex items-center justify-center text-xl font-heading font-bold text-primary-foreground overflow-hidden">
                   {song.cover_url ? (
-                    <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     song.title[0]
                   )}

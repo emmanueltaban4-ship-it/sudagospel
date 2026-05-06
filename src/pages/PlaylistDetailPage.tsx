@@ -82,7 +82,7 @@ const PlaylistDetailPage = () => {
         <div className="relative overflow-hidden">
           <div className="absolute inset-0">
             {playlist?.cover_url ? (
-              <img src={playlist.cover_url} alt="" className="w-full h-full object-cover blur-[80px] opacity-40 scale-110" / loading="lazy" decoding="async">
+              <img src={playlist.cover_url} alt="" className="w-full h-full object-cover blur-[80px] opacity-40 scale-110"  loading="lazy" decoding="async" />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/20 to-background" />
             )}
@@ -101,7 +101,7 @@ const PlaylistDetailPage = () => {
               {/* Playlist cover */}
               <div className="h-40 w-40 md:h-52 md:w-52 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/60 to-primary/20 flex items-center justify-center shadow-2xl flex-shrink-0">
                 {playlist?.cover_url ? (
-                  <img src={playlist.cover_url} alt={playlist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                  <img src={playlist.cover_url} alt={playlist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                 ) : (
                   <ListMusic className="h-16 w-16 md:h-20 md:w-20 text-primary-foreground/50" />
                 )}

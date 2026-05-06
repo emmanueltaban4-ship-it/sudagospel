@@ -109,7 +109,7 @@ const MiniPlayer = () => {
               >
                 <div className="h-12 w-12 rounded-xl overflow-hidden bg-muted shadow-md ring-1 ring-primary/10">
                   {currentTrack.coverUrl ? (
-                    <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-accent/30 to-primary/20">
                       <Music className="h-5 w-5 text-muted-foreground" />
@@ -155,7 +155,7 @@ const MiniPlayer = () => {
                 <button onClick={() => setShowFullScreen(true)} className="flex-shrink-0 group">
                   <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted shadow-lg group-hover:shadow-xl group-hover:glow-gold transition-all ring-1 ring-primary/10">
                     {currentTrack.coverUrl ? (
-                      <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                      <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-accent/30 to-primary/20">
                         <Music className="h-6 w-6 text-muted-foreground" />

@@ -80,7 +80,7 @@ const BrandingSection = ({ artist }: { artist: any }) => {
       {/* Cover + Avatar */}
       <Card className="overflow-hidden">
         <div className="relative h-40 md:h-56 bg-gradient-to-br from-primary/30 via-secondary/20 to-primary/10">
-          {artist.cover_url && <img src={artist.cover_url} alt="cover" className="h-full w-full object-cover" / loading="lazy" decoding="async">}
+          {artist.cover_url && <img src={artist.cover_url} alt="cover" className="h-full w-full object-cover"  loading="lazy" decoding="async" />}
           <button
             onClick={() => coverRef.current?.click()}
             className="absolute top-3 right-3 bg-background/90 backdrop-blur rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 hover:bg-background transition"
@@ -93,7 +93,7 @@ const BrandingSection = ({ artist }: { artist: any }) => {
           <div className="relative">
             <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl ring-4 ring-background bg-muted overflow-hidden">
               {artist.avatar_url ? (
-                <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
               ) : (
                 <div className="h-full w-full flex items-center justify-center"><ImageIcon className="h-8 w-8 text-muted-foreground" /></div>
               )}

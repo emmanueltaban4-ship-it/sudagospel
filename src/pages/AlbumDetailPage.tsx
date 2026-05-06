@@ -143,7 +143,7 @@ const AlbumDetailPage = () => {
         <div className="relative overflow-hidden min-h-[260px] md:min-h-[320px]">
           <div className="absolute inset-0">
             {album.cover_url ? (
-              <img src={album.cover_url} alt="" className="h-full w-full object-cover scale-110 blur-[80px] opacity-60" / loading="lazy" decoding="async">
+              <img src={album.cover_url} alt="" className="h-full w-full object-cover scale-110 blur-[80px] opacity-60"  loading="lazy" decoding="async" />
             ) : (
               <div className="h-full w-full bg-gradient-to-br from-primary/50 to-secondary/30" />
             )}
@@ -162,7 +162,7 @@ const AlbumDetailPage = () => {
               <div className="flex-shrink-0">
                 <div className="h-48 w-48 md:h-56 md:w-56 rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
                   {album.cover_url ? (
-                    <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={album.cover_url} alt={album.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                       <Disc3 className="h-20 w-20 text-primary-foreground/50" />

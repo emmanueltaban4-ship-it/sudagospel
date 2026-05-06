@@ -98,7 +98,7 @@ const NewSongsPage = () => {
                     className="h-10 w-10 rounded-lg overflow-hidden bg-muted flex-shrink-0 relative"
                   >
                     {song.cover_url ? (
-                      <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                      <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                     ) : (
                       <div className="h-full w-full bg-muted flex items-center justify-center">
                         <Music className="h-4 w-4 text-muted-foreground" />

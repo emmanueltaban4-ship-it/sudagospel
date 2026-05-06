@@ -94,7 +94,7 @@ const ShareDialog = ({ title, artist, coverUrl, shareUrl, type = "song", trigger
         <div className="mx-6 mb-5 flex items-center gap-3 rounded-xl bg-muted/50 p-3 border border-border/50">
           <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
             {coverUrl ? (
-              <img src={coverUrl} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+              <img src={coverUrl} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
             ) : (
               <div className="h-full w-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center">
                 <Music className="h-6 w-6 text-primary-foreground/60" />

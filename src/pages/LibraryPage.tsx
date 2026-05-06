@@ -117,7 +117,7 @@ const LibraryPage = () => {
                     >
                       <div className="aspect-square overflow-hidden bg-muted relative">
                         {playlist.cover_url ? (
-                          <img src={playlist.cover_url} alt={playlist.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" / loading="lazy" decoding="async">
+                          <img src={playlist.cover_url} alt={playlist.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"  loading="lazy" decoding="async" />
                         ) : (
                           <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/10 flex items-center justify-center">
                             <Music className="h-8 w-8 text-muted-foreground/30" />
@@ -171,7 +171,7 @@ const LibraryPage = () => {
                     >
                       <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">
                         {song.cover_url ? (
-                          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                          <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                         ) : (
                           <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center">
                             <Music className="h-5 w-5 text-muted-foreground/40" />
@@ -209,7 +209,7 @@ const LibraryPage = () => {
                       >
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">
                           {song.coverUrl ? (
-                            <img src={song.coverUrl} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                            <img src={song.coverUrl} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                           ) : (
                             <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center">
                               <Music className="h-5 w-5 text-muted-foreground/40" />
@@ -251,7 +251,7 @@ const LibraryPage = () => {
                       >
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">
                           {song.coverUrl ? (
-                            <img src={song.coverUrl} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                            <img src={song.coverUrl} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                           ) : (
                             <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/30 to-secondary/20">
                               <Music className="h-5 w-5 text-muted-foreground/40" />

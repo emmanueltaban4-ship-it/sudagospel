@@ -129,7 +129,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
                   >
                     <div className="h-10 w-10 rounded-full overflow-hidden bg-gradient-brand flex-shrink-0">
                       {artist.avatar_url ? (
-                        <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                        <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center text-sm font-bold text-primary-foreground">
                           {artist.name[0]}
@@ -164,7 +164,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
                       className="relative h-10 w-10 rounded-md overflow-hidden bg-muted flex-shrink-0"
                     >
                       {song.cover_url ? (
-                        <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                        <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center">
                           <Music className="h-4 w-4 text-muted-foreground" />

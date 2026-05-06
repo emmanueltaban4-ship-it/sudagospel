@@ -111,7 +111,7 @@ const PromotionSection = ({ artist }: { artist: any }) => {
               return (
                 <div key={s.id} className="p-3 rounded-xl border bg-muted/10 flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                    {s.cover_url && <img src={s.cover_url} className="h-full w-full object-cover" alt="" / loading="lazy" decoding="async">}
+                    {s.cover_url && <img src={s.cover_url} className="h-full w-full object-cover" alt=""  loading="lazy" decoding="async" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold truncate">{s.title}</p>
@@ -138,7 +138,7 @@ const PromotionSection = ({ artist }: { artist: any }) => {
             {live.slice(0, 8).map((s: any) => (
               <div key={s.id} className="p-3 rounded-xl border bg-muted/10 flex items-center gap-3">
                 <div className="h-10 w-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                  {s.cover_url && <img src={s.cover_url} className="h-full w-full object-cover" alt="" / loading="lazy" decoding="async">}
+                  {s.cover_url && <img src={s.cover_url} className="h-full w-full object-cover" alt=""  loading="lazy" decoding="async" />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold truncate">{s.title}</p>

@@ -114,7 +114,7 @@ const PlaylistsPage = () => {
                   <Link to={`/playlist/${pl.id}`} className="block">
                     <div className="aspect-square rounded-xl overflow-hidden mb-2 bg-gradient-to-br from-primary/60 to-primary/20 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                       {pl.cover_url ? (
-                        <img src={pl.cover_url} alt={pl.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                        <img src={pl.cover_url} alt={pl.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                       ) : (
                         <Music className="h-12 w-12 text-primary-foreground/70" />
                       )}
