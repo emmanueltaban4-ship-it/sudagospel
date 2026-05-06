@@ -430,10 +430,10 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
     <div className="space-y-4 md:space-y-6">
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard icon={Headphones} label="Total plays" value={totalPlays.toLocaleString()} delta={newPlaysInRange ? `+${newPlaysInRange.toLocaleString()} (${range}d)` : undefined} accent="text-primary" />
-        <KpiCard icon={Download} label="Downloads" value={totalDownloads.toLocaleString()} delta={newDownloadsInRange ? `+${newDownloadsInRange} (${range}d)` : undefined} />
-        <KpiCard icon={Users} label="Followers" value={followerCount.toLocaleString()} delta={newFollowersInRange ? `+${newFollowersInRange} (${range}d)` : undefined} />
-        <KpiCard icon={Music} label="Released" value={approvedSongs.length.toLocaleString()} hint={`${pendingSongs.length} pending · ${scheduledSongs.length} scheduled`} />
+        <KpiCard icon={Headphones} tone="primary"   label="Total plays" value={totalPlays.toLocaleString()}     delta={newPlaysInRange ? `+${newPlaysInRange.toLocaleString()} (${range}d)` : undefined} series={dailySeries.map(d => ({ v: d.plays }))} />
+        <KpiCard icon={Download}   tone="secondary" label="Downloads"   value={totalDownloads.toLocaleString()} delta={newDownloadsInRange ? `+${newDownloadsInRange} (${range}d)` : undefined}             series={dailySeries.map(d => ({ v: d.downloads }))} />
+        <KpiCard icon={Users}      tone="accent"    label="Followers"   value={followerCount.toLocaleString()}   delta={newFollowersInRange ? `+${newFollowersInRange} (${range}d)` : undefined}             series={dailySeries.map(d => ({ v: d.followers }))} />
+        <KpiCard icon={Music}      tone="neutral"   label="Released"    value={approvedSongs.length.toLocaleString()} hint={`${pendingSongs.length} pending · ${scheduledSongs.length} scheduled`} />
       </div>
 
       {/* Range */}
