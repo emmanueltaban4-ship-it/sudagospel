@@ -108,6 +108,7 @@ const App = () => {
                     <Route path="/blog" element={<NewsPage />} />
                     <Route path="/news/:slug" element={<ArticleDetailPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/u/:userId" element={<PublicProfilePage />} />
                     <Route path="/auth" element={<AuthPage />} />
                     <Route path="/upload" element={<UploadPage />} />
                     <Route path="/admin" element={<AdminPage />} />
