@@ -155,7 +155,7 @@ const AdminSongManagement = () => {
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-lg flex-shrink-0 overflow-hidden bg-muted">
                   {song.cover_url ? (
-                    <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>
                   )}

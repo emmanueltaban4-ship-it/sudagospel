@@ -96,7 +96,7 @@ const ShareStoryCard = ({ open, onOpenChange, songTitle, artistName, coverUrl }:
         <canvas ref={canvasRef} className="hidden" />
         {previewUrl && (
           <div className="space-y-4">
-            <img src={previewUrl} alt="Story preview" className="w-full rounded-xl border border-border" / loading="lazy" decoding="async">
+            <img src={previewUrl} alt="Story preview" className="w-full rounded-xl border border-border"  loading="lazy" decoding="async" />
             <Button onClick={download} className="w-full" size="lg">
               <Download className="h-4 w-4 mr-2" /> Download story image
             </Button>

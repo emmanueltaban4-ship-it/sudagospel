@@ -56,7 +56,7 @@ const PurchasesPage = () => {
             {purchases.map((p: any) => (
               <Card key={p.id} className="p-3 flex items-center gap-3">
                 <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                  {p.songs?.cover_url && <img src={p.songs.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">}
+                  {p.songs?.cover_url && <img src={p.songs.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <Link to={`/song/${p.song_id}`} className="font-semibold text-sm truncate block hover:text-primary">{p.songs?.title}</Link>
@@ -78,7 +78,7 @@ const PurchasesPage = () => {
             {subs.map((s: any) => (
               <Card key={s.id} className="p-3 flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                  {s.artists?.avatar_url && <img src={s.artists.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">}
+                  {s.artists?.avatar_url && <img src={s.artists.avatar_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <Link to={artistPath(s.artists)} className="font-semibold text-sm truncate block hover:text-primary">{s.artists?.name}</Link>

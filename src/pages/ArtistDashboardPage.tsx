@@ -149,7 +149,7 @@ const ArtistDashboardPage = () => {
         <div className="absolute inset-0 -z-10">
           {myArtist.cover_url ? (
             <>
-              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover opacity-40" / loading="lazy" decoding="async">
+              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover opacity-40"  loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
             </>
           ) : (
@@ -161,7 +161,7 @@ const ArtistDashboardPage = () => {
           <div className="flex items-start md:items-center gap-3 md:gap-5">
             <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden flex-shrink-0 ring-2 ring-background shadow-xl shadow-primary/10">
               {myArtist.avatar_url ? (
-                <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
               ) : (
                 <div className="h-full w-full flex items-center justify-center"><Music className="h-8 w-8 text-primary" /></div>
               )}
@@ -548,7 +548,7 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
                 <Link key={song.id} to={`/song/${song.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition group">
                   <span className="w-6 text-center text-sm font-bold text-muted-foreground">{i + 1}</span>
                   <div className="h-11 w-11 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                    {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
+                    {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{song.title}</p>
@@ -596,7 +596,7 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
             {scheduledSongs.map((song) => (
               <div key={song.id} className="flex items-center gap-3 p-2 rounded-xl bg-background/60">
                 <div className="h-11 w-11 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-                  {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
+                  {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate">{song.title}</p>
@@ -792,7 +792,7 @@ const MusicSection = ({ artist }: { artist: any }) => {
                       onCheckedChange={() => toggleSel(song.id)}
                     />
                     <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex-shrink-0 relative">
-                      {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
+                      {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
                       {isPinned && <div className="absolute top-0.5 right-0.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center"><Pin className="h-2.5 w-2.5 text-primary-foreground fill-primary-foreground" /></div>}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1062,7 +1062,7 @@ const SongPriceRow = ({ song }: { song: any }) => {
   return (
     <div className="p-3 flex items-center gap-3">
       <div className="h-10 w-10 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-        {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-3.5 w-3.5 text-primary" /></div>}
+        {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-3.5 w-3.5 text-primary" /></div>}
       </div>
       <p className="flex-1 min-w-0 text-sm font-semibold truncate">{song.title}</p>
       <Switch checked={paid} onCheckedChange={setPaid} />
@@ -1202,7 +1202,7 @@ const AudienceSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
             {followers.map((f: any) => (
               <div key={f.user_id + f.created_at} className="p-3 flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                  {f.profile?.avatar_url ? <img src={f.profile.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async"> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Users className="h-3.5 w-3.5 text-primary" /></div>}
+                  {f.profile?.avatar_url ? <img src={f.profile.avatar_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Users className="h-3.5 w-3.5 text-primary" /></div>}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate">{f.profile?.display_name || "Anonymous fan"}</p>

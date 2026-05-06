@@ -175,7 +175,7 @@ const SongDetailPage = () => {
           {/* Gradient background from cover */}
           <div className="absolute inset-0">
             {song.cover_url ? (
-              <img src={song.cover_url} alt="" className="h-full w-full object-cover scale-125 blur-[60px] opacity-50" / loading="lazy" decoding="async">
+              <img src={song.cover_url} alt="" className="h-full w-full object-cover scale-125 blur-[60px] opacity-50"  loading="lazy" decoding="async" />
             ) : (
               <div className="h-full w-full bg-gradient-to-br from-primary/40 to-secondary/20" />
             )}
@@ -196,7 +196,7 @@ const SongDetailPage = () => {
               {/* Cover art */}
               <div className="w-52 h-52 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex-shrink-0">
                 {song.cover_url ? (
-                  <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                  <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                 ) : (
                   <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                     <Music className="h-16 w-16 text-primary-foreground/80" />
@@ -224,7 +224,7 @@ const SongDetailPage = () => {
                   >
                     <div className="h-6 w-6 rounded-full overflow-hidden bg-muted flex-shrink-0">
                       {artist?.avatar_url ? (
-                        <img src={artist.avatar_url} alt={artistName} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                        <img src={artist.avatar_url} alt={artistName} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                       ) : (
                         <div className="h-full w-full bg-primary flex items-center justify-center text-[10px] font-bold text-primary-foreground">
                           {artistName[0]}
@@ -384,7 +384,7 @@ const SongDetailPage = () => {
               >
                 <div className="h-14 w-14 rounded-full overflow-hidden bg-muted flex-shrink-0">
                   {artist?.avatar_url ? (
-                    <img src={artist.avatar_url} alt={artistName} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={artist.avatar_url} alt={artistName} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full bg-primary flex items-center justify-center text-lg font-bold text-primary-foreground">
                       {artistName[0]}

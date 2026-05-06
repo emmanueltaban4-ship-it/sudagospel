@@ -276,7 +276,7 @@ const UploadPage = () => {
                 <label className="flex cursor-pointer flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-border bg-card p-8 text-center hover:border-primary hover:bg-primary/5 transition-all">
                   {coverPreview ? (
                     <div className="h-48 w-48 rounded-xl overflow-hidden shadow-lg">
-                      <img src={coverPreview} alt="Cover preview" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                      <img src={coverPreview} alt="Cover preview" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                     </div>
                   ) : (
                     <div className="h-32 w-32 rounded-xl bg-muted flex items-center justify-center">
@@ -447,7 +447,7 @@ const UploadPage = () => {
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Summary</p>
                   <div className="flex items-center gap-3">
                     {coverPreview ? (
-                      <img src={coverPreview} alt="" className="h-14 w-14 rounded-lg object-cover" / loading="lazy" decoding="async">
+                      <img src={coverPreview} alt="" className="h-14 w-14 rounded-lg object-cover"  loading="lazy" decoding="async" />
                     ) : (
                       <div className="h-14 w-14 rounded-lg bg-muted flex items-center justify-center"><Music className="h-6 w-6 text-muted-foreground" /></div>
                     )}

@@ -250,7 +250,7 @@ const ArtistDetailPage = () => {
               alt=""
               className="h-full w-full object-cover"
               style={{ objectPosition: artist.banner_position === 'top' ? 'top' : artist.banner_position === 'bottom' ? 'bottom' : 'center' }}
-            / loading="lazy" decoding="async">
+             loading="lazy" decoding="async" />
           ) : (
             <div className="h-full w-full" style={{ background: `linear-gradient(135deg, ${artist.accent_color || '#DC2626'}40, hsl(var(--secondary)/0.2), hsl(var(--background)))` }} />
           )}
@@ -291,7 +291,7 @@ const ArtistDetailPage = () => {
               {/* Avatar */}
               <div className="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden border-4 border-background shadow-2xl mx-auto md:mx-0">
                 {artist.avatar_url ? (
-                  <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                  <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                 ) : (
                   <div className="h-full w-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-4xl font-heading font-bold text-primary-foreground">
                     {artist.name[0]}

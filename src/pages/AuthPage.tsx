@@ -121,7 +121,7 @@ const AuthPage = () => {
           {/* Logo & branding */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Sudagospel" className="h-12 w-12 rounded-xl shadow-lg" / loading="lazy" decoding="async">
+              <img src={logo} alt="Sudagospel" className="h-12 w-12 rounded-xl shadow-lg"  loading="lazy" decoding="async" />
               <span className="font-heading text-xl font-extrabold text-foreground">Sudagospel</span>
             </div>
             <h1 className="font-heading text-3xl md:text-4xl font-extrabold text-foreground tracking-tight leading-tight">
@@ -431,7 +431,7 @@ const RightPanel = () => {
 
   return (
     <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative overflow-hidden">
-      <img src={heroImg} alt="Feel the music" className="absolute inset-0 h-full w-full object-cover" / loading="lazy" decoding="async">
+      <img src={heroImg} alt="Feel the music" className="absolute inset-0 h-full w-full object-cover"  loading="lazy" decoding="async" />
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-background/40" />
 
@@ -467,7 +467,7 @@ const RightPanel = () => {
               {verifiedArtists.map((artist, i) => (
                 <div key={i} className="h-9 w-9 rounded-full border-2 border-white/20 overflow-hidden bg-white/10">
                   {artist.avatar_url ? (
-                    <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={artist.avatar_url} alt={artist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center text-white/60 text-xs font-bold">
                       {artist.name?.[0]}
@@ -497,7 +497,7 @@ const RightPanel = () => {
                 <div key={i} className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
                     {song.cover_url ? (
-                      <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                      <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                     ) : (
                       <div className="h-full w-full flex items-center justify-center">
                         <Play className="h-3 w-3 text-white/40" />

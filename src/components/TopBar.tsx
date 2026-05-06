@@ -79,7 +79,7 @@ const TopBar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0 group active:scale-95 transition-transform">
-            <img src={logoImg} alt="Sudagospel" className="h-9 object-contain" / loading="lazy" decoding="async">
+            <img src={logoImg} alt="Sudagospel" className="h-9 object-contain"  loading="lazy" decoding="async" />
           </Link>
 
           {/* Center search — desktop */}
@@ -156,7 +156,7 @@ const TopBar = () => {
               </div>
             ) : (
               <SheetTitle className="flex items-center gap-2">
-                <img src={logoImg} alt="Sudagospel" className="h-8 object-contain" / loading="lazy" decoding="async">
+                <img src={logoImg} alt="Sudagospel" className="h-8 object-contain"  loading="lazy" decoding="async" />
                 <span className="text-base font-bold">{siteName}</span>
               </SheetTitle>
             )}

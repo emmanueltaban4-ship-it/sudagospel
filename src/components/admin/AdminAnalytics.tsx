@@ -160,7 +160,7 @@ const AdminAnalytics = () => {
               <div key={i} className="flex items-center gap-3 py-2">
                 <div className="h-8 w-8 rounded-full overflow-hidden bg-muted flex-shrink-0">
                   {u.avatar_url ? (
-                    <img src={u.avatar_url} alt="" className="h-full w-full object-cover" / loading="lazy" decoding="async">
+                    <img src={u.avatar_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
                   ) : (
                     <div className="h-full w-full bg-primary flex items-center justify-center text-[10px] font-bold text-primary-foreground">
                       {u.display_name?.[0]?.toUpperCase() || "?"}
