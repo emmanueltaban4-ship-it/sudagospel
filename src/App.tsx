@@ -140,6 +140,7 @@ const App = () => {
                     <Route path="/radio/:artistId" element={<ArtistRadioPage />} />
                     <Route path="/notifications" element={<NotificationsPage />} />
                     <Route path="/purchases" element={<PurchasesPage />} />
+                    <Route path="/account" element={<AccountSettingsPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
