@@ -48,6 +48,7 @@ const ForYouPage = lazy(() => import("./pages/ForYouPage.tsx"));
 const ArtistRadioPage = lazy(() => import("./pages/ArtistRadioPage.tsx"));
 const NotificationsPage = lazy(() => import("./pages/NotificationsPage.tsx"));
 const PurchasesPage = lazy(() => import("./pages/PurchasesPage.tsx"));
+const AccountSettingsPage = lazy(() => import("./pages/AccountSettingsPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 import InstallPWA from "@/components/InstallPWA";
 
