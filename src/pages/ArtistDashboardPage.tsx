@@ -143,46 +143,63 @@ const ArtistDashboardPage = () => {
 
   return (
     <Layout>
-      {/* Hero header with cover gradient */}
+      {/* Cinematic hero header */}
       <div className="relative overflow-hidden border-b border-border/50">
-        {/* Cover image / gradient backdrop */}
         <div className="absolute inset-0 -z-10">
           {myArtist.cover_url ? (
             <>
-              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover opacity-40"  loading="lazy" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
+              <img src={myArtist.cover_url} alt="" className="h-full w-full object-cover scale-110 blur-[2px] opacity-50" loading="lazy" decoding="async" />
+              <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/75 to-background" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.25),transparent_55%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--secondary)/0.18),transparent_55%)]" />
             </>
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-primary/20 via-background to-secondary/15" />
+            <>
+              <div className="h-full w-full bg-gradient-to-br from-primary/25 via-background to-secondary/20" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary)/0.3),transparent_55%)]" />
+            </>
           )}
+          {/* film grain / scanlines */}
+          <div className="absolute inset-0 opacity-[0.04] [background-image:repeating-linear-gradient(0deg,#fff_0,#fff_1px,transparent_1px,transparent_3px)]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-3 md:px-6 pt-5 md:pt-8 pb-4 md:pb-6">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 pt-6 md:pt-10 pb-5 md:pb-8 animate-fade-in">
           <div className="flex items-start md:items-center gap-3 md:gap-5">
-            <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden flex-shrink-0 ring-2 ring-background shadow-xl shadow-primary/10">
-              {myArtist.avatar_url ? (
-                <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover"  loading="lazy" decoding="async" />
-              ) : (
-                <div className="h-full w-full flex items-center justify-center"><Music className="h-8 w-8 text-primary" /></div>
-              )}
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary via-primary/40 to-secondary opacity-60 blur-md" />
+              <div className="relative h-16 w-16 md:h-24 md:w-24 rounded-2xl bg-card overflow-hidden ring-2 ring-background shadow-2xl">
+                {myArtist.avatar_url ? (
+                  <img src={myArtist.avatar_url} alt={myArtist.name} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center"><Music className="h-9 w-9 text-primary" /></div>
+                )}
+              </div>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase text-primary flex items-center gap-1.5">
+              <p className="text-[10px] md:text-[11px] font-bold tracking-[0.22em] uppercase text-primary flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3" /> Creator Studio
               </p>
-              <h1 className="font-heading text-2xl md:text-4xl font-extrabold flex items-center gap-2 truncate mt-0.5">
-                <span className="truncate">{myArtist.name}</span>
-                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 md:h-6 md:w-6 text-primary fill-primary/20 flex-shrink-0" />}
+              <h1 className="font-heading text-2xl md:text-5xl font-extrabold flex items-center gap-2 truncate mt-1 leading-[1.05]">
+                <span className="truncate bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">{myArtist.name}</span>
+                {myArtist.is_verified && <BadgeCheck className="h-5 w-5 md:h-7 md:w-7 text-primary fill-primary/20 flex-shrink-0" />}
               </h1>
-              <p className="hidden md:block text-sm text-muted-foreground mt-1">
-                Manage your music, grow your audience, and track every play.
-              </p>
+              <div className="hidden md:flex items-center gap-2 mt-3 flex-wrap">
+                <Badge variant="outline" className="rounded-full bg-background/60 backdrop-blur border-border/60 gap-1.5 px-2.5 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  Live studio
+                </Badge>
+                {myArtist.genre && (
+                  <Badge variant="outline" className="rounded-full bg-background/60 backdrop-blur border-border/60 gap-1.5 px-2.5 py-1">
+                    <Disc3 className="h-3 w-3" />{myArtist.genre}
+                  </Badge>
+                )}
+              </div>
             </div>
             <div className="hidden md:flex flex-wrap gap-2">
-              <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60">
+              <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 backdrop-blur bg-background/60 border-border/60">
                 <Link to={artistPath(myArtist.name)}><Eye className="h-4 w-4" />View profile</Link>
               </Button>
-              <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/20">
+              <Button asChild size="sm" className="rounded-xl gap-1.5 shadow-lg shadow-primary/30">
                 <Link to="/upload"><Music className="h-4 w-4" />Upload</Link>
               </Button>
             </div>
