@@ -16,6 +16,7 @@ const MusicPage = lazy(() => import("./pages/MusicPage.tsx"));
 const ArtistsPage = lazy(() => import("./pages/ArtistsPage.tsx"));
 const NewsPage = lazy(() => import("./pages/NewsPage.tsx"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage.tsx"));
+const PublicProfilePage = lazy(() => import("./pages/PublicProfilePage.tsx"));
 const AuthPage = lazy(() => import("./pages/AuthPage.tsx"));
 const UploadPage = lazy(() => import("./pages/UploadPage.tsx"));
 const AdminPage = lazy(() => import("./pages/AdminPage.tsx"));
@@ -107,6 +108,7 @@ const App = () => {
                     <Route path="/blog" element={<NewsPage />} />
                     <Route path="/news/:slug" element={<ArticleDetailPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/u/:userId" element={<PublicProfilePage />} />
                     <Route path="/auth" element={<AuthPage />} />
                     <Route path="/upload" element={<UploadPage />} />
                     <Route path="/admin" element={<AdminPage />} />
