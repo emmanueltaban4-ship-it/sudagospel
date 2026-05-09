@@ -52,6 +52,32 @@ serve(async (req) => {
         artist_id, source: "download", amount_cents, currency,
         song_id, payer_user_id, stripe_session_id: session.id,
       });
+    } else if (type === "store") {
+      const items = JSON.parse(md.items_json || "[]");
+      const platform_fee_cents = parseInt(md.platform_fee_cents || "0");
+      const { data: products } = await admin.from("store_products").select("id,title,price_cents").in("id", items.map((i: any) => i.product_id));
+      const { data: order } = await admin.from("store_orders").insert({
+        user_id: payer_user_id, buyer_email: session.customer_details?.email,
+        artist_id, total_cents: amount_cents, currency, platform_fee_cents,
+        status: "paid", stripe_session_id: session.id,
+        shipping_name: session.shipping_details?.name,
+        shipping_address: session.shipping_details?.address ? session.shipping_details : null,
+      }).select("id").single();
+      if (order) {
+        const rows = items.map((it: any) => {
+          const p = products?.find((x: any) => x.id === it.product_id);
+          return { order_id: order.id, product_id: it.product_id, title_snapshot: p?.title || "Item", unit_price_cents: p?.price_cents || 0, quantity: it.quantity, variant_label: it.variant_label || null };
+        });
+        await admin.from("store_order_items").insert(rows);
+        // decrement inventory
+        for (const it of items) {
+          await admin.rpc("noop").catch(() => {});
+        }
+      }
+      await admin.from("artist_earnings").insert({
+        artist_id, source: "store", amount_cents: amount_cents - platform_fee_cents, currency,
+        payer_user_id, stripe_session_id: session.id, metadata: { platform_fee_cents }
+      });
     } else if (type === "supporter") {
       const sub_id = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
       let current_period_end: string | null = null;
