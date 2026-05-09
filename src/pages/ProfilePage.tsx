@@ -386,7 +386,9 @@ const ProfilePage = () => {
     );
   }
 
-  const isArtist = !!myArtist;
+  const isArtist = !!myArtist && (myArtist as any).status === "approved";
+  const artistApplicationStatus: "pending" | "rejected" | null =
+    myArtist && (myArtist as any).status !== "approved" ? ((myArtist as any).status as any) : null;
   const displayName = profile?.display_name || "User";
   const initials = displayName.slice(0, 2).toUpperCase();
   const totalPlays = artistSongs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
