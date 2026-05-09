@@ -22,6 +22,20 @@ import BoostSongDialog from "@/components/BoostSongDialog";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
+/* ─── Audiomack-style inline stats ─── */
+const formatStat = (n: number) => {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1) + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 === 0 ? 0 : 1) + "K";
+  return n.toString();
+};
+const StatInline = ({ value, label }: { value: number; label: string }) => (
+  <div className="flex flex-col items-center min-w-[60px]">
+    <span className="font-heading text-base font-extrabold text-foreground tabular-nums leading-none">{formatStat(value)}</span>
+    <span className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">{label}</span>
+  </div>
+);
+const Divider = () => <span className="h-8 w-px bg-border/60" />;
+
 /* ─── Album Selector for Song Edit ─── */
 const AlbumSelectorForEdit = ({ artistId, value, onChange }: { artistId: string; value: string; onChange: (v: string) => void }) => {
   const { data: albums } = useQuery({
