@@ -50,7 +50,12 @@ const NotificationsPage = lazy(() => import("./pages/NotificationsPage.tsx"));
 const PurchasesPage = lazy(() => import("./pages/PurchasesPage.tsx"));
 const AccountSettingsPage = lazy(() => import("./pages/AccountSettingsPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const SermonsPage = lazy(() => import("./pages/SermonsPage.tsx"));
+const EventsPage = lazy(() => import("./pages/EventsPage.tsx"));
+const PrayerWallPage = lazy(() => import("./pages/PrayerWallPage.tsx"));
+const MoodsPage = lazy(() => import("./pages/MoodsPage.tsx"));
 import InstallPWA from "@/components/InstallPWA";
+import LiveRadioBar from "@/components/LiveRadioBar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
