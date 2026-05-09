@@ -430,6 +430,13 @@ const ProfilePage = () => {
   return (
     <Layout>
       <div className="pb-28">
+        {/* === COVER BANNER === */}
+        <CoverBanner
+          userId={user.id}
+          bannerUrl={profile?.banner_url}
+          onUpdated={() => queryClient.invalidateQueries({ queryKey: ["profile"] })}
+        />
+
         {/* === AUDIOMACK-STYLE HERO === */}
         <div className="relative">
           {/* Blurred backdrop from avatar */}
