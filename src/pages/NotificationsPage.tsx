@@ -48,6 +48,8 @@ const NotificationsPage = () => {
           )}
         </div>
 
+        <div className="mb-5"><PushNotificationToggle /></div>
+
         {notifications.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <Bell className="h-10 w-10 mx-auto mb-3 opacity-40" />
