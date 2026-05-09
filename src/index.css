@@ -50,41 +50,42 @@
   }
 
   .dark {
-    --background: 270 15% 4%;
-    --foreground: 40 15% 96%;
+    /* Audiomack-style neutral near-black, red as the single accent */
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
 
-    --card: 270 14% 7%;
-    --card-foreground: 40 15% 96%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 270 14% 7%;
-    --popover-foreground: 40 15% 96%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 0 84% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 268 65% 48%;
+    --secondary: 0 70% 40%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 270 12% 11%;
-    --muted-foreground: 260 8% 50%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 62%;
 
-    --accent: 268 65% 48%;
+    --accent: 0 84% 55%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 30%;
+    --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 270 12% 13%;
-    --input: 270 12% 13%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
     --ring: 0 84% 55%;
 
-    --sidebar-background: 270 14% 5%;
-    --sidebar-foreground: 40 15% 96%;
+    --sidebar-background: 0 0% 7%;
+    --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 84% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 12% 11%;
-    --sidebar-accent-foreground: 40 15% 96%;
-    --sidebar-border: 270 12% 13%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 15%;
     --sidebar-ring: 0 84% 55%;
   }
 }
