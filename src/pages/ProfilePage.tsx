@@ -569,6 +569,14 @@ const ProfilePage = () => {
           </div>
         )}
 
+        {/* === EXTRAS (completion, stats, badges, recently played, liked, playlists, following) === */}
+        <ProfileExtras
+          userId={user.id}
+          profile={isArtist ? { ...profile, is_verified: myArtist?.is_verified } : profile}
+          followerCount={followerCount}
+          isArtist={isArtist}
+        />
+
         {/* === MAIN CONTENT === */}
         <div className="px-4 lg:px-8 mt-6">
           <div className="max-w-2xl mx-auto">
