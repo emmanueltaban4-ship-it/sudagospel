@@ -532,6 +532,7 @@ const ProfilePage = () => {
                     <Button onClick={() => navigate("/account")} size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
                       <Settings className="h-3.5 w-3.5" /> Settings
                     </Button>
+                    <ShareProfileButton profile={profile} userId={user.id} />
                     {isArtist && (
                       <Button asChild size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
                         <Link to={artistPath(myArtist!.name)}><Eye className="h-3.5 w-3.5" /> Public</Link>
