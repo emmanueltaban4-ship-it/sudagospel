@@ -261,6 +261,7 @@ const AdminPage = () => {
             {activeTab === "polls" && <AdminPolls />}
             {activeTab === "emails" && <AdminEmailLogs />}
             {activeTab === "gospel" && <AdminGospelContent />}
+            {activeTab === "announcements" && <AdminAnnouncements />}
           </div>
         </div>
       </div>
