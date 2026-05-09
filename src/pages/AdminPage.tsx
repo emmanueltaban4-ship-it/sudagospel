@@ -85,6 +85,34 @@ const AdminPage = () => {
     );
   }
 
+  const tabBadge = (id: TabId): { count: number; tone: "primary" | "warning" | "info" } | null => {
+    if (!stats) return null;
+    switch (id) {
+      case "approvals":
+      case "upload-review":
+        return stats.pendingSongs > 0 ? { count: stats.pendingSongs, tone: "primary" } : null;
+      case "artist-approvals":
+        return stats.pendingArtists > 0 ? { count: stats.pendingArtists, tone: "warning" } : null;
+      case "verification":
+        return stats.pendingVerifications > 0 ? { count: stats.pendingVerifications, tone: "warning" } : null;
+      case "reports": {
+        const total = stats.openReports + stats.openClaims;
+        return total > 0 ? { count: total, tone: "warning" } : null;
+      }
+      case "users":
+        return stats.newUsersWeek > 0 ? { count: stats.newUsersWeek, tone: "info" } : null;
+      default:
+        return null;
+    }
+  };
+
+  const badgeClasses = (tone: "primary" | "warning" | "info", active: boolean) => {
+    if (active) return "bg-primary-foreground/20 text-primary-foreground";
+    if (tone === "warning") return "bg-yellow-500 text-black";
+    if (tone === "info") return "bg-secondary text-secondary-foreground";
+    return "bg-primary text-primary-foreground";
+  };
+
   return (
     <Layout>
       <div className="container py-6">
@@ -95,14 +123,24 @@ const AdminPage = () => {
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
 
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex items-center gap-2 mb-6 flex-wrap">
           <Shield className="h-6 w-6 text-primary" />
           <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
             Admin Dashboard
           </h1>
           {stats && stats.pendingSongs > 0 && (
             <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
-              {stats.pendingSongs} pending
+              {stats.pendingSongs} songs pending
+            </span>
+          )}
+          {stats && stats.pendingArtists > 0 && (
+            <span className="rounded-full bg-yellow-500 px-2.5 py-0.5 text-xs font-bold text-black">
+              {stats.pendingArtists} artist apps
+            </span>
+          )}
+          {stats && (stats.openReports + stats.openClaims) > 0 && (
+            <span className="rounded-full bg-destructive px-2.5 py-0.5 text-xs font-bold text-destructive-foreground">
+              {stats.openReports + stats.openClaims} open reports
             </span>
           )}
         </div>
@@ -111,10 +149,10 @@ const AdminPage = () => {
         {stats && (
           <div className="md:hidden grid grid-cols-4 gap-2 mb-4">
             {[
-              { label: "Users", value: stats.totalUsers, icon: Users },
-              { label: "Songs", value: stats.totalSongs, icon: Music },
-              { label: "Artists", value: stats.totalArtists, icon: Mic2 },
-              { label: "Pending", value: stats.pendingSongs, icon: CheckSquare },
+              { label: "New / 7d", value: stats.newUsersWeek, icon: Users },
+              { label: "Songs", value: stats.pendingSongs, icon: Music },
+              { label: "Artists", value: stats.pendingArtists, icon: Mic2 },
+              { label: "Reports", value: stats.openReports + stats.openClaims, icon: Flag },
             ].map((item) => (
               <div key={item.label} className="rounded-xl bg-muted/60 border border-border/40 p-2.5 text-center">
                 <item.icon className="h-4 w-4 mx-auto mb-1 text-primary" />
@@ -140,28 +178,29 @@ const AdminPage = () => {
                 <Shield className="h-5 w-5 text-primary" /> Admin
               </SheetTitle>
               <nav className="flex flex-col gap-0.5 px-2 pb-4 overflow-y-auto max-h-[calc(100vh-80px)]">
-                {tabs.map((tab) => (
-                  <SheetTrigger key={tab.id} asChild>
-                    <button
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-3 text-sm font-medium transition-colors text-left ${
-                        activeTab === tab.id
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                      }`}
-                    >
-                      <tab.icon className="h-4 w-4 flex-shrink-0" />
-                      {tab.label}
-                      {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
-                        <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                          activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
-                        }`}>
-                          {stats.pendingSongs}
-                        </span>
-                      )}
-                    </button>
-                  </SheetTrigger>
-                ))}
+                {tabs.map((tab) => {
+                  const badge = tabBadge(tab.id);
+                  return (
+                    <SheetTrigger key={tab.id} asChild>
+                      <button
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-3 text-sm font-medium transition-colors text-left ${
+                          activeTab === tab.id
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        <tab.icon className="h-4 w-4 flex-shrink-0" />
+                        {tab.label}
+                        {badge && (
+                          <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${badgeClasses(badge.tone, activeTab === tab.id)}`}>
+                            {badge.count}
+                          </span>
+                        )}
+                      </button>
+                    </SheetTrigger>
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>
@@ -170,27 +209,28 @@ const AdminPage = () => {
         <div className="flex gap-6">
           {/* Desktop sidebar */}
           <nav className="hidden md:flex flex-col gap-1 w-52 flex-shrink-0 sticky top-20 self-start">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left ${
-                  activeTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                <tab.icon className="h-4 w-4 flex-shrink-0" />
-                {tab.label}
-                {tab.id === "approvals" && stats && stats.pendingSongs > 0 && (
-                  <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                    activeTab === tab.id ? "bg-primary-foreground/20" : "bg-primary text-primary-foreground"
-                  }`}>
-                    {stats.pendingSongs}
-                  </span>
-                )}
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const badge = tabBadge(tab.id);
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left ${
+                    activeTab === tab.id
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <tab.icon className="h-4 w-4 flex-shrink-0" />
+                  {tab.label}
+                  {badge && (
+                    <span className={`ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold ${badgeClasses(badge.tone, activeTab === tab.id)}`}>
+                      {badge.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </nav>
 
           {/* Tab content */}
