@@ -105,28 +105,29 @@
 @layer utilities {
   .text-gradient-brand {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(43 96% 56%), hsl(268 65% 48%));
+    background-image: linear-gradient(135deg, hsl(0 84% 55%), hsl(0 70% 40%));
   }
   .bg-gradient-brand {
-    background-image: linear-gradient(135deg, hsl(43 96% 56%), hsl(268 65% 48%));
+    background-image: linear-gradient(135deg, hsl(0 84% 55%), hsl(0 70% 40%));
   }
   .bg-gradient-hero {
-    background-image: linear-gradient(180deg, hsl(270 15% 4%) 0%, hsl(270 15% 4% / 0.85) 100%);
+    background-image: linear-gradient(180deg, hsl(0 0% 6%) 0%, hsl(0 0% 6% / 0.85) 100%);
   }
+  /* Audiomack-style red play-button gradient (kept name for compatibility) */
   .bg-gradient-gold {
-    background-image: linear-gradient(135deg, hsl(43 96% 56%), hsl(33 98% 46%));
+    background-image: linear-gradient(135deg, hsl(0 84% 55%), hsl(0 72% 45%));
   }
   .bg-gradient-purple {
-    background-image: linear-gradient(135deg, hsl(268 65% 48%), hsl(280 70% 38%));
+    background-image: linear-gradient(135deg, hsl(0 70% 40%), hsl(0 60% 30%));
   }
   .bg-gradient-surface {
-    background-image: linear-gradient(180deg, hsl(270 14% 9%), hsl(270 14% 7%));
+    background-image: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 8%));
   }
   .glow-gold {
-    box-shadow: 0 0 30px -5px hsl(43 96% 56% / 0.3);
+    box-shadow: 0 0 30px -5px hsl(0 84% 55% / 0.4);
   }
   .glow-purple {
-    box-shadow: 0 0 30px -5px hsl(268 65% 48% / 0.3);
+    box-shadow: 0 0 30px -5px hsl(0 70% 40% / 0.3);
   }
   .scrollbar-hide {
     -ms-overflow-style: none;
