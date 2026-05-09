@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     const ids = songs.map((s) => s.id);
     const { error: updateError } = await supabase
       .from("songs")
-      .update({ release_status: "published", is_approved: true })
+      .update({ release_status: "published" })
       .in("id", ids);
 
     if (updateError) throw updateError;
