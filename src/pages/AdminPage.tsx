@@ -52,6 +52,7 @@ const tabs = [
   { id: "polls", label: "Polls", icon: Vote },
   { id: "emails", label: "Emails", icon: Mail },
   { id: "gospel", label: "Gospel Content", icon: BookOpen },
+  { id: "announcements", label: "Announcements", icon: Bell },
 ] as const;
 
 type TabId = typeof tabs[number]["id"];
