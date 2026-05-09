@@ -57,25 +57,25 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const auth = req.headers.get("Authorization") || "";
-    const token = auth.replace("Bearer ", "");
-    const isServiceRole = token === SERVICE_ROLE;
-
-    let isAdmin = isServiceRole;
-    if (!isServiceRole) {
-      if (!token) return json({ error: "Unauthorized" }, 401);
-      const userClient = createClient(SUPABASE_URL, ANON, { global: { headers: { Authorization: auth } } });
-      const { data: claimsData, error: cErr } = await userClient.auth.getClaims(token);
-      if (cErr || !claimsData?.claims) return json({ error: "Unauthorized" }, 401);
-      const uid = claimsData.claims.sub as string;
-      const { data: roleRow } = await admin.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin").maybeSingle();
-      isAdmin = !!roleRow;
-      if (!isAdmin) return json({ error: "Forbidden" }, 403);
-    }
-
     const body = await req.json().catch(() => ({}));
 
+    // Admin path: send a specific announcement now → require admin auth.
     if (body.id) {
+      const auth = req.headers.get("Authorization") || "";
+      const token = auth.replace("Bearer ", "");
+      if (!token) return json({ error: "Unauthorized" }, 401);
+      const isServiceRole = token === SERVICE_ROLE;
+      let isAdmin = isServiceRole;
+      if (!isServiceRole) {
+        const userClient = createClient(SUPABASE_URL, ANON, { global: { headers: { Authorization: auth } } });
+        const { data: claimsData, error: cErr } = await userClient.auth.getClaims(token);
+        if (cErr || !claimsData?.claims) return json({ error: "Unauthorized" }, 401);
+        const uid = claimsData.claims.sub as string;
+        const { data: roleRow } = await admin.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin").maybeSingle();
+        isAdmin = !!roleRow;
+      }
+      if (!isAdmin) return json({ error: "Forbidden" }, 403);
+
       const { data: a, error } = await admin.from("announcements").select("*").eq("id", body.id).maybeSingle();
       if (error || !a) return json({ error: "Announcement not found" }, 404);
       if (a.sent_at) return json({ error: "Already sent", a }, 400);
