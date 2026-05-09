@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
+import DailyDevotionalCard from "@/components/DailyDevotionalCard";
 import MadeForYouCarousel from "@/components/MadeForYouCarousel";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
