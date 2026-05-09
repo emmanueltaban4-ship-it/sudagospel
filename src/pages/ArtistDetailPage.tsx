@@ -21,6 +21,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
 import { useArtistLinks, useTopTracks } from "@/hooks/use-artist-management";
+import ArtistStorefront from "@/components/artist/ArtistStorefront";
+import ArtistLiveChat from "@/components/artist/ArtistLiveChat";
 
 const linkTypeIcon = (t: string) => {
   switch (t) {
@@ -32,7 +34,7 @@ const linkTypeIcon = (t: string) => {
   }
 };
 
-type TabKey = "all" | "top-tracks" | "albums";
+type TabKey = "all" | "top-tracks" | "albums" | "store" | "chat";
 
 const ArtistDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -234,6 +236,8 @@ const ArtistDetailPage = () => {
     { key: "all", label: "All" },
     { key: "top-tracks", label: "Top Tracks" },
     { key: "albums", label: "Albums" },
+    { key: "store", label: "Store" },
+    { key: "chat", label: "Live Chat" },
   ];
 
   return (
@@ -649,6 +653,9 @@ const ArtistDetailPage = () => {
                     )}
                   </div>
                 )}
+
+                {activeTab === "store" && <ArtistStorefront artistId={artist.id} />}
+                {activeTab === "chat" && <ArtistLiveChat artistId={artist.id} isOwner={user?.id === artist.user_id} />}
               </div>
             </div>
           </div>

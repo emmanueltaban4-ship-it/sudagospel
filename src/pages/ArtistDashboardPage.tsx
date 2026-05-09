@@ -19,8 +19,9 @@ import {
   LayoutDashboard, DollarSign, Settings as SettingsIcon, Library,
   CheckCircle2, Clock, AlertCircle, Wallet, Crown, Coins, Save,
   ExternalLink, ArrowDownToLine, Info, Palette, UserCog, Bell,
-  ShieldCheck, Megaphone, Pin, ListOrdered, Trash2, EyeOff,
+  ShieldCheck, Megaphone, Pin, ListOrdered, Trash2, EyeOff, ShoppingBag,
 } from "lucide-react";
+import StoreSection from "@/components/artist-dashboard/StoreSection";
 import BrandingSection from "@/components/artist-dashboard/BrandingSection";
 import CollaborationSection from "@/components/artist-dashboard/CollaborationSection";
 import PromotionSection from "@/components/artist-dashboard/PromotionSection";
@@ -40,7 +41,7 @@ import { useArtistBalance, useArtistEarnings, useArtistPayouts, formatCents } fr
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-type Section = "overview" | "branding" | "music" | "toptracks" | "monetization" | "audience" | "links" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
+type Section = "overview" | "branding" | "music" | "toptracks" | "store" | "monetization" | "audience" | "links" | "collaboration" | "promotion" | "notifications" | "rights" | "settings";
 
 type NavItem = { id: Section; label: string; icon: any };
 type NavGroup = { label: string; items: NavItem[] };
@@ -67,6 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Grow",
     items: [
       { id: "monetization", label: "Monetization", icon: DollarSign },
+      { id: "store", label: "Store", icon: ShoppingBag },
       { id: "promotion", label: "Promotion", icon: Megaphone },
       { id: "notifications", label: "Activity", icon: Bell },
     ],
@@ -303,6 +305,7 @@ const ArtistDashboardPage = () => {
             {section === "toptracks" && <TopTracksManager artist={myArtist} />}
             {section === "links" && <LinksSection artist={myArtist} />}
             {section === "monetization" && <MonetizationSection artist={myArtist} />}
+            {section === "store" && <StoreSection artist={myArtist} />}
             {section === "audience" && <AudienceSection artist={myArtist} range={range} setRange={setRange} />}
             {section === "collaboration" && <CollaborationSection artist={myArtist} />}
             {section === "promotion" && <PromotionSection artist={myArtist} />}

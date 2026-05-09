@@ -24,7 +24,8 @@ import AdminArtistApprovals from "@/components/admin/AdminArtistApprovals";
 import AdminPolls from "@/components/admin/AdminPolls";
 import AdminPayouts from "@/components/admin/AdminPayouts";
 import AdminUploadReview from "@/components/admin/AdminUploadReview";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet, Upload } from "lucide-react";
+import AdminGospelContent from "@/components/admin/AdminGospelContent";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet, Upload, BookOpen } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
@@ -49,6 +50,7 @@ const tabs = [
   { id: "verification", label: "Verification", icon: BadgeCheck },
   { id: "polls", label: "Polls", icon: Vote },
   { id: "emails", label: "Emails", icon: Mail },
+  { id: "gospel", label: "Gospel Content", icon: BookOpen },
 ] as const;
 
 type TabId = typeof tabs[number]["id"];
@@ -256,6 +258,7 @@ const AdminPage = () => {
             {activeTab === "verification" && <AdminVerificationRequests />}
             {activeTab === "polls" && <AdminPolls />}
             {activeTab === "emails" && <AdminEmailLogs />}
+            {activeTab === "gospel" && <AdminGospelContent />}
           </div>
         </div>
       </div>

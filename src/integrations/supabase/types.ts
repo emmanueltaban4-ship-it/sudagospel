@@ -151,6 +151,33 @@ export type Database = {
         }
         Relationships: []
       }
+      artist_chat_messages: {
+        Row: {
+          artist_id: string
+          content: string
+          created_at: string
+          id: string
+          is_hidden: boolean
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       artist_collaborators: {
         Row: {
           artist_id: string
@@ -1229,6 +1256,90 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referral_attributions: {
+        Row: {
+          code: string
+          created_at: string
+          credited: boolean
+          id: string
+          referred_user_id: string
+          referrer_user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          credited?: boolean
+          id?: string
+          referred_user_id: string
+          referrer_user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          credited?: boolean
+          id?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          code: string
+          created_at: string
+          credit_cents: number
+          id: string
+          signups_count: number
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          credit_cents?: number
+          id?: string
+          signups_count?: number
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          credit_cents?: number
+          id?: string
+          signups_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           admin_notes: string | null
@@ -1622,6 +1733,155 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      store_order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string
+          quantity: number
+          title_snapshot: string
+          unit_price_cents: number
+          variant_label: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id: string
+          quantity?: number
+          title_snapshot: string
+          unit_price_cents: number
+          variant_label?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          title_snapshot?: string
+          unit_price_cents?: number
+          variant_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "store_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_orders: {
+        Row: {
+          artist_id: string
+          buyer_email: string | null
+          created_at: string
+          currency: string
+          fulfillment_notes: string | null
+          id: string
+          platform_fee_cents: number
+          shipping_address: Json | null
+          shipping_name: string | null
+          status: string
+          stripe_session_id: string | null
+          total_cents: number
+          tracking_url: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          artist_id: string
+          buyer_email?: string | null
+          created_at?: string
+          currency?: string
+          fulfillment_notes?: string | null
+          id?: string
+          platform_fee_cents?: number
+          shipping_address?: Json | null
+          shipping_name?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          total_cents: number
+          tracking_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          artist_id?: string
+          buyer_email?: string | null
+          created_at?: string
+          currency?: string
+          fulfillment_notes?: string | null
+          id?: string
+          platform_fee_cents?: number
+          shipping_address?: Json | null
+          shipping_name?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          total_cents?: number
+          tracking_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      store_products: {
+        Row: {
+          artist_id: string
+          created_at: string
+          currency: string
+          description: string | null
+          download_url: string | null
+          id: string
+          image_url: string | null
+          inventory: number | null
+          is_active: boolean
+          is_physical: boolean
+          kind: string
+          price_cents: number
+          title: string
+          updated_at: string
+          variants: Json | null
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          download_url?: string | null
+          id?: string
+          image_url?: string | null
+          inventory?: number | null
+          is_active?: boolean
+          is_physical?: boolean
+          kind?: string
+          price_cents: number
+          title: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          download_url?: string | null
+          id?: string
+          image_url?: string | null
+          inventory?: number | null
+          is_active?: boolean
+          is_physical?: boolean
+          kind?: string
+          price_cents?: number
+          title?: string
+          updated_at?: string
+          variants?: Json | null
+        }
+        Relationships: []
       }
       supporter_subscriptions: {
         Row: {
