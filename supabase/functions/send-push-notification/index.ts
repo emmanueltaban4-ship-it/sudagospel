@@ -1,8 +1,12 @@
 // Send a web push notification to a user (or list of users / a single subscription).
 // Body: { user_ids?: string[], user_id?: string, payload: { title, body, url?, icon?, image?, tag?, data? } }
-import { corsHeaders } from "@supabase/supabase-js/cors";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import webpush from "npm:web-push@3.6.7";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
