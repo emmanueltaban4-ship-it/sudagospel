@@ -1,8 +1,23 @@
+import { createClient } from 'npm:@supabase/supabase-js@2.57.2'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, range',
   'Access-Control-Expose-Headers': 'content-type, content-length, content-range, accept-ranges, content-disposition',
 }
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!
+
+// Strict allowlist for proxy targets — prevents SSRF.
+const ALLOWED_HOSTS = new Set(['sudagospel.net', 'www.sudagospel.net', 'sudagospel.com', 'www.sudagospel.com'])
+const isAllowedHost = (hostname: string) =>
+  ALLOWED_HOSTS.has(hostname) || [...ALLOWED_HOSTS].some((h) => hostname.endsWith('.' + h))
+
+// Strip CR/LF and quotes to prevent header injection.
+const sanitizeFilename = (name: string) =>
+  name.replace(/[\r\n"\\]/g, '').replace(/[^\x20-\x7E]/g, '_').slice(0, 200)
+
 
 const SUDAGOSPEL_ORIGIN = 'https://sudagospel.net'
 
@@ -75,9 +90,13 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  // No Bearer JWT required: this endpoint is consumed by <audio> elements which
+  // cannot send Authorization headers. SSRF and header injection are mitigated
+  // by the strict allowlist + filename sanitization below.
+
   const url = new URL(req.url)
   const fileUrl = url.searchParams.get('url')
-  const filename = url.searchParams.get('filename')
+  const rawFilename = url.searchParams.get('filename')
 
   if (!fileUrl) {
     return new Response(JSON.stringify({ error: 'Missing url parameter' }), {
@@ -86,8 +105,33 @@ Deno.serve(async (req) => {
     })
   }
 
+  // Validate the requested URL — http(s) only, allowlisted hosts only.
+  let parsedRequested: URL
+  try {
+    parsedRequested = new URL(fileUrl)
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid url' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+  if (!['http:', 'https:'].includes(parsedRequested.protocol) || !isAllowedHost(parsedRequested.hostname)) {
+    return new Response(JSON.stringify({ error: 'Disallowed host' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   try {
     const resolvedUrl = await resolveSudagospelTrackUrl(fileUrl)
+    // Re-validate after resolution in case rewrite returned an unexpected host.
+    const parsedResolved = new URL(resolvedUrl)
+    if (!['http:', 'https:'].includes(parsedResolved.protocol) || !isAllowedHost(parsedResolved.hostname)) {
+      return new Response(JSON.stringify({ error: 'Disallowed resolved host' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
     const rangeHeader = req.headers.get('range')
 
     const response = await fetch(resolvedUrl, {
@@ -96,9 +140,10 @@ Deno.serve(async (req) => {
         Referer: `${SUDAGOSPEL_ORIGIN}/`,
         ...(rangeHeader ? { Range: rangeHeader } : {}),
       },
+      redirect: 'manual',
     })
 
-    if (!response.ok) {
+    if (!response.ok && response.status !== 206) {
       return new Response(JSON.stringify({ error: 'Failed to fetch file' }), {
         status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -108,20 +153,19 @@ Deno.serve(async (req) => {
     const headers = new Headers(corsHeaders)
     headers.set('Content-Type', response.headers.get('content-type') || 'audio/mpeg')
     headers.set('Accept-Ranges', 'bytes')
-    // Long edge + browser cache; immutable since track URLs are content-addressed
     headers.set('Cache-Control', 'public, max-age=2592000, s-maxage=2592000, immutable, stale-while-revalidate=86400')
     headers.set('Vary', 'Range')
     headers.set('X-Content-Type-Options', 'nosniff')
 
-    // Pass through caching/streaming headers when available
     const passthroughHeaders = ['content-length', 'content-range', 'etag', 'last-modified']
     for (const header of passthroughHeaders) {
       const value = response.headers.get(header)
       if (value) headers.set(header, value)
     }
 
-    if (filename) {
-      headers.set('Content-Disposition', `attachment; filename="${filename}"`)
+    if (rawFilename) {
+      const safe = sanitizeFilename(rawFilename)
+      if (safe) headers.set('Content-Disposition', `attachment; filename="${safe}"`)
     }
 
     return new Response(response.body, {
