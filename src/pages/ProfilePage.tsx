@@ -814,6 +814,7 @@ const ProfilePage = () => {
                         {myArtist!.youtube_channel_url && <p><strong>YouTube:</strong> {myArtist!.youtube_channel_url}</p>}
                       </div>
                     )}
+                  </div>
 
                   {/* Studio shortcuts — extra artist features & settings */}
                   <ArtistStudioLinks />
