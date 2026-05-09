@@ -90,24 +90,9 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  // Require an authenticated Supabase user — blocks anonymous SSRF abuse.
-  const auth = req.headers.get('Authorization') || ''
-  if (!auth.startsWith('Bearer ')) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: { headers: { Authorization: auth } },
-  })
-  const { data: claims, error: claimsErr } = await supabase.auth.getClaims(auth.replace('Bearer ', ''))
-  if (claimsErr || !claims?.claims) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
+  // No Bearer JWT required: this endpoint is consumed by <audio> elements which
+  // cannot send Authorization headers. SSRF and header injection are mitigated
+  // by the strict allowlist + filename sanitization below.
 
   const url = new URL(req.url)
   const fileUrl = url.searchParams.get('url')
