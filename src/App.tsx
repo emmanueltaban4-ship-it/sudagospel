@@ -146,9 +146,15 @@ const App = () => {
                     <Route path="/notifications" element={<NotificationsPage />} />
                     <Route path="/purchases" element={<PurchasesPage />} />
                     <Route path="/account" element={<AccountSettingsPage />} />
+                    <Route path="/sermons" element={<SermonsPage />} />
+                    <Route path="/events" element={<EventsPage />} />
+                    <Route path="/prayer" element={<PrayerWallPage />} />
+                    <Route path="/moods" element={<MoodsPage />} />
+                    <Route path="/moods/:slug" element={<MoodsPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
+                <LiveRadioBar />
               </BrowserRouter>
             </PlayerProvider>
           </AuthProvider>
