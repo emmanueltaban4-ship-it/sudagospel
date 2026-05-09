@@ -19,6 +19,7 @@ import {
   Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
+import ProfileExtras, { CoverBanner, ShareProfileButton } from "@/components/profile/ProfileExtras";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
@@ -429,6 +430,13 @@ const ProfilePage = () => {
   return (
     <Layout>
       <div className="pb-28">
+        {/* === COVER BANNER === */}
+        <CoverBanner
+          userId={user.id}
+          bannerUrl={profile?.banner_url}
+          onUpdated={() => queryClient.invalidateQueries({ queryKey: ["profile"] })}
+        />
+
         {/* === AUDIOMACK-STYLE HERO === */}
         <div className="relative">
           {/* Blurred backdrop from avatar */}
@@ -524,6 +532,7 @@ const ProfilePage = () => {
                     <Button onClick={() => navigate("/account")} size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
                       <Settings className="h-3.5 w-3.5" /> Settings
                     </Button>
+                    <ShareProfileButton profile={profile} userId={user.id} />
                     {isArtist && (
                       <Button asChild size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
                         <Link to={artistPath(myArtist!.name)}><Eye className="h-3.5 w-3.5" /> Public</Link>
@@ -559,6 +568,14 @@ const ProfilePage = () => {
             </div>
           </div>
         )}
+
+        {/* === EXTRAS (completion, stats, badges, recently played, liked, playlists, following) === */}
+        <ProfileExtras
+          userId={user.id}
+          profile={isArtist ? { ...profile, is_verified: myArtist?.is_verified } : profile}
+          followerCount={followerCount}
+          isArtist={isArtist}
+        />
 
         {/* === MAIN CONTENT === */}
         <div className="px-4 lg:px-8 mt-6">
