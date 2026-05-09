@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
 import ProfileExtras, { CoverBanner, ShareProfileButton } from "@/components/profile/ProfileExtras";
+import ArtistApplicationDialog from "@/components/profile/ArtistApplicationDialog";
+import ArtistStudioLinks from "@/components/profile/ArtistStudioLinks";
+import { Sparkles } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
@@ -383,7 +386,9 @@ const ProfilePage = () => {
     );
   }
 
-  const isArtist = !!myArtist;
+  const isArtist = !!myArtist && (myArtist as any).status === "approved";
+  const artistApplicationStatus: "pending" | "rejected" | null =
+    myArtist && (myArtist as any).status !== "approved" ? ((myArtist as any).status as any) : null;
   const displayName = profile?.display_name || "User";
   const initials = displayName.slice(0, 2).toUpperCase();
   const totalPlays = artistSongs?.reduce((sum, s) => sum + (s.play_count || 0), 0) || 0;
@@ -813,6 +818,10 @@ const ProfilePage = () => {
                     )}
                   </div>
 
+                  {/* Studio shortcuts — extra artist features & settings */}
+                  <ArtistStudioLinks />
+
+
                   {/* Verification Request */}
                   {!myArtist!.is_verified && (
                     <div className="rounded-xl bg-card border border-border p-4 space-y-3">
@@ -913,8 +922,50 @@ const ProfilePage = () => {
               /* ─── FAN VIEW ─── */
               <div className="space-y-1.5">
                 {isAdmin && <NavItem icon={<Shield className="h-5 w-5" />} label="Admin Dashboard" sublabel="Manage users, songs & settings" onClick={() => navigate("/admin")} accent />}
+
+                {/* Become an Artist CTA — fan only */}
+                {artistApplicationStatus === "pending" ? (
+                  <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-4 flex items-center gap-3">
+                    <div className="h-11 w-11 rounded-xl bg-yellow-500/15 flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-5 w-5 text-yellow-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-foreground">Artist application pending</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">An admin is reviewing your application. You'll be notified soon.</p>
+                    </div>
+                  </div>
+                ) : artistApplicationStatus === "rejected" ? (
+                  <ArtistApplicationDialog>
+                    <button className="w-full flex items-center gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 hover:bg-destructive/10 transition-all text-left group">
+                      <div className="h-11 w-11 rounded-xl bg-destructive/15 flex items-center justify-center flex-shrink-0">
+                        <Mic2 className="h-5 w-5 text-destructive" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-foreground">Application not approved</p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">{(myArtist as any)?.rejection_reason || "Tap to apply again"}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-destructive transition-colors flex-shrink-0" />
+                    </button>
+                  </ArtistApplicationDialog>
+                ) : (
+                  <ArtistApplicationDialog>
+                    <button className="w-full flex items-center gap-3 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4 hover:from-primary/15 transition-all text-left group">
+                      <div className="h-11 w-11 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
+                        <Mic2 className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                          Become an Artist
+                          <Sparkles className="h-3.5 w-3.5 text-primary" />
+                        </p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">Upload music, build a fanbase, get paid</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                    </button>
+                  </ArtistApplicationDialog>
+                )}
+
                 <div className="pt-2 pb-1"><p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Library</p></div>
-                <NavItem icon={<Upload className="h-5 w-5" />} label="Upload Music" onClick={() => navigate("/upload")} />
                 <NavItem icon={<ListMusic className="h-5 w-5" />} label="My Playlists" badge={myPlaylists > 0 ? String(myPlaylists) : undefined} onClick={() => navigate("/playlists")} />
                 <NavItem icon={<Crown className="h-5 w-5" />} label="Premium" sublabel="Unlock all features" onClick={() => navigate("/subscription")} />
 

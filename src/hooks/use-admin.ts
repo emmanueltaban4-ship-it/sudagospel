@@ -25,7 +25,11 @@ export const useAdminStats = () => {
   return useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const [profiles, songs, pendingSongs, artists, comments, downloads, likes] = await Promise.all([
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const [
+        profiles, songs, pendingSongs, artists, comments, downloads, likes,
+        pendingArtists, openReports, openClaims, newUsersWeek, pendingVerifications,
+      ] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("songs").select("*", { count: "exact", head: true }),
         supabase.from("songs").select("*", { count: "exact", head: true }).eq("is_approved", false),
@@ -33,6 +37,11 @@ export const useAdminStats = () => {
         supabase.from("song_comments").select("*", { count: "exact", head: true }),
         supabase.from("song_downloads").select("*", { count: "exact", head: true }),
         supabase.from("song_likes").select("*", { count: "exact", head: true }),
+        supabase.from("artists").select("*", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("reports").select("*", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("ownership_claims").select("*", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("profiles").select("*", { count: "exact", head: true }).gte("created_at", weekAgo),
+        (supabase as any).from("verification_requests").select("*", { count: "exact", head: true }).eq("status", "pending"),
       ]);
 
       return {
@@ -43,6 +52,11 @@ export const useAdminStats = () => {
         totalComments: comments.count ?? 0,
         totalDownloads: downloads.count ?? 0,
         totalLikes: likes.count ?? 0,
+        pendingArtists: pendingArtists.count ?? 0,
+        openReports: openReports.count ?? 0,
+        openClaims: openClaims.count ?? 0,
+        newUsersWeek: newUsersWeek.count ?? 0,
+        pendingVerifications: pendingVerifications.count ?? 0,
       };
     },
   });
