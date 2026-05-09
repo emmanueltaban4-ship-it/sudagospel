@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       injectRegister: false, // we register manually with iframe guard
       devOptions: { enabled: false },
-      includeAssets: ["icon-192.png", "robots.txt"],
+      includeAssets: ["icon-192.png", "robots.txt", "push-sw.js"],
       manifest: {
         name: "SudaGospel - Gospel Music from South Sudan",
         short_name: "SudaGospel",
@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
+        importScripts: ["push-sw.js"],
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/~oauth/, /^\/api/, /^\/functions/, /\.(mp3|m4a|wav|jpg|jpeg|png|webp)$/],
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
