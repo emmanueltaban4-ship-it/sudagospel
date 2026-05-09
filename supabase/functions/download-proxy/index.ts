@@ -90,9 +90,28 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  // Require an authenticated Supabase user — blocks anonymous SSRF abuse.
+  const auth = req.headers.get('Authorization') || ''
+  if (!auth.startsWith('Bearer ')) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { Authorization: auth } },
+  })
+  const { data: claims, error: claimsErr } = await supabase.auth.getClaims(auth.replace('Bearer ', ''))
+  if (claimsErr || !claims?.claims) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   const url = new URL(req.url)
   const fileUrl = url.searchParams.get('url')
-  const filename = url.searchParams.get('filename')
+  const rawFilename = url.searchParams.get('filename')
 
   if (!fileUrl) {
     return new Response(JSON.stringify({ error: 'Missing url parameter' }), {
@@ -101,8 +120,33 @@ Deno.serve(async (req) => {
     })
   }
 
+  // Validate the requested URL — http(s) only, allowlisted hosts only.
+  let parsedRequested: URL
+  try {
+    parsedRequested = new URL(fileUrl)
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid url' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+  if (!['http:', 'https:'].includes(parsedRequested.protocol) || !isAllowedHost(parsedRequested.hostname)) {
+    return new Response(JSON.stringify({ error: 'Disallowed host' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   try {
     const resolvedUrl = await resolveSudagospelTrackUrl(fileUrl)
+    // Re-validate after resolution in case rewrite returned an unexpected host.
+    const parsedResolved = new URL(resolvedUrl)
+    if (!['http:', 'https:'].includes(parsedResolved.protocol) || !isAllowedHost(parsedResolved.hostname)) {
+      return new Response(JSON.stringify({ error: 'Disallowed resolved host' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
     const rangeHeader = req.headers.get('range')
 
     const response = await fetch(resolvedUrl, {
@@ -111,9 +155,10 @@ Deno.serve(async (req) => {
         Referer: `${SUDAGOSPEL_ORIGIN}/`,
         ...(rangeHeader ? { Range: rangeHeader } : {}),
       },
+      redirect: 'manual',
     })
 
-    if (!response.ok) {
+    if (!response.ok && response.status !== 206) {
       return new Response(JSON.stringify({ error: 'Failed to fetch file' }), {
         status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -123,20 +168,19 @@ Deno.serve(async (req) => {
     const headers = new Headers(corsHeaders)
     headers.set('Content-Type', response.headers.get('content-type') || 'audio/mpeg')
     headers.set('Accept-Ranges', 'bytes')
-    // Long edge + browser cache; immutable since track URLs are content-addressed
     headers.set('Cache-Control', 'public, max-age=2592000, s-maxage=2592000, immutable, stale-while-revalidate=86400')
     headers.set('Vary', 'Range')
     headers.set('X-Content-Type-Options', 'nosniff')
 
-    // Pass through caching/streaming headers when available
     const passthroughHeaders = ['content-length', 'content-range', 'etag', 'last-modified']
     for (const header of passthroughHeaders) {
       const value = response.headers.get(header)
       if (value) headers.set(header, value)
     }
 
-    if (filename) {
-      headers.set('Content-Disposition', `attachment; filename="${filename}"`)
+    if (rawFilename) {
+      const safe = sanitizeFilename(rawFilename)
+      if (safe) headers.set('Content-Disposition', `attachment; filename="${safe}"`)
     }
 
     return new Response(response.body, {
