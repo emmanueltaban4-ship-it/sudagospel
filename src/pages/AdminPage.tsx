@@ -25,7 +25,8 @@ import AdminPolls from "@/components/admin/AdminPolls";
 import AdminPayouts from "@/components/admin/AdminPayouts";
 import AdminUploadReview from "@/components/admin/AdminUploadReview";
 import AdminGospelContent from "@/components/admin/AdminGospelContent";
-import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet, Upload, BookOpen } from "lucide-react";
+import AdminAnnouncements from "@/components/admin/AdminAnnouncements";
+import { Shield, CheckSquare, Users, MessageCircle, BarChart3, ArrowLeft, FileText, Settings2, Music, Mic2, Megaphone, DollarSign, Tag, Disc3, Flag, Star, Mail, Video, BadgeCheck, Menu, Vote, Wallet, Upload, BookOpen, Bell } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const tabs = [
