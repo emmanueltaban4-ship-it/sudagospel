@@ -19,6 +19,7 @@ import {
   Eye, Trash2, Pencil, Youtube, Rocket, Video, Plus
 } from "lucide-react";
 import BoostSongDialog from "@/components/BoostSongDialog";
+import ProfileExtras, { CoverBanner, ShareProfileButton } from "@/components/profile/ProfileExtras";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
