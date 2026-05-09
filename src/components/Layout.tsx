@@ -7,6 +7,7 @@ import BottomNav from "./BottomNav";
 import {
   Home, TrendingUp, Clock, Users, ListMusic, Newspaper, Crown,
   Upload, Trophy, Headphones, Download, Library, Video,
+  Mic2, Calendar, HandHeart, Sparkles,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -17,6 +18,12 @@ const sidebarLinks = [
     { to: "/most-listened", icon: Headphones, label: "Top Songs" },
     { to: "/new-songs", icon: Clock, label: "New Songs" },
     { to: "/hall-of-fame", icon: Trophy, label: "Hall of Fame" },
+  ]},
+  { section: "Gospel", items: [
+    { to: "/sermons", icon: Mic2, label: "Sermons" },
+    { to: "/moods", icon: Sparkles, label: "Worship Moods" },
+    { to: "/prayer", icon: HandHeart, label: "Prayer Wall" },
+    { to: "/events", icon: Calendar, label: "Events" },
   ]},
   { section: "Your Library", items: [
     { to: "/library", icon: Library, label: "Library" },

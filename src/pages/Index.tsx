@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
+import DailyDevotionalCard from "@/components/DailyDevotionalCard";
 import MadeForYouCarousel from "@/components/MadeForYouCarousel";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
@@ -251,6 +252,24 @@ const Index = () => {
   return (
     <Layout>
       <HeroSection />
+
+      {/* Daily devotional + gospel quick links */}
+      <section className="px-4 lg:px-6 pt-3">
+        <DailyDevotionalCard />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {[
+            { to: "/sermons", label: "Sermons", icon: Mic2, color: "from-primary/20 to-primary/5" },
+            { to: "/moods", label: "Worship Moods", icon: Sparkles, color: "from-secondary/30 to-secondary/5" },
+            { to: "/prayer", label: "Prayer Wall", icon: Heart, color: "from-pink-500/20 to-pink-500/5" },
+            { to: "/events", label: "Events", icon: Disc3, color: "from-amber-500/20 to-amber-500/5" },
+          ].map((q) => (
+            <Link key={q.to} to={q.to} className={`p-3 rounded-2xl border border-border/40 bg-gradient-to-br ${q.color} hover:border-primary/40 transition flex items-center gap-2`}>
+              <q.icon className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="text-xs font-bold truncate">{q.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* Quick Genre Pills */}
       <section className="px-4 lg:px-6 py-4">

@@ -517,6 +517,51 @@ export type Database = {
         }
         Relationships: []
       }
+      devotionals: {
+        Row: {
+          author: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          publish_date: string
+          scripture_ref: string | null
+          scripture_text: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          publish_date: string
+          scripture_ref?: string | null
+          scripture_text?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          publish_date?: string
+          scripture_ref?: string | null
+          scripture_text?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -604,6 +649,71 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          artist_id: string | null
+          city: string | null
+          country: string | null
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          is_published: boolean
+          location: string | null
+          price_text: string | null
+          starts_at: string
+          ticket_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artist_id?: string | null
+          city?: string | null
+          country?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          price_text?: string | null
+          starts_at: string
+          ticket_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artist_id?: string | null
+          city?: string | null
+          country?: string | null
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          price_text?: string | null
+          starts_at?: string
+          ticket_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       featured_content: {
         Row: {
           content_id: string
@@ -625,6 +735,77 @@ export type Database = {
           created_at?: string
           id?: string
           position?: number
+        }
+        Relationships: []
+      }
+      mood_songs: {
+        Row: {
+          created_at: string
+          id: string
+          mood_id: string
+          position: number
+          song_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mood_id: string
+          position?: number
+          song_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mood_id?: string
+          position?: number
+          song_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mood_songs_mood_id_fkey"
+            columns: ["mood_id"]
+            isOneToOne: false
+            referencedRelation: "moods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      moods: {
+        Row: {
+          color: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          position: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          position?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          position?: number
+          slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -950,6 +1131,68 @@ export type Database = {
         }
         Relationships: []
       }
+      prayer_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          request_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          request_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          request_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prayer_reactions_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "prayer_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_requests: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          is_hidden: boolean
+          prayer_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          is_hidden?: boolean
+          prayer_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          is_hidden?: boolean
+          prayer_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           account_type: string | null
@@ -1021,6 +1264,71 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      sermons: {
+        Row: {
+          artist_id: string | null
+          audio_url: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          duration_seconds: number | null
+          id: string
+          is_published: boolean
+          play_count: number
+          preacher: string | null
+          published_at: string
+          scripture_ref: string | null
+          series: string | null
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          artist_id?: string | null
+          audio_url: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          is_published?: boolean
+          play_count?: number
+          preacher?: string | null
+          published_at?: string
+          scripture_ref?: string | null
+          series?: string | null
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          artist_id?: string | null
+          audio_url?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          is_published?: boolean
+          play_count?: number
+          preacher?: string | null
+          published_at?: string
+          scripture_ref?: string | null
+          series?: string | null
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sermons_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_settings: {
         Row: {
@@ -1247,6 +1555,7 @@ export type Database = {
           play_count: number | null
           release_status: string
           scheduled_release_at: string | null
+          scripture_refs: string | null
           title: string
           updated_at: string
           uploaded_by: string | null
@@ -1269,6 +1578,7 @@ export type Database = {
           play_count?: number | null
           release_status?: string
           scheduled_release_at?: string | null
+          scripture_refs?: string | null
           title: string
           updated_at?: string
           uploaded_by?: string | null
@@ -1291,6 +1601,7 @@ export type Database = {
           play_count?: number | null
           release_status?: string
           scheduled_release_at?: string | null
+          scripture_refs?: string | null
           title?: string
           updated_at?: string
           uploaded_by?: string | null

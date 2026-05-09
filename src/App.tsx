@@ -50,7 +50,12 @@ const NotificationsPage = lazy(() => import("./pages/NotificationsPage.tsx"));
 const PurchasesPage = lazy(() => import("./pages/PurchasesPage.tsx"));
 const AccountSettingsPage = lazy(() => import("./pages/AccountSettingsPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const SermonsPage = lazy(() => import("./pages/SermonsPage.tsx"));
+const EventsPage = lazy(() => import("./pages/EventsPage.tsx"));
+const PrayerWallPage = lazy(() => import("./pages/PrayerWallPage.tsx"));
+const MoodsPage = lazy(() => import("./pages/MoodsPage.tsx"));
 import InstallPWA from "@/components/InstallPWA";
+import LiveRadioBar from "@/components/LiveRadioBar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -141,9 +146,15 @@ const App = () => {
                     <Route path="/notifications" element={<NotificationsPage />} />
                     <Route path="/purchases" element={<PurchasesPage />} />
                     <Route path="/account" element={<AccountSettingsPage />} />
+                    <Route path="/sermons" element={<SermonsPage />} />
+                    <Route path="/events" element={<EventsPage />} />
+                    <Route path="/prayer" element={<PrayerWallPage />} />
+                    <Route path="/moods" element={<MoodsPage />} />
+                    <Route path="/moods/:slug" element={<MoodsPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
+                <LiveRadioBar />
               </BrowserRouter>
             </PlayerProvider>
           </AuthProvider>
