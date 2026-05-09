@@ -1,8 +1,23 @@
+import { createClient } from 'npm:@supabase/supabase-js@2.57.2'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, range',
   'Access-Control-Expose-Headers': 'content-type, content-length, content-range, accept-ranges, content-disposition',
 }
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!
+
+// Strict allowlist for proxy targets — prevents SSRF.
+const ALLOWED_HOSTS = new Set(['sudagospel.net', 'www.sudagospel.net', 'sudagospel.com', 'www.sudagospel.com'])
+const isAllowedHost = (hostname: string) =>
+  ALLOWED_HOSTS.has(hostname) || [...ALLOWED_HOSTS].some((h) => hostname.endsWith('.' + h))
+
+// Strip CR/LF and quotes to prevent header injection.
+const sanitizeFilename = (name: string) =>
+  name.replace(/[\r\n"\\]/g, '').replace(/[^\x20-\x7E]/g, '_').slice(0, 200)
+
 
 const SUDAGOSPEL_ORIGIN = 'https://sudagospel.net'
 
