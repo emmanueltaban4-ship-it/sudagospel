@@ -106,6 +106,60 @@ export type Database = {
           },
         ]
       }
+      announcements: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          errors_count: number | null
+          icon_url: string | null
+          id: string
+          image_url: string | null
+          recipients_count: number | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          tag: string | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          errors_count?: number | null
+          icon_url?: string | null
+          id?: string
+          image_url?: string | null
+          recipients_count?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          tag?: string | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          errors_count?: number | null
+          icon_url?: string | null
+          id?: string
+          image_url?: string | null
+          recipients_count?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          tag?: string | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           author_id: string
