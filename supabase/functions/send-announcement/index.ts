@@ -83,7 +83,13 @@ Deno.serve(async (req) => {
       return json({ ok: true, ...result });
     }
 
-    // Cron path: pick all due unsent
+    // Cron path: pick all due unsent — require service-role token (pg_cron only).
+    const cronAuth = req.headers.get("Authorization") || "";
+    const cronToken = cronAuth.replace("Bearer ", "").trim();
+    if (!cronToken || cronToken !== SERVICE_ROLE) {
+      return json({ error: "Forbidden" }, 403);
+    }
+
     const { data: due } = await admin
       .from("announcements")
       .select("*")
