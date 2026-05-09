@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Bell, CheckCheck, Heart, Repeat2, MessageCircle, UserPlus, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDocumentMeta } from "@/hooks/use-document-meta";
+import PushNotificationToggle from "@/components/PushNotificationToggle";
 
 const ICONS: Record<string, any> = {
   follow: UserPlus,
