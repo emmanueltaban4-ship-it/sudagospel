@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
+        importScripts: ["push-sw.js"],
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/~oauth/, /^\/api/, /^\/functions/, /\.(mp3|m4a|wav|jpg|jpeg|png|webp)$/],
         globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
