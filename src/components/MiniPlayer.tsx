@@ -78,16 +78,16 @@ const MiniPlayer = () => {
     <>
       <FullScreenPlayer isOpen={showFullScreen} onClose={() => setShowFullScreen(false)} />
 
-      <div className="fixed bottom-[56px] md:bottom-0 left-0 right-0 z-40">
-        <div className="absolute inset-0 glass-strong border-t border-border/50" />
+      <div className="fixed bottom-[58px] md:bottom-0 left-0 right-0 z-40 safe-area-bottom md:safe-area-bottom-0">
+        <div className="absolute inset-0 bg-background border-t border-border/60 md:bg-background/95 md:backdrop-blur-2xl" />
 
         <div className="relative">
           {/* === MOBILE LAYOUT === */}
           <div className="md:hidden">
-            {/* Progress bar — taller touch target */}
+            {/* Hairline progress bar at very top edge */}
             <div
               ref={progressRef}
-              className="h-[6px] bg-muted/40 cursor-pointer relative group touch-none"
+              className="h-[2px] bg-muted/30 cursor-pointer relative touch-none"
               onClick={(e) => {
                 const pct = handleProgressInteraction(e);
                 if (pct !== undefined) seek(pct * duration);
@@ -96,23 +96,21 @@ const MiniPlayer = () => {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              <div className="h-full bg-gradient-gold transition-[width] duration-100" style={{ width: `${displayProgress}%` }}>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50 opacity-100 transition-opacity" />
-              </div>
+              <div className="h-full bg-primary transition-[width] duration-100" style={{ width: `${displayProgress}%` }} />
             </div>
 
-            <div className="flex items-center gap-3 px-3 py-2.5">
+            <div className="flex items-center gap-3 px-3 py-2">
               {/* Cover art — tap to expand */}
               <button
                 onClick={() => setShowFullScreen(true)}
                 className="flex-shrink-0 active:scale-95 transition-transform"
               >
-                <div className="h-12 w-12 rounded-xl overflow-hidden bg-muted shadow-md ring-1 ring-primary/10">
+                <div className="h-10 w-10 rounded-md overflow-hidden bg-muted">
                   {currentTrack.coverUrl ? (
-                    <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />
+                    <img src={currentTrack.coverUrl} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-accent/30 to-primary/20">
-                      <Music className="h-5 w-5 text-muted-foreground" />
+                    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/30 to-primary/10">
+                      <Music className="h-4 w-4 text-muted-foreground" />
                     </div>
                   )}
                 </div>
@@ -120,29 +118,23 @@ const MiniPlayer = () => {
 
               {/* Song info — tap to expand */}
               <button onClick={() => setShowFullScreen(true)} className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-semibold truncate text-foreground leading-tight">{currentTrack.title}</p>
-                <p className="text-[11px] text-muted-foreground truncate">{currentTrack.artist}</p>
+                <p className="text-[13px] font-bold truncate text-foreground leading-tight">{currentTrack.title}</p>
+                <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">{currentTrack.artist}</p>
               </button>
 
-              {/* Controls — large touch targets */}
-              <div className="flex items-center gap-0">
-                <button
-                  onClick={prev}
-                  className="h-11 w-10 flex items-center justify-center text-muted-foreground active:text-foreground active:scale-90 transition-all"
-                >
-                  <SkipBack className="h-[18px] w-[18px]" />
-                </button>
+              {/* Controls — Audiomack-style: just play + next */}
+              <div className="flex items-center gap-1">
                 <button
                   onClick={togglePlay}
-                  className="h-12 w-12 rounded-full bg-gradient-gold text-primary-foreground flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-primary/30"
+                  className="h-10 w-10 flex items-center justify-center text-foreground active:scale-90 transition-transform"
                 >
-                  {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" fill="currentColor" />}
+                  {isPlaying ? <Pause className="h-6 w-6" fill="currentColor" /> : <Play className="h-6 w-6 ml-0.5" fill="currentColor" />}
                 </button>
                 <button
                   onClick={next}
-                  className="h-11 w-10 flex items-center justify-center text-muted-foreground active:text-foreground active:scale-90 transition-all"
+                  className="h-10 w-10 flex items-center justify-center text-foreground/80 active:scale-90 transition-all"
                 >
-                  <SkipForward className="h-[18px] w-[18px]" />
+                  <SkipForward className="h-[22px] w-[22px]" fill="currentColor" />
                 </button>
               </div>
             </div>

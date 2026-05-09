@@ -1,76 +1,73 @@
+# Audiomack-style Redesign for Sudagospel
 
-# Upgraded Upload Experience + Scheduled Releases
+Adopt Audiomack's layout language across the app while keeping the Sudagospel **red + dark** brand. No business logic changes — pure presentation, tokens, and component shells.
 
-## Summary
-Replace the current single-form upload page with a polished multi-step wizard. Add scheduled release support with countdown timers and follower notifications via email.
+## 1. Design tokens (`src/index.css`, `tailwind.config.ts`)
 
-## What Changes
+- Make **dark the default** (Audiomack is dark-first). Light theme stays available but app boots dark.
+- Tighten palette:
+  - `--background`: near-black `0 0% 6%`
+  - `--card`: `0 0% 9%`
+  - `--muted`: `0 0% 13%`
+  - `--primary`: keep red `0 84% 55%` (Audiomack uses orange — we keep red as the accent everywhere they use orange)
+  - `--border`: `0 0% 15%` (very subtle)
+- Add utilities: `bg-gradient-am-hero` (radial red→black), `bg-blur-art` (for blurred-artwork backdrops), `text-am-label` (uppercase 11px tracked label).
+- Typography: keep Figtree/DM Sans but tighten to Audiomack scale (display 28/32, h2 20, body 14, label 11 uppercase).
 
-### 1. Database: Add `scheduled_release_at` and `release_status` to Songs
-- `scheduled_release_at` (timestamptz, nullable) — future publish date
-- `release_status` (text, default 'published') — values: `draft`, `scheduled`, `published`
-- Songs with `release_status = 'scheduled'` are hidden until the scheduled date
-- Update the SELECT RLS policy so scheduled songs are only visible to the uploader/admin until release
+## 2. Bottom nav (`src/components/BottomNav.tsx`)
 
-**Migration:**
-```sql
-ALTER TABLE public.songs ADD COLUMN scheduled_release_at timestamptz;
-ALTER TABLE public.songs ADD COLUMN release_status text NOT NULL DEFAULT 'published';
+Replace tabs with Audiomack's exact 5:
+
+```text
+[ Feed ] [ Browse ] [ Search ] [ My Library ] [ Premium ]
+   /        /music     (opens     /library        /subscription
+                       SearchOverlay)
 ```
 
-### 2. Multi-Step Upload Wizard (`src/pages/UploadPage.tsx`)
-Rewrite as a 4-step wizard with progress indicator:
+- Larger icons, thin label under, active tab in red with a tiny dot indicator.
+- Solid dark background with hairline top border, no blur.
 
-**Step 1 — Audio File**
-- Drag & drop or click to upload audio (MP3, WAV)
-- Show file name, size, duration preview
-- Visual upload progress
+## 3. Top bar (`src/components/TopBar.tsx`)
 
-**Step 2 — Cover Artwork**
-- Upload cover image with live preview
-- Square aspect ratio guidance
+- Mobile: logo left, avatar right only (search moves to bottom nav). Cleaner, less crowded.
+- Desktop: keep search but restyle as Audiomack's pill (rounded, muted bg, no kbd hint).
 
-**Step 3 — Metadata**
-- Title, Description, Genre selector, Lyrics
-- Artist selector (with create-new inline)
-- Album selector (with create-new inline, including type/cover)
+## 4. Home / Feed (`src/pages/Index.tsx`, `HeroSection.tsx`, carousels)
 
-**Step 4 — Release Options**
-- Choose: Publish Now or Schedule Release
-- If scheduled: date/time picker for future release
-- Summary card showing all entered info
-- Submit button
+Audiomack feed pattern:
+- **Trending Now** hero: large square artwork left, song title + artist + play CTA right, blurred art backdrop.
+- Horizontal **rails** with section header (`TITLE` uppercase + "See all" link), 2.5 cards visible on mobile, snap-scroll.
+- Rails to include: Trending Now, Top Songs This Week, New Releases, Recommended Artists, Made for You.
+- Card style: square art with rounded-lg, title bold sm, artist muted xs, no card chrome.
 
-### 3. Countdown Timer Component (`src/components/CountdownTimer.tsx`)
-- Shows days/hours/minutes/seconds until release
-- Used on song detail page and in song cards for scheduled songs
-- Animated, clean design
+## 5. Player
 
-### 4. Scheduled Release Display
-- Song detail page shows countdown for upcoming releases
-- Song cards show "Coming Soon" badge with countdown
-- Home page "New Releases" can show upcoming scheduled songs
+**MiniPlayer** (`src/components/MiniPlayer.tsx`):
+- Sits directly above bottom nav, full-width, dark solid bg, hairline top border.
+- Layout: 40px art • title/artist stacked • play/pause • next. Thin 2px progress line at the very top edge.
 
-### 5. Edge Function: Auto-Publish Scheduled Songs
-- `publish-scheduled-songs` edge function triggered by pg_cron every minute
-- Checks for songs where `scheduled_release_at <= now()` and `release_status = 'scheduled'`
-- Updates them to `release_status = 'published'` and `is_approved = true`
+**FullScreenPlayer** (`src/components/FullScreenPlayer.tsx`):
+- Blurred album art covers entire background with dark overlay.
+- Centered large square art (80% width), title (display), artist (muted).
+- Scrubber with elapsed/remaining times.
+- Big circular red play button, prev/next/shuffle/repeat around it.
+- Action row: like, add to playlist, download, share, more.
 
-### 6. Edge Function: Notify Followers
-- When a song gets published (either immediately or via schedule), notify followers
-- Query `artist_follows` for the artist, send notification emails
-- Uses the existing email infrastructure if configured, otherwise stores in a notifications approach
+## 6. Song & Artist detail pages (`SongDetailPage.tsx`, `ArtistDetailPage.tsx`)
 
-## Files to Create/Modify
-- **New migration** — `scheduled_release_at` + `release_status` columns, updated RLS
-- `src/pages/UploadPage.tsx` — Complete rewrite as multi-step wizard
-- `src/components/CountdownTimer.tsx` — New countdown component
-- `src/pages/SongDetailPage.tsx` — Show countdown for scheduled songs
-- `supabase/functions/publish-scheduled-songs/index.ts` — Auto-publish cron function
-- pg_cron job for auto-publishing
+- Cinematic header: full-bleed blurred artwork backdrop → vertical gradient to background.
+- Foreground: square art (or circular for artist), title, artist (verified badge), meta row (plays · uploaded date · genre).
+- Sticky action bar: red Play button, Follow/Like, Share, More.
+- Below: tabs (Overview / Comments / Related). Comments and tracklist styled as flat dense rows.
 
-## Technical Details
-- Wizard state managed with useState, step transitions with framer-motion
-- Audio file duration extracted via Web Audio API on upload
-- Countdown uses `setInterval` with 1-second ticks
-- Scheduled songs visible only to uploader until release date
+## 7. Cards & rows (`SongCard.tsx`, `ArtistCard.tsx`)
+
+- Remove heavy card chrome; rely on artwork + tight typography.
+- Square art with hover-floating red play button (Audiomack signature).
+- Track row variant (used in detail pages & library): index • art • title/artist • plays • duration • more.
+
+## Out of scope
+
+- No DB, RLS, auth, or hook logic changes.
+- No new pages/routes; we restyle existing surfaces.
+- Admin & artist dashboard untouched (already polished).
