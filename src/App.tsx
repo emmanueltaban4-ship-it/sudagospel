@@ -53,6 +53,7 @@ const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const SermonsPage = lazy(() => import("./pages/SermonsPage.tsx"));
 const EventsPage = lazy(() => import("./pages/EventsPage.tsx"));
 const PrayerWallPage = lazy(() => import("./pages/PrayerWallPage.tsx"));
+const ReferralsPage = lazy(() => import("./pages/ReferralsPage.tsx"));
 const MoodsPage = lazy(() => import("./pages/MoodsPage.tsx"));
 import InstallPWA from "@/components/InstallPWA";
 import LiveRadioBar from "@/components/LiveRadioBar";
@@ -124,6 +125,7 @@ const App = () => {
                     <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                     <Route path="/subscription" element={<SubscriptionPage />} />
                     <Route path="/artist-dashboard" element={<ArtistDashboardPage />} />
+                    <Route path="/referrals" element={<ReferralsPage />} />
                     <Route path="/presave/:id" element={<PreSavePage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
