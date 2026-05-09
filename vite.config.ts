@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       injectRegister: false, // we register manually with iframe guard
       devOptions: { enabled: false },
-      includeAssets: ["icon-192.png", "robots.txt"],
+      includeAssets: ["icon-192.png", "robots.txt", "push-sw.js"],
       manifest: {
         name: "SudaGospel - Gospel Music from South Sudan",
         short_name: "SudaGospel",
