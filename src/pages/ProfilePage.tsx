@@ -22,6 +22,20 @@ import BoostSongDialog from "@/components/BoostSongDialog";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
+/* ─── Audiomack-style inline stats ─── */
+const formatStat = (n: number) => {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1) + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 === 0 ? 0 : 1) + "K";
+  return n.toString();
+};
+const StatInline = ({ value, label }: { value: number; label: string }) => (
+  <div className="flex flex-col items-center min-w-[60px]">
+    <span className="font-heading text-base font-extrabold text-foreground tabular-nums leading-none">{formatStat(value)}</span>
+    <span className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">{label}</span>
+  </div>
+);
+const Divider = () => <span className="h-8 w-px bg-border/60" />;
+
 /* ─── Album Selector for Song Edit ─── */
 const AlbumSelectorForEdit = ({ artistId, value, onChange }: { artistId: string; value: string; onChange: (v: string) => void }) => {
   const { data: albums } = useQuery({
@@ -415,98 +429,136 @@ const ProfilePage = () => {
   return (
     <Layout>
       <div className="pb-28">
-        {/* === HERO HEADER === */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/15 via-primary/5 to-background" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[100px]" />
+        {/* === AUDIOMACK-STYLE HERO === */}
+        <div className="relative">
+          {/* Blurred backdrop from avatar */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full object-cover scale-150 blur-[80px] opacity-40"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-background" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
           </div>
-          <div className="relative px-4 lg:px-8 pt-8 pb-6">
-            <div className="max-w-2xl mx-auto">
-              <div className="flex items-start gap-5">
-                <div className="relative flex-shrink-0">
-                  <div className="h-24 w-24 rounded-full overflow-hidden ring-4 ring-background shadow-2xl">
-                    {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : (
-                      <div className="h-full w-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground font-heading text-2xl font-extrabold">{initials}</div>
-                    )}
-                  </div>
-                  <button onClick={() => avatarInputRef.current?.click()} className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-card border-2 border-background flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-card shadow-lg transition-colors">
-                    <Camera className="h-3.5 w-3.5" />
-                  </button>
-                  <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleAvatarUpload(e.target.files[0]); }} />
-                </div>
-                <div className="flex-1 min-w-0 pt-1">
-                  {editing ? (
-                    <div className="space-y-2.5">
-                      <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Display name" className="bg-card/80 border-border/60 rounded-xl h-10 text-sm font-semibold" />
-                      <Textarea value={editBio} onChange={(e) => setEditBio(e.target.value)} placeholder="Tell us about yourself..." rows={2} className="bg-card/80 border-border/60 rounded-xl text-sm resize-none" />
-                      <div className="flex gap-2">
-                        <Button onClick={() => updateProfile.mutate()} size="sm" className="gap-1.5 rounded-lg bg-primary text-primary-foreground text-xs h-8"><Save className="h-3 w-3" /> Save</Button>
-                        <Button onClick={() => setEditing(false)} size="sm" variant="ghost" className="gap-1.5 rounded-lg text-xs h-8"><X className="h-3 w-3" /> Cancel</Button>
-                      </div>
-                    </div>
+
+          <div className="relative px-4 lg:px-8 pt-10 pb-6">
+            <div className="max-w-2xl mx-auto flex flex-col items-center text-center">
+              {/* Avatar — large, centered, ringed */}
+              <div className="relative mb-4">
+                <div className="h-28 w-28 rounded-full overflow-hidden ring-4 ring-background shadow-2xl shadow-black/50">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
                   ) : (
-                    <>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <h1 className="font-heading text-xl font-extrabold text-foreground truncate">{displayName}</h1>
-                        <button onClick={startEditing} className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0"><Edit3 className="h-3.5 w-3.5" /></button>
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate">{user.email || user.phone}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                          {isArtist ? <><Mic2 className="h-3 w-3" /> Artist</> : <><Headphones className="h-3 w-3" /> Fan</>}
-                        </span>
-                        {isArtist && myArtist?.is_verified && <CheckCircle className="h-4 w-4 text-primary" />}
-                      </div>
-                      {profile?.bio && <p className="text-sm text-muted-foreground mt-2.5 line-clamp-2">{profile.bio}</p>}
-                    </>
+                    <div className="h-full w-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground font-heading text-3xl font-extrabold">{initials}</div>
                   )}
                 </div>
+                <button
+                  onClick={() => avatarInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 h-9 w-9 rounded-full bg-primary text-primary-foreground border-2 border-background flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+                  aria-label="Change avatar"
+                >
+                  <Camera className="h-4 w-4" />
+                </button>
+                <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleAvatarUpload(e.target.files[0]); }} />
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* === STATS === */}
-        <div className="px-4 lg:px-8 -mt-1">
-          <div className="max-w-2xl mx-auto">
-            <div className={`grid gap-2 ${isArtist ? "grid-cols-3 sm:grid-cols-6" : "grid-cols-4"}`}>
-              {isArtist ? (
-                <>
-                  {[
-                    { label: "Songs", value: artistSongs?.length ?? 0, icon: Music },
-                    { label: "Plays", value: totalPlays, icon: Play },
-                    { label: "Downloads", value: totalDownloads, icon: Download },
-                    { label: "Followers", value: followerCount, icon: Users },
-                    { label: "Likes", value: myLikes, icon: Heart },
-                    { label: "Playlists", value: myPlaylists, icon: ListMusic },
-                  ].map((stat) => (
-                    <div key={stat.label} className="rounded-xl bg-card/60 backdrop-blur-sm border border-border/50 p-3 text-center hover:bg-card/80 transition-colors">
-                      <stat.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
-                      <p className="font-heading text-lg font-extrabold text-foreground leading-none">{typeof stat.value === "number" ? stat.value.toLocaleString() : stat.value}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1">{stat.label}</p>
-                    </div>
-                  ))}
-                </>
+              {editing ? (
+                <div className="w-full max-w-sm space-y-2.5">
+                  <Input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Display name" className="bg-card/80 border-border/60 rounded-xl h-10 text-sm font-semibold text-center" />
+                  <Textarea value={editBio} onChange={(e) => setEditBio(e.target.value)} placeholder="Tell us about yourself..." rows={2} className="bg-card/80 border-border/60 rounded-xl text-sm resize-none text-center" />
+                  <div className="flex gap-2 justify-center">
+                    <Button onClick={() => updateProfile.mutate()} size="sm" className="gap-1.5 rounded-full bg-primary text-primary-foreground text-xs h-9 px-4"><Save className="h-3 w-3" /> Save</Button>
+                    <Button onClick={() => setEditing(false)} size="sm" variant="ghost" className="gap-1.5 rounded-full text-xs h-9 px-4"><X className="h-3 w-3" /> Cancel</Button>
+                  </div>
+                </div>
               ) : (
                 <>
-                  {[
-                    { label: "Likes", value: myLikes, icon: Heart },
-                    { label: "Playlists", value: myPlaylists, icon: ListMusic },
-                    { label: "Following", value: followedArtists?.length ?? 0, icon: Users },
-                    { label: "Uploads", value: 0, icon: Upload },
-                  ].map((stat) => (
-                    <div key={stat.label} className="rounded-xl bg-card/60 backdrop-blur-sm border border-border/50 p-3 text-center hover:bg-card/80 transition-colors">
-                      <stat.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
-                      <p className="font-heading text-lg font-extrabold text-foreground leading-none">{stat.value}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1">{stat.label}</p>
-                    </div>
-                  ))}
+                  {/* Name + verified */}
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h1 className="font-heading text-2xl font-black text-foreground tracking-tight">{displayName}</h1>
+                    {isArtist && myArtist?.is_verified && (
+                      <BadgeCheck className="h-5 w-5 text-primary fill-primary stroke-background" />
+                    )}
+                  </div>
+
+                  {/* Handle / role pill */}
+                  <div className="flex items-center gap-2 text-[12px] text-muted-foreground mb-3">
+                    <span>@{(user.email?.split("@")[0] || "user").toLowerCase()}</span>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span className="inline-flex items-center gap-1 font-semibold uppercase tracking-wider text-[10px] text-primary">
+                      {isArtist ? <><Mic2 className="h-3 w-3" /> Artist</> : <><Headphones className="h-3 w-3" /> Fan</>}
+                    </span>
+                  </div>
+
+                  {/* Inline Audiomack-style stat row */}
+                  <div className="flex items-center justify-center gap-5 mb-5">
+                    {isArtist ? (
+                      <>
+                        <StatInline value={followerCount} label="Followers" />
+                        <Divider />
+                        <StatInline value={totalPlays} label="Plays" />
+                        <Divider />
+                        <StatInline value={artistSongs?.length ?? 0} label="Songs" />
+                      </>
+                    ) : (
+                      <>
+                        <StatInline value={followedArtists?.length ?? 0} label="Following" />
+                        <Divider />
+                        <StatInline value={myLikes} label="Likes" />
+                        <Divider />
+                        <StatInline value={myPlaylists} label="Playlists" />
+                      </>
+                    )}
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Button onClick={startEditing} size="sm" className="rounded-full bg-primary text-primary-foreground font-bold gap-1.5 h-9 px-5 active:scale-95 transition-transform">
+                      <Edit3 className="h-3.5 w-3.5" /> Edit profile
+                    </Button>
+                    <Button onClick={() => navigate("/account")} size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
+                      <Settings className="h-3.5 w-3.5" /> Settings
+                    </Button>
+                    {isArtist && (
+                      <Button asChild size="sm" variant="outline" className="rounded-full font-semibold gap-1.5 h-9 px-4 border-border/60 bg-card/40 backdrop-blur">
+                        <Link to={artistPath(myArtist!.name)}><Eye className="h-3.5 w-3.5" /> Public</Link>
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Bio */}
+                  {profile?.bio && (
+                    <p className="text-sm text-muted-foreground/90 max-w-md mx-auto leading-relaxed">{profile.bio}</p>
+                  )}
                 </>
               )}
             </div>
           </div>
         </div>
+
+        {/* === Secondary stats grid (artist extras: downloads, etc.) === */}
+        {isArtist && (
+          <div className="px-4 lg:px-8">
+            <div className="max-w-2xl mx-auto grid grid-cols-3 gap-2">
+              {[
+                { label: "Downloads", value: totalDownloads, icon: Download },
+                { label: "Likes", value: myLikes, icon: Heart },
+                { label: "Playlists", value: myPlaylists, icon: ListMusic },
+              ].map((stat) => (
+                <div key={stat.label} className="rounded-xl bg-card/60 border border-border/40 p-3 text-center">
+                  <stat.icon className="h-4 w-4 text-primary mx-auto mb-1.5" />
+                  <p className="font-heading text-base font-extrabold text-foreground leading-none tabular-nums">{stat.value.toLocaleString()}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* === MAIN CONTENT === */}
         <div className="px-4 lg:px-8 mt-6">
