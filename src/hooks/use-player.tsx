@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { resolvePlayableUrl } from "@/lib/signed-media";
 
 export interface Track {
   id: string;
