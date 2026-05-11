@@ -7,6 +7,7 @@ import { artistPath } from "@/lib/artist-slug";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Headphones, Play, Pause, Download, TrendingUp } from "lucide-react";
+import { downloadFile } from "@/lib/download";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
