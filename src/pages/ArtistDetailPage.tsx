@@ -585,15 +585,7 @@ const ArtistDetailPage = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    toast.info("Preparing download...");
-                                    fetch(song.file_url).then(r => r.blob()).then(blob => {
-                                      const url = URL.createObjectURL(blob);
-                                      const a = document.createElement("a");
-                                      a.href = url; a.download = `${song.title} - ${artistName}.mp3`;
-                                      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                                      URL.revokeObjectURL(url);
-                                      toast.success("Download started!");
-                                    }).catch(() => toast.error("Download failed."));
+                                    downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
                                   }}
                                   className="p-2 rounded-full text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
                                 >
