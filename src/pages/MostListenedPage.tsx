@@ -7,6 +7,7 @@ import { artistPath } from "@/lib/artist-slug";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { Headphones, Play, Pause, Download, TrendingUp } from "lucide-react";
+import { downloadFile } from "@/lib/download";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
@@ -153,21 +154,7 @@ const MostListenedPage = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      toast.info("Preparing download...");
-                      fetch(song.file_url)
-                        .then((r) => r.blob())
-                        .then((blob) => {
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `${song.title} - ${artistName}.mp3`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
-                          URL.revokeObjectURL(url);
-                          toast.success("Download started!");
-                        })
-                        .catch(() => toast.error("Download failed."));
+                      downloadFile(song.file_url, `${song.title} - ${artistName}.mp3`);
                     }}
                     className="p-1.5 rounded-full text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all"
                   >
