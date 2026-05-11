@@ -128,9 +128,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       return updated;
     });
     if (audioRef.current) {
-      audioRef.current.src = getPlayableUrl(track.fileUrl);
-      audioRef.current.play().catch(() => setIsPlaying(false));
+      const audio = audioRef.current;
       setIsPlaying(true);
+      resolvePlayableUrl(track.fileUrl)
+        .then((src) => {
+          audio.src = src;
+          return audio.play();
+        })
+        .catch(() => setIsPlaying(false));
     }
     // Fire-and-forget play count increment + listening history
     supabase.rpc('increment_play_count', { song_uuid: track.id }).then(() => {});
