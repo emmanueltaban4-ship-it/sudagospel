@@ -23,6 +23,7 @@ import { useState, useMemo } from "react";
 import { useArtistLinks, useTopTracks } from "@/hooks/use-artist-management";
 import ArtistStorefront from "@/components/artist/ArtistStorefront";
 import ArtistLiveChat from "@/components/artist/ArtistLiveChat";
+import { downloadFile } from "@/lib/download";
 
 const linkTypeIcon = (t: string) => {
   switch (t) {
