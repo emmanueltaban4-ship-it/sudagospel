@@ -56,21 +56,20 @@ const PlayerContext = createContext<PlayerContextType>({
   clearQueue: () => {},
 });
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const getPlayableUrl = (url: string) =>
-  url.includes("sudagospel.com/get-track.php") || url.includes("sudagospel.net/get-track.php")
-    ? `${SUPABASE_URL}/functions/v1/download-proxy?url=${encodeURIComponent(url)}`
-    : url;
-
-// Preload next track for gapless playback
-const preloadAudio = (url: string) => {
-  const link = document.createElement("link");
-  link.rel = "prefetch";
-  link.as = "fetch";
-  link.href = getPlayableUrl(url);
-  link.crossOrigin = "anonymous";
-  document.head.appendChild(link);
-  setTimeout(() => link.remove(), 60000);
+// Preload next track for gapless playback (best-effort; signed URLs may be skipped if unavailable).
+const preloadAudio = async (url: string) => {
+  try {
+    const resolved = await resolvePlayableUrl(url);
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.as = "fetch";
+    link.href = resolved;
+    link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+    setTimeout(() => link.remove(), 60000);
+  } catch {
+    /* ignore preload failures */
+  }
 };
 
 export const usePlayer = () => useContext(PlayerContext);
