@@ -126,26 +126,50 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     } catch { return []; }
   });
 
+  // Persisted playback prefs (data saver, speed, EQ)
+  const initialPrefs = useRef<PlaybackSettings>(loadPlaybackSettings()).current;
+  const [playbackRate, setPlaybackRateState] = useState(initialPrefs.playbackRate);
+  const [dataSaver, setDataSaverState] = useState(initialPrefs.dataSaver);
+  const [eqEnabled, setEqEnabledState] = useState(initialPrefs.eqEnabled);
+  const [eqBass, setEqBass] = useState(initialPrefs.eqBass);
+  const [eqMid, setEqMid] = useState(initialPrefs.eqMid);
+  const [eqTreble, setEqTreble] = useState(initialPrefs.eqTreble);
+
+  // Sleep timer
+  const [sleepTimerEndsAt, setSleepTimerEndsAt] = useState<number | null>(null);
+  const sleepTimeoutRef = useRef<number | null>(null);
+
+  // Web Audio nodes (created lazily when EQ is first enabled)
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const bassFilterRef = useRef<BiquadFilterNode | null>(null);
+  const midFilterRef = useRef<BiquadFilterNode | null>(null);
+  const trebleFilterRef = useRef<BiquadFilterNode | null>(null);
+
   // Refs for callbacks that need current state
   const shuffleRef = useRef(shuffle);
   const repeatRef = useRef(repeatMode);
   const queueRef = useRef(queue);
   const currentTrackRef = useRef(currentTrack);
+  const dataSaverRef = useRef(dataSaver);
   shuffleRef.current = shuffle;
   repeatRef.current = repeatMode;
   queueRef.current = queue;
   currentTrackRef.current = currentTrack;
+  dataSaverRef.current = dataSaver;
 
   useEffect(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.addEventListener("timeupdate", () => {
-        setCurrentTime(audioRef.current!.currentTime);
+      const a = new Audio();
+      a.crossOrigin = "anonymous"; // needed for Web Audio EQ + safe for Supabase signed URLs
+      audioRef.current = a;
+      a.addEventListener("timeupdate", () => {
+        setCurrentTime(a.currentTime);
       });
-      audioRef.current.addEventListener("loadedmetadata", () => {
-        setDuration(audioRef.current!.duration);
+      a.addEventListener("loadedmetadata", () => {
+        setDuration(a.duration);
       });
-      audioRef.current.addEventListener("ended", () => {
+      a.addEventListener("ended", () => {
         handleEnded();
       });
     }
@@ -153,6 +177,74 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current?.pause();
     };
   }, []);
+
+  // Persist playback prefs
+  useEffect(() => {
+    savePlaybackSettings({
+      dataSaver, playbackRate, eqEnabled, eqBass, eqMid, eqTreble,
+    });
+  }, [dataSaver, playbackRate, eqEnabled, eqBass, eqMid, eqTreble]);
+
+  // Apply playback rate to <audio>
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = playbackRate;
+  }, [playbackRate]);
+
+  // Lazy-init Web Audio + EQ filters
+  const ensureEqGraph = useCallback(() => {
+    if (!audioRef.current) return false;
+    if (sourceNodeRef.current) return true;
+    try {
+      const Ctx: typeof AudioContext = (window.AudioContext || (window as any).webkitAudioContext);
+      if (!Ctx) return false;
+      const ctx = new Ctx();
+      audioCtxRef.current = ctx;
+      const src = ctx.createMediaElementSource(audioRef.current);
+      const bass = ctx.createBiquadFilter();
+      bass.type = "lowshelf"; bass.frequency.value = 200; bass.gain.value = eqBass;
+      const mid = ctx.createBiquadFilter();
+      mid.type = "peaking"; mid.frequency.value = 1000; mid.Q.value = 1; mid.gain.value = eqMid;
+      const treble = ctx.createBiquadFilter();
+      treble.type = "highshelf"; treble.frequency.value = 4000; treble.gain.value = eqTreble;
+      src.connect(bass).connect(mid).connect(treble).connect(ctx.destination);
+      sourceNodeRef.current = src;
+      bassFilterRef.current = bass;
+      midFilterRef.current = mid;
+      trebleFilterRef.current = treble;
+      return true;
+    } catch (e) {
+      console.warn("[player] EQ init failed", e);
+      return false;
+    }
+  }, [eqBass, eqMid, eqTreble]);
+
+  useEffect(() => {
+    if (eqEnabled) ensureEqGraph();
+    if (bassFilterRef.current) bassFilterRef.current.gain.value = eqEnabled ? eqBass : 0;
+    if (midFilterRef.current) midFilterRef.current.gain.value = eqEnabled ? eqMid : 0;
+    if (trebleFilterRef.current) trebleFilterRef.current.gain.value = eqEnabled ? eqTreble : 0;
+  }, [eqEnabled, eqBass, eqMid, eqTreble, ensureEqGraph]);
+
+  // Sleep timer
+  useEffect(() => {
+    if (sleepTimeoutRef.current !== null) {
+      window.clearTimeout(sleepTimeoutRef.current);
+      sleepTimeoutRef.current = null;
+    }
+    if (sleepTimerEndsAt !== null) {
+      const ms = Math.max(0, sleepTimerEndsAt - Date.now());
+      sleepTimeoutRef.current = window.setTimeout(() => {
+        if (audioRef.current && !audioRef.current.paused) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+        setSleepTimerEndsAt(null);
+      }, ms);
+    }
+    return () => {
+      if (sleepTimeoutRef.current !== null) window.clearTimeout(sleepTimeoutRef.current);
+    };
+  }, [sleepTimerEndsAt]);
 
   const playTrack = useCallback((track: Track) => {
     setCurrentTrack(track);
