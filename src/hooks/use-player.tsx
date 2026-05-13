@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useRef, useEffect, useCallback, Re
 import { supabase } from "@/integrations/supabase/client";
 import { resolvePlayableUrl } from "@/lib/signed-media";
 import { offlineDownloads } from "@/lib/offline-downloads";
+import { loadPlaybackSettings, savePlaybackSettings, PlaybackSettings } from "@/lib/playback-settings";
 
 // Prefer locally-saved blob if the song was downloaded for offline use.
 const resolveTrackUrl = async (id: string, fileUrl: string): Promise<string> => {
@@ -30,6 +31,20 @@ interface PlayerContextType {
   recentlyPlayed: Track[];
   shuffle: boolean;
   repeatMode: RepeatMode;
+  // New: playback prefs
+  playbackRate: number;
+  setPlaybackRate: (r: number) => void;
+  dataSaver: boolean;
+  setDataSaver: (v: boolean) => void;
+  eqEnabled: boolean;
+  setEqEnabled: (v: boolean) => void;
+  eqBass: number;
+  eqMid: number;
+  eqTreble: number;
+  setEqBands: (b: { bass?: number; mid?: number; treble?: number }) => void;
+  // New: sleep timer
+  sleepTimerEndsAt: number | null;
+  setSleepTimer: (minutes: number | null) => void;
   play: (track: Track, queue?: Track[]) => void;
   togglePlay: () => void;
   seek: (time: number) => void;
@@ -52,6 +67,18 @@ const PlayerContext = createContext<PlayerContextType>({
   recentlyPlayed: [],
   shuffle: false,
   repeatMode: "off",
+  playbackRate: 1,
+  setPlaybackRate: () => {},
+  dataSaver: false,
+  setDataSaver: () => {},
+  eqEnabled: false,
+  setEqEnabled: () => {},
+  eqBass: 0,
+  eqMid: 0,
+  eqTreble: 0,
+  setEqBands: () => {},
+  sleepTimerEndsAt: null,
+  setSleepTimer: () => {},
   play: () => {},
   togglePlay: () => {},
   seek: () => {},
@@ -99,26 +126,50 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     } catch { return []; }
   });
 
+  // Persisted playback prefs (data saver, speed, EQ)
+  const initialPrefs = useRef<PlaybackSettings>(loadPlaybackSettings()).current;
+  const [playbackRate, setPlaybackRateState] = useState(initialPrefs.playbackRate);
+  const [dataSaver, setDataSaverState] = useState(initialPrefs.dataSaver);
+  const [eqEnabled, setEqEnabledState] = useState(initialPrefs.eqEnabled);
+  const [eqBass, setEqBass] = useState(initialPrefs.eqBass);
+  const [eqMid, setEqMid] = useState(initialPrefs.eqMid);
+  const [eqTreble, setEqTreble] = useState(initialPrefs.eqTreble);
+
+  // Sleep timer
+  const [sleepTimerEndsAt, setSleepTimerEndsAt] = useState<number | null>(null);
+  const sleepTimeoutRef = useRef<number | null>(null);
+
+  // Web Audio nodes (created lazily when EQ is first enabled)
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const bassFilterRef = useRef<BiquadFilterNode | null>(null);
+  const midFilterRef = useRef<BiquadFilterNode | null>(null);
+  const trebleFilterRef = useRef<BiquadFilterNode | null>(null);
+
   // Refs for callbacks that need current state
   const shuffleRef = useRef(shuffle);
   const repeatRef = useRef(repeatMode);
   const queueRef = useRef(queue);
   const currentTrackRef = useRef(currentTrack);
+  const dataSaverRef = useRef(dataSaver);
   shuffleRef.current = shuffle;
   repeatRef.current = repeatMode;
   queueRef.current = queue;
   currentTrackRef.current = currentTrack;
+  dataSaverRef.current = dataSaver;
 
   useEffect(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.addEventListener("timeupdate", () => {
-        setCurrentTime(audioRef.current!.currentTime);
+      const a = new Audio();
+      a.crossOrigin = "anonymous"; // needed for Web Audio EQ + safe for Supabase signed URLs
+      audioRef.current = a;
+      a.addEventListener("timeupdate", () => {
+        setCurrentTime(a.currentTime);
       });
-      audioRef.current.addEventListener("loadedmetadata", () => {
-        setDuration(audioRef.current!.duration);
+      a.addEventListener("loadedmetadata", () => {
+        setDuration(a.duration);
       });
-      audioRef.current.addEventListener("ended", () => {
+      a.addEventListener("ended", () => {
         handleEnded();
       });
     }
@@ -126,6 +177,74 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current?.pause();
     };
   }, []);
+
+  // Persist playback prefs
+  useEffect(() => {
+    savePlaybackSettings({
+      dataSaver, playbackRate, eqEnabled, eqBass, eqMid, eqTreble,
+    });
+  }, [dataSaver, playbackRate, eqEnabled, eqBass, eqMid, eqTreble]);
+
+  // Apply playback rate to <audio>
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = playbackRate;
+  }, [playbackRate]);
+
+  // Lazy-init Web Audio + EQ filters
+  const ensureEqGraph = useCallback(() => {
+    if (!audioRef.current) return false;
+    if (sourceNodeRef.current) return true;
+    try {
+      const Ctx: typeof AudioContext = (window.AudioContext || (window as any).webkitAudioContext);
+      if (!Ctx) return false;
+      const ctx = new Ctx();
+      audioCtxRef.current = ctx;
+      const src = ctx.createMediaElementSource(audioRef.current);
+      const bass = ctx.createBiquadFilter();
+      bass.type = "lowshelf"; bass.frequency.value = 200; bass.gain.value = eqBass;
+      const mid = ctx.createBiquadFilter();
+      mid.type = "peaking"; mid.frequency.value = 1000; mid.Q.value = 1; mid.gain.value = eqMid;
+      const treble = ctx.createBiquadFilter();
+      treble.type = "highshelf"; treble.frequency.value = 4000; treble.gain.value = eqTreble;
+      src.connect(bass).connect(mid).connect(treble).connect(ctx.destination);
+      sourceNodeRef.current = src;
+      bassFilterRef.current = bass;
+      midFilterRef.current = mid;
+      trebleFilterRef.current = treble;
+      return true;
+    } catch (e) {
+      console.warn("[player] EQ init failed", e);
+      return false;
+    }
+  }, [eqBass, eqMid, eqTreble]);
+
+  useEffect(() => {
+    if (eqEnabled) ensureEqGraph();
+    if (bassFilterRef.current) bassFilterRef.current.gain.value = eqEnabled ? eqBass : 0;
+    if (midFilterRef.current) midFilterRef.current.gain.value = eqEnabled ? eqMid : 0;
+    if (trebleFilterRef.current) trebleFilterRef.current.gain.value = eqEnabled ? eqTreble : 0;
+  }, [eqEnabled, eqBass, eqMid, eqTreble, ensureEqGraph]);
+
+  // Sleep timer
+  useEffect(() => {
+    if (sleepTimeoutRef.current !== null) {
+      window.clearTimeout(sleepTimeoutRef.current);
+      sleepTimeoutRef.current = null;
+    }
+    if (sleepTimerEndsAt !== null) {
+      const ms = Math.max(0, sleepTimerEndsAt - Date.now());
+      sleepTimeoutRef.current = window.setTimeout(() => {
+        if (audioRef.current && !audioRef.current.paused) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+        setSleepTimerEndsAt(null);
+      }, ms);
+    }
+    return () => {
+      if (sleepTimeoutRef.current !== null) window.clearTimeout(sleepTimeoutRef.current);
+    };
+  }, [sleepTimerEndsAt]);
 
   const playTrack = useCallback((track: Track) => {
     setCurrentTrack(track);
@@ -152,13 +271,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         supabase.from('user_listening_history').insert({ user_id: data.user.id, song_id: track.id }).then(() => {});
       }
     });
-    // Preload next track in queue
-    requestIdleCallback(() => {
-      const q = queueRef.current;
-      const idx = q.findIndex(t => t.id === track.id);
-      const next = q[idx + 1];
-      if (next) preloadAudio(next.fileUrl);
-    });
+    // Preload next track in queue (skipped in data-saver mode)
+    if (!dataSaverRef.current) {
+      requestIdleCallback(() => {
+        const q = queueRef.current;
+        const idx = q.findIndex(t => t.id === track.id);
+        const next = q[idx + 1];
+        if (next) preloadAudio(next.fileUrl);
+      });
+    }
   }, []);
 
   const play = useCallback((track: Track, newQueue?: Track[]) => {
@@ -250,11 +371,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
   const clearQueue = useCallback(() => setQueue([]), []);
 
+  const setPlaybackRate = useCallback((r: number) => setPlaybackRateState(r), []);
+  const setDataSaver = useCallback((v: boolean) => setDataSaverState(v), []);
+  const setEqEnabled = useCallback((v: boolean) => setEqEnabledState(v), []);
+  const setEqBands = useCallback((b: { bass?: number; mid?: number; treble?: number }) => {
+    if (b.bass !== undefined) setEqBass(b.bass);
+    if (b.mid !== undefined) setEqMid(b.mid);
+    if (b.treble !== undefined) setEqTreble(b.treble);
+  }, []);
+  const setSleepTimer = useCallback((minutes: number | null) => {
+    setSleepTimerEndsAt(minutes === null ? null : Date.now() + minutes * 60_000);
+  }, []);
+
   return (
     <PlayerContext.Provider
       value={{
         currentTrack, isPlaying, duration, currentTime, volume,
         queue, recentlyPlayed, shuffle, repeatMode,
+        playbackRate, setPlaybackRate,
+        dataSaver, setDataSaver,
+        eqEnabled, setEqEnabled, eqBass, eqMid, eqTreble, setEqBands,
+        sleepTimerEndsAt, setSleepTimer,
         play, togglePlay, seek, setVolume,
         next: handleNext, prev: handlePrev,
         toggleShuffle, cycleRepeat, removeFromQueue, clearQueue,

@@ -107,7 +107,7 @@ const TestLinkPreview = ({ type, id }: Props) => {
                 <div className="w-full aspect-[1.91/1] bg-muted flex items-center justify-center text-xs text-muted-foreground">No image</div>
               )}
               <div className="p-3 space-y-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground truncate">{data.siteName || "sudagospel"}</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground truncate">{data.siteName || "ssdguna"}</p>
                 <p className="text-sm font-bold leading-tight line-clamp-2">{data.title || <span className="text-destructive">Missing title</span>}</p>
                 {data.description && <p className="text-xs text-muted-foreground line-clamp-2">{data.description}</p>}
               </div>

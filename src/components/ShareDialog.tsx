@@ -60,10 +60,10 @@ const ShareDialog = ({ title, artist, coverUrl, shareUrl, type = "song", trigger
   const [copied, setCopied] = useState(false);
 
   const shareText = type === "song" && artist
-    ? `🎵 Listen to "${title}" by ${artist} on Sudagospel`
+    ? `🎵 Listen to "${title}" by ${artist} on SSDGUNA`
     : type === "artist"
-    ? `🎤 Check out ${title} on Sudagospel`
-    : `📰 ${title} on Sudagospel`;
+    ? `🎤 Check out ${title} on SSDGUNA`
+    : `📰 ${title} on SSDGUNA`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
@@ -104,7 +104,7 @@ const ShareDialog = ({ title, artist, coverUrl, shareUrl, type = "song", trigger
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground truncate">{title}</p>
             {artist && <p className="text-xs text-muted-foreground truncate">{artist}</p>}
-            <p className="text-[10px] text-muted-foreground/60 mt-0.5 truncate">sudagospel.com</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5 truncate">ssdguna.net</p>
           </div>
         </div>
 

@@ -36,7 +36,7 @@ export const SignupEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img src={LOGO_URL} alt={siteName} width="48" height="48" style={logo} />
-        <Heading style={h1}>Welcome to Sudagospel! 🎶</Heading>
+        <Heading style={h1}>Welcome to SSDGUNA! 🎶</Heading>
         <Text style={text}>
           Thanks for joining{' '}
           <Link href={siteUrl} style={link}>

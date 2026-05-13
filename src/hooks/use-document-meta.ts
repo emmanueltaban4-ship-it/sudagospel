@@ -61,7 +61,7 @@ const removeJsonLd = () => {
 };
 
 const defaults = {
-  title: "Sudagospel - South Sudan's Gospel Music Platform",
+  title: "SSDGUNA - South Sudan's Gospel Music Platform",
   description: "Discover, stream and download the best gospel music from South Sudan.",
 };
 
@@ -70,7 +70,7 @@ export const useDocumentMeta = (meta: DocumentMeta) => {
     const prevTitle = document.title;
 
     if (meta.title) {
-      document.title = `${meta.title} | Sudagospel`;
+      document.title = `${meta.title} | SSDGUNA`;
     }
 
     const ogTitle = meta.ogTitle || meta.title || defaults.title;

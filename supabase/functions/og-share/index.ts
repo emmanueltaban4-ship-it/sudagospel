@@ -22,9 +22,9 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const SITE_ORIGIN = "https://sudagospel.com";
+  const SITE_ORIGIN = "https://ssdguna.net";
 
-  let title = "Sudagospel";
+  let title = "SSDGUNA";
   let description = "Stream and download gospel music from South Sudan.";
   let imageUrl = `${supabaseUrl}/storage/v1/object/public/covers/og-default.jpg`;
   let pageUrl = SITE_ORIGIN;
@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
     if (song) {
       const artistName = (song.artists as any)?.name || "Unknown Artist";
       title = `${song.title} by ${artistName}`;
-      description = song.description || `Listen to ${song.title} by ${artistName} on Sudagospel. ${song.genre || "Gospel"} music from South Sudan.`;
+      description = song.description || `Listen to ${song.title} by ${artistName} on SSDGUNA. ${song.genre || "Gospel"} music from South Sudan.`;
       if (song.cover_url) imageUrl = song.cover_url;
       pageUrl = `${SITE_ORIGIN}/song/${songId}`;
     }
@@ -51,8 +51,8 @@ Deno.serve(async (req) => {
       .single();
 
     if (artist) {
-      title = `${artist.name} - Sudagospel`;
-      description = artist.bio || `Listen to ${artist.name}'s gospel music on Sudagospel. ${artist.genre || "Gospel"} artist from South Sudan.`;
+      title = `${artist.name} - SSDGUNA`;
+      description = artist.bio || `Listen to ${artist.name}'s gospel music on SSDGUNA. ${artist.genre || "Gospel"} artist from South Sudan.`;
       if (artist.avatar_url) imageUrl = artist.avatar_url;
       pageUrl = `${SITE_ORIGIN}/artist/${songId}`;
     }
@@ -64,8 +64,8 @@ Deno.serve(async (req) => {
       .single();
 
     if (article) {
-      title = `${article.title} - Sudagospel`;
-      description = article.excerpt || "Read the latest gospel news on Sudagospel.";
+      title = `${article.title} - SSDGUNA`;
+      description = article.excerpt || "Read the latest gospel news on SSDGUNA.";
       if (article.cover_url) imageUrl = article.cover_url;
       pageUrl = `${SITE_ORIGIN}/news/${article.slug || songId}`;
     }
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
   <meta property="og:image:alt" content="${escapeHtml(title)}">
   <meta property="og:type" content="${type === "artist" ? "profile" : type === "article" ? "article" : "music.song"}">
   <meta property="og:url" content="${escapeHtml(pageUrl)}">
-  <meta property="og:site_name" content="Sudagospel">
+  <meta property="og:site_name" content="SSDGUNA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">

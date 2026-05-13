@@ -4,11 +4,13 @@ import { addDownload } from "@/pages/DownloadsPage";
 import {
   Play, Pause, SkipForward, SkipBack, Heart, Download, Share2,
   ChevronDown, Music, ListMusic, Shuffle, Repeat, Repeat1,
-  Volume, Volume1, Volume2, VolumeX, X, Trash2
+  Volume, Volume1, Volume2, VolumeX, X, Settings2, Moon
 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import ShareDialog from "@/components/ShareDialog";
+import Waveform from "@/components/Waveform";
+import PlaybackExtrasSheet from "@/components/PlaybackExtrasSheet";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -29,7 +31,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     currentTrack, isPlaying, togglePlay, next, prev,
     currentTime, duration, seek, queue, volume, setVolume,
     shuffle, repeatMode, toggleShuffle, cycleRepeat,
-    play, removeFromQueue
+    play, removeFromQueue, playbackRate, sleepTimerEndsAt,
   } = usePlayer();
 
   const { isLiked, toggleLike } = useLikeSong(currentTrack?.id || "");
@@ -261,21 +263,13 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     </button>
                   </div>
 
-                  {/* Progress bar */}
+                  {/* Waveform progress */}
                   <div className="mb-5">
-                    <div
-                      ref={progressRef}
-                      className="h-1.5 rounded-full bg-muted/40 cursor-pointer group hover:h-2 transition-all"
-                      onClick={handleSeek}
-                      onTouchMove={handleSeek}
-                    >
-                      <div
-                        className="h-full rounded-full bg-gradient-gold relative transition-[width] duration-100"
-                        style={{ width: `${progress}%` }}
-                      >
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                    </div>
+                    <Waveform
+                      trackId={currentTrack.id}
+                      progress={duration > 0 ? currentTime / duration : 0}
+                      onSeek={(pct) => seek(pct * duration)}
+                    />
                     <div className="flex justify-between mt-2">
                       <span className="text-[11px] text-muted-foreground tabular-nums">{formatTime(currentTime)}</span>
                       <span className="text-[11px] text-muted-foreground tabular-nums">{formatTime(duration)}</span>
@@ -333,8 +327,24 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     </div>
                   </div>
 
+                  {/* Active extras status */}
+                  {(playbackRate !== 1 || sleepTimerEndsAt) && (
+                    <div className="flex items-center justify-center gap-2 mb-2 text-[10px]">
+                      {playbackRate !== 1 && (
+                        <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold tabular-nums">
+                          {playbackRate}x
+                        </span>
+                      )}
+                      {sleepTimerEndsAt && (
+                        <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold inline-flex items-center gap-1">
+                          <Moon className="h-2.5 w-2.5" /> Sleep on
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {/* Action buttons */}
-                  <div className="flex items-center justify-center gap-10 pb-6">
+                  <div className="flex items-center justify-center gap-8 pb-6">
                     <button onClick={handleDownload} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                       <Download className="h-5 w-5" />
                     </button>
@@ -347,6 +357,14 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                       trigger={
                         <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                           <Share2 className="h-5 w-5" />
+                        </button>
+                      }
+                    />
+                    <PlaybackExtrasSheet
+                      trackId={currentTrack.id}
+                      trigger={
+                        <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
+                          <Settings2 className="h-5 w-5" />
                         </button>
                       }
                     />

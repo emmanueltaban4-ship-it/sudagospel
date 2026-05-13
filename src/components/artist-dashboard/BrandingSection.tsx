@@ -117,7 +117,7 @@ const BrandingSection = ({ artist }: { artist: any }) => {
       <Card className="p-4 md:p-6 space-y-4">
         <div>
           <h3 className="font-heading text-lg font-bold">Profile details</h3>
-          <p className="text-xs text-muted-foreground">How you appear across Sudagospel</p>
+          <p className="text-xs text-muted-foreground">How you appear across SSDGUNA</p>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-1.5">

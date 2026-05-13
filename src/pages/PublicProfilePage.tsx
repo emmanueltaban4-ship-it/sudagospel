@@ -68,8 +68,8 @@ const PublicProfilePage = () => {
   });
 
   useDocumentMeta({
-    title: profile ? `${profile.display_name || "User"} on Sudagospel` : "User profile",
-    description: profile?.bio || `${profile?.display_name || "A listener"} on Sudagospel`,
+    title: profile ? `${profile.display_name || "User"} on SSDGUNA` : "User profile",
+    description: profile?.bio || `${profile?.display_name || "A listener"} on SSDGUNA`,
   });
 
   if (isLoading) {
@@ -130,7 +130,7 @@ const PublicProfilePage = () => {
                   {profile.account_type === "artist" ? "Artist" : "Listener"}
                 </span>
                 <h1 className="font-heading text-3xl md:text-4xl font-extrabold text-foreground mt-1 leading-tight">
-                  {profile.display_name || "Sudagospel listener"}
+                  {profile.display_name || "SSDGUNA listener"}
                 </h1>
                 {profile.bio && (
                   <p className="text-sm text-muted-foreground mt-2 max-w-xl">{profile.bio}</p>

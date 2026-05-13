@@ -26,7 +26,7 @@ serve(async (req) => {
     if (!artist.supporter_enabled) throw new Error("Artist is not accepting supporters");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2025-08-27.basil" });
-    const origin = req.headers.get("origin") || "https://sudagospel.com";
+    const origin = req.headers.get("origin") || "https://ssdguna.net";
 
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     const customerId = customers.data[0]?.id;

@@ -35,7 +35,7 @@ const SECTIONS: Section[] = [
     icon: Palette,
     description: "App identity — name, logo, colors and homepage copy.",
     fields: [
-      { key: "site_name", label: "Site name", type: "text", placeholder: "Sudagospel", maxLength: 60 },
+      { key: "site_name", label: "Site name", type: "text", placeholder: "SSDGUNA", maxLength: 60 },
       { key: "tagline", label: "Tagline", type: "text", placeholder: "South Sudan's premier gospel music platform", maxLength: 160 },
       { key: "logo_url", label: "Logo", type: "image" },
       { key: "favicon_url", label: "Favicon", type: "image", help: "Square 64×64 or 128×128 recommended." },
@@ -43,7 +43,7 @@ const SECTIONS: Section[] = [
       { key: "primary_color", label: "Primary color", type: "color", help: "Hex value, e.g. #DC2626." },
       { key: "secondary_color", label: "Secondary color", type: "color" },
       { key: "hero_quote", label: "Homepage quote", type: "textarea", placeholder: "Inspirational quote shown on the homepage hero." },
-      { key: "footer_text", label: "Footer text", type: "text", placeholder: "© 2026 Sudagospel" },
+      { key: "footer_text", label: "Footer text", type: "text", placeholder: "© 2026 SSDGUNA" },
     ],
   },
   {
@@ -55,7 +55,7 @@ const SECTIONS: Section[] = [
       { key: "seo_title", label: "Default page title", type: "text", maxLength: 70, help: "Under 60 characters works best." },
       { key: "seo_description", label: "Meta description", type: "textarea", maxLength: 200, help: "Under 160 characters works best." },
       { key: "seo_keywords", label: "Keywords", type: "text", placeholder: "gospel, south sudan, worship" },
-      { key: "canonical_url", label: "Canonical URL", type: "url", placeholder: "https://sudagospel.com" },
+      { key: "canonical_url", label: "Canonical URL", type: "url", placeholder: "https://ssdguna.net" },
       { key: "google_site_verification", label: "Google site verification token", type: "text" },
       { key: "google_analytics_id", label: "Google Analytics ID", type: "text", placeholder: "G-XXXXXXXXXX" },
       { key: "robots_index", label: "Allow search engine indexing", type: "boolean", help: "Turn off to ask search engines not to index the site." },
