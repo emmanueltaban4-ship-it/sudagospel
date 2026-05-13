@@ -1,4 +1,4 @@
-import { Home, Compass, Search, Library, Crown } from "lucide-react";
+import { Home, Compass, Search, Library, Newspaper } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SearchOverlay from "./SearchOverlay";
@@ -8,7 +8,7 @@ const tabs = [
   { to: "/music", icon: Compass, label: "Browse" },
   { to: "__search__", icon: Search, label: "Search" },
   { to: "/library", icon: Library, label: "My Library" },
-  { to: "/subscription", icon: Crown, label: "Premium" },
+  { to: "/news", icon: Newspaper, label: "News" },
 ];
 
 const BottomNav = () => {
