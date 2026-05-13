@@ -895,6 +895,8 @@ const ProfilePage = () => {
                     <NavItem icon={<Crown className="h-5 w-5" />} label="Premium" sublabel="Unlock all features" onClick={() => navigate("/subscription")} />
                   </div>
 
+                  <InstallAppCard />
+
                   {/* Following */}
                   {followedArtists && followedArtists.length > 0 && (
                     <>
