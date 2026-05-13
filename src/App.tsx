@@ -56,6 +56,7 @@ const PrayerWallPage = lazy(() => import("./pages/PrayerWallPage.tsx"));
 const ReferralsPage = lazy(() => import("./pages/ReferralsPage.tsx"));
 const MoodsPage = lazy(() => import("./pages/MoodsPage.tsx"));
 import InstallPWA from "@/components/InstallPWA";
+import FirstVisitInstallBanner from "@/components/FirstVisitInstallBanner";
 import LiveRadioBar from "@/components/LiveRadioBar";
 
 const queryClient = new QueryClient({
