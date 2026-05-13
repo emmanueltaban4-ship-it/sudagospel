@@ -2,6 +2,7 @@ import {
   Play, Pause, SkipForward, SkipBack, Volume, Volume1, Volume2, VolumeX,
   Repeat, Shuffle, Heart, ListMusic, Maximize2, Music, ChevronUp
 } from "lucide-react";
+import { songPath } from "@/lib/song-slug";
 import { usePlayer } from "@/hooks/use-player";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useCallback } from "react";
