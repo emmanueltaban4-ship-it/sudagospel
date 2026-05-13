@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { resolvePlayableUrl } from "@/lib/signed-media";
+import { offlineDownloads } from "@/lib/offline-downloads";
+
+// Prefer locally-saved blob if the song was downloaded for offline use.
+const resolveTrackUrl = async (id: string, fileUrl: string): Promise<string> => {
+  const offline = await offlineDownloads.getBlobUrl(id);
+  if (offline) return offline;
+  return resolvePlayableUrl(fileUrl);
+};
 
 export interface Track {
   id: string;
