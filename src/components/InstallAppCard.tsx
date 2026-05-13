@@ -58,7 +58,7 @@ const InstallAppCard = () => {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
-            Install SSDGUNA App
+            Install Suda Gospel App
             <Smartphone className="h-3.5 w-3.5 text-primary" />
           </p>
           <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -70,11 +70,11 @@ const InstallAppCard = () => {
       <Dialog open={showIosHelp} onOpenChange={setShowIosHelp}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Install SSDGUNA</DialogTitle>
+            <DialogTitle>Install Suda Gospel</DialogTitle>
             <DialogDescription>
               {isIOS()
-                ? "Add SSDGUNA to your iPhone home screen in two steps."
-                : "Use your browser menu to install SSDGUNA on your device."}
+                ? "Add Suda Gospel to your iPhone home screen in two steps."
+                : "Use your browser menu to install Suda Gospel on your device."}
             </DialogDescription>
           </DialogHeader>
           {isIOS() ? (

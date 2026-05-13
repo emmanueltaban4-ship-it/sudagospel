@@ -33,7 +33,7 @@ serve(async (req) => {
     if (existing) throw new Error("Already purchased");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2025-08-27.basil" });
-    const origin = req.headers.get("origin") || "https://ssdguna.net";
+    const origin = req.headers.get("origin") || "https://sudagospel.net";
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: user.email,

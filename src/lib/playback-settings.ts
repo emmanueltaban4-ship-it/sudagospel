@@ -1,6 +1,6 @@
 // Lightweight persisted playback preferences (data saver, EQ, speed defaults).
 
-const KEY = "ssdguna_playback_settings_v1";
+const KEY = "sudagospel_playback_settings_v1";
 
 export interface PlaybackSettings {
   dataSaver: boolean;

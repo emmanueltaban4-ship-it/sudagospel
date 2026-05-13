@@ -14,8 +14,8 @@ const NewSongsPage = () => {
   useDocumentMeta({
     title: "New Songs",
     description:
-      "Discover the latest gospel songs uploaded to SSDGUNA. Fresh music from South Sudan's gospel artists.",
-    keywords: "new gospel songs, latest South Sudan music, fresh gospel, SSDGUNA",
+      "Discover the latest gospel songs uploaded to Suda Gospel. Fresh music from South Sudan's gospel artists.",
+    keywords: "new gospel songs, latest South Sudan music, fresh gospel, Suda Gospel",
   });
 
   const { play, currentTrack, isPlaying, togglePlay } = usePlayer();

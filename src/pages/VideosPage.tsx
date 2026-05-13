@@ -23,7 +23,7 @@ const VideosPage = () => {
   const [activeTab, setActiveTab] = useState<TabKey>("all");
 
   useDocumentMeta({
-    title: "Videos - SSDGUNA",
+    title: "Videos - Suda Gospel",
     description: "Watch music videos, interviews, and gospel spotlights from South Sudan's top artists.",
   });
 

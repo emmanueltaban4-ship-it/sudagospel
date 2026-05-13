@@ -53,7 +53,7 @@ serve(async (req) => {
     const platform_fee_cents = Math.round((total * feePct) / 100);
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2025-08-27.basil" });
-    const origin = req.headers.get("origin") || "https://ssdguna.net";
+    const origin = req.headers.get("origin") || "https://sudagospel.net";
     const needsShipping = products.some(p => p.is_physical);
 
     const session = await stripe.checkout.sessions.create({

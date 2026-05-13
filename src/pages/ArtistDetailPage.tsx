@@ -166,11 +166,11 @@ const ArtistDetailPage = () => {
   const totalDownloads = songs?.reduce((sum, s) => sum + (s.download_count || 0), 0) || 0;
   const { isFollowing, followerCount, toggleFollow } = useFollowArtist(artistId || "");
 
-  const canonicalUrl = artist ? `https://ssdguna.net/artist/${artistSlug(artist.name)}` : undefined;
+  const canonicalUrl = artist ? `https://sudagospel.net/artist/${artistSlug(artist.name)}` : undefined;
   const songCount = songs?.length || 0;
   const seoDescription = artist?.bio
     ? `${artist.bio.slice(0, 140)}${artist.bio.length > 140 ? "…" : ""}`
-    : `Listen to ${artist?.name || "this artist"}'s ${songCount} gospel songs on SSDGUNA.`;
+    : `Listen to ${artist?.name || "this artist"}'s ${songCount} gospel songs on Suda Gospel.`;
 
   useDocumentMeta({
     title: artist?.name || "Artist",
@@ -178,7 +178,7 @@ const ArtistDetailPage = () => {
     ogImage: artist?.avatar_url || undefined,
     ogType: "music.musician",
     canonicalUrl,
-    keywords: artist ? `${artist.name}, South Sudan gospel, gospel music, ${artist.genre || "gospel"}, SSDGUNA` : undefined,
+    keywords: artist ? `${artist.name}, South Sudan gospel, gospel music, ${artist.genre || "gospel"}, Suda Gospel` : undefined,
     jsonLd: artist ? {
       "@context": "https://schema.org", "@type": "MusicGroup",
       name: artist.name, url: canonicalUrl, genre: artist.genre || "Gospel",

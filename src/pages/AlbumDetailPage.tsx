@@ -84,7 +84,7 @@ const AlbumDetailPage = () => {
 
   useDocumentMeta({
     title: album ? `${album.title} - ${artist?.name || "Album"}` : "Album",
-    description: album?.description || `Listen to ${album?.title || "this album"} on SSDGUNA`,
+    description: album?.description || `Listen to ${album?.title || "this album"} on Suda Gospel`,
   });
 
   const handlePlayAll = () => {
@@ -102,7 +102,7 @@ const AlbumDetailPage = () => {
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: album?.title, text: `Check out ${album?.title} on SSDGUNA`, url });
+      await navigator.share({ title: album?.title, text: `Check out ${album?.title} on Suda Gospel`, url });
     } else {
       await navigator.clipboard.writeText(url);
       toast.success("Link copied!");

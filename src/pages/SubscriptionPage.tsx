@@ -69,7 +69,7 @@ const SubscriptionPage = () => {
       name: "Premium",
       price: "$4.99",
       period: "/month",
-      description: "Unlock the full SSDGUNA experience",
+      description: "Unlock the full Suda Gospel experience",
       icon: Crown,
       features: [
         "Everything in Free",

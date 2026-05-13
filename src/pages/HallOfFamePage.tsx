@@ -15,7 +15,7 @@ const HallOfFamePage = () => {
 
   useDocumentMeta({
     title: "Hall of Fame",
-    description: "Top gospel artists on SSDGUNA ranked by plays and followers.",
+    description: "Top gospel artists on Suda Gospel ranked by plays and followers.",
     keywords: "South Sudan gospel, hall of fame, top artists, gospel music rankings",
   });
 
@@ -95,7 +95,7 @@ const HallOfFamePage = () => {
             Hall of Fame
           </h1>
           <p className="text-sm text-muted-foreground mt-2">
-            Celebrating the most popular gospel artists on SSDGUNA
+            Celebrating the most popular gospel artists on Suda Gospel
           </p>
         </div>
 

@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.ssdguna',
-  appName: 'SSDGUNA',
+  appId: 'app.lovable.sudagospel',
+  appName: 'Suda Gospel',
   webDir: 'dist',
   plugins: {
     SplashScreen: {

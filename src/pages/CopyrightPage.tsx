@@ -46,7 +46,7 @@ const CopyrightPage = () => {
 
           <div>
             <h2 className="text-xl font-semibold text-foreground mb-2">6. Contact</h2>
-            <p>For copyright-related inquiries, contact us at <span className="text-foreground">copyright@ssdguna.net</span>.</p>
+            <p>For copyright-related inquiries, contact us at <span className="text-foreground">copyright@sudagospel.net</span>.</p>
           </div>
         </section>
 

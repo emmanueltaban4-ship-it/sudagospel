@@ -472,7 +472,7 @@ const Index = () => {
                   <h2 className="font-heading text-xl md:text-2xl font-black text-foreground tracking-tight">
                     Verified Gospel Ministers
                   </h2>
-                  <p className="text-xs text-muted-foreground">Authenticated and trusted artists on SSDGUNA</p>
+                  <p className="text-xs text-muted-foreground">Authenticated and trusted artists on Suda Gospel</p>
                 </div>
               </div>
               <Link to="/artists" className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
