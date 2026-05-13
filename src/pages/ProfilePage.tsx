@@ -23,6 +23,7 @@ import BoostSongDialog from "@/components/BoostSongDialog";
 import ProfileExtras, { CoverBanner, ShareProfileButton } from "@/components/profile/ProfileExtras";
 import ArtistApplicationDialog from "@/components/profile/ArtistApplicationDialog";
 import ArtistStudioLinks from "@/components/profile/ArtistStudioLinks";
+import InstallAppCard from "@/components/InstallAppCard";
 import { Sparkles } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
@@ -894,6 +895,8 @@ const ProfilePage = () => {
                     <NavItem icon={<Crown className="h-5 w-5" />} label="Premium" sublabel="Unlock all features" onClick={() => navigate("/subscription")} />
                   </div>
 
+                  <InstallAppCard />
+
                   {/* Following */}
                   {followedArtists && followedArtists.length > 0 && (
                     <>
@@ -969,6 +972,8 @@ const ProfilePage = () => {
                 <div className="pt-2 pb-1"><p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Library</p></div>
                 <NavItem icon={<ListMusic className="h-5 w-5" />} label="My Playlists" badge={myPlaylists > 0 ? String(myPlaylists) : undefined} onClick={() => navigate("/playlists")} />
                 <NavItem icon={<Crown className="h-5 w-5" />} label="Premium" sublabel="Unlock all features" onClick={() => navigate("/subscription")} />
+
+                <div className="pt-2"><InstallAppCard /></div>
 
                 {followedArtists && followedArtists.length > 0 && (
                   <>
