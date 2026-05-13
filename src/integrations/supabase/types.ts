@@ -1430,6 +1430,57 @@ export type Database = {
         }
         Relationships: []
       }
+      security_findings: {
+        Row: {
+          affected_resource: string | null
+          category: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          external_id: string | null
+          id: string
+          remediation: string | null
+          resolved_at: string | null
+          severity: Database["public"]["Enums"]["security_finding_severity"]
+          source: string | null
+          status: Database["public"]["Enums"]["security_finding_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affected_resource?: string | null
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          external_id?: string | null
+          id?: string
+          remediation?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["security_finding_severity"]
+          source?: string | null
+          status?: Database["public"]["Enums"]["security_finding_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affected_resource?: string | null
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          external_id?: string | null
+          id?: string
+          remediation?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["security_finding_severity"]
+          source?: string | null
+          status?: Database["public"]["Enums"]["security_finding_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sermons: {
         Row: {
           artist_id: string | null
@@ -2299,6 +2350,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      security_finding_severity: "info" | "warn" | "error"
+      security_finding_status: "open" | "in_progress" | "fixed" | "ignored"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2427,6 +2480,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      security_finding_severity: ["info", "warn", "error"],
+      security_finding_status: ["open", "in_progress", "fixed", "ignored"],
     },
   },
 } as const
