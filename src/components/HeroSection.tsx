@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { songPath } from "@/lib/song-slug";
 import { Play, Pause, ChevronLeft, ChevronRight, Headphones, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
@@ -203,7 +204,7 @@ const HeroSection = () => {
                 {isCurrent && isPlaying ? "Pause" : "Play Now"}
               </button>
               <Link
-                to={`/song/${activeSong.id}`}
+                to={songPath(activeSong.id, activeSong.title)}
                 className="inline-flex items-center gap-1.5 border border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 font-semibold text-sm rounded-full px-5 py-3 transition-all"
               >
                 Details <ChevronRight className="h-4 w-4" />

@@ -1,4 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
+import { songPath } from "@/lib/song-slug";
 import { artistPath } from "@/lib/artist-slug";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -418,7 +419,7 @@ const ProfilePage = () => {
           {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-muted flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}
         </div>
         <div className="flex-1 min-w-0">
-          <Link to={`/song/${song.id}`} className="text-sm font-medium text-foreground truncate block hover:underline">{song.title}</Link>
+          <Link to={songPath(song.id, song.title)} className="text-sm font-medium text-foreground truncate block hover:underline">{song.title}</Link>
           <p className="text-[11px] text-muted-foreground">{options?.showStatus ? "Awaiting review" : `${(song.play_count || 0).toLocaleString()} plays · ${(song.download_count || 0).toLocaleString()} downloads`}</p>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
@@ -621,7 +622,7 @@ const ProfilePage = () => {
                     {approvedSongs.length > 0 ? (
                       <div className="rounded-xl border border-border overflow-hidden">
                         {[...approvedSongs].sort((a, b) => (b.play_count || 0) - (a.play_count || 0)).slice(0, 5).map((song, i) => (
-                          <Link key={song.id} to={`/song/${song.id}`} className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors ${i < 4 ? "border-b border-border" : ""}`}>
+                          <Link key={song.id} to={songPath(song.id, song.title)} className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors ${i < 4 ? "border-b border-border" : ""}`}>
                             <span className="text-sm font-bold text-muted-foreground w-6 text-center">{i + 1}</span>
                             <div className="h-10 w-10 rounded overflow-hidden bg-muted flex-shrink-0">
                               {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full flex items-center justify-center"><Music className="h-4 w-4 text-muted-foreground" /></div>}

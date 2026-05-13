@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { songPath } from "@/lib/song-slug";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
 import { useTrendingSongs, TrendingPeriod } from "@/hooks/use-discovery";
@@ -165,7 +166,7 @@ const ChartsPage = () => {
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Link to={`/song/${s.song_id}`} onClick={(e) => e.stopPropagation()}>
+                      <Link to={songPath(s.song_id, s.title)} onClick={(e) => e.stopPropagation()}>
                         <p className={`text-sm font-semibold truncate hover:underline ${active ? "text-primary" : "text-foreground"}`}>
                           {s.title}
                         </p>
@@ -268,7 +269,7 @@ const PodiumCard = ({
 
         {/* Title overlay */}
         <div className="absolute bottom-3 left-3 right-20">
-          <Link to={`/song/${song.song_id}`} onClick={(e) => e.stopPropagation()}>
+          <Link to={songPath(song.song_id, song.title)} onClick={(e) => e.stopPropagation()}>
             <h3 className="font-heading font-bold text-white text-base md:text-lg truncate hover:underline">
               {song.title}
             </h3>

@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { songPath } from "@/lib/song-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -262,7 +263,7 @@ const AlbumDetailPage = () => {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <Link to={`/song/${song.id}`} onClick={(e) => e.stopPropagation()}>
+                    <Link to={songPath(song.id, song.title)} onClick={(e) => e.stopPropagation()}>
                       <p className={`text-sm font-medium truncate hover:underline ${isCurrentSong ? "text-primary" : "text-foreground"}`}>
                         {song.title}
                       </p>

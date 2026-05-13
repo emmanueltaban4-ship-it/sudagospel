@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { songPath } from "@/lib/song-slug";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -565,7 +566,7 @@ const OverviewSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
           ) : (
             <div className="space-y-1">
               {topSongs.map((song, i) => (
-                <Link key={song.id} to={`/song/${song.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition group">
+                <Link key={song.id} to={songPath(song.id, song.title)} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition group">
                   <span className="w-6 text-center text-sm font-bold text-muted-foreground">{i + 1}</span>
                   <div className="h-11 w-11 rounded-lg bg-muted overflow-hidden flex-shrink-0">
                     {song.cover_url ? <img src={song.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" /> : <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-4 w-4 text-primary" /></div>}
@@ -816,7 +817,7 @@ const MusicSection = ({ artist }: { artist: any }) => {
                       {isPinned && <div className="absolute top-0.5 right-0.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center"><Pin className="h-2.5 w-2.5 text-primary-foreground fill-primary-foreground" /></div>}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Link to={`/song/${song.id}`} className="block">
+                      <Link to={songPath(song.id, song.title)} className="block">
                         <p className="text-sm font-semibold truncate hover:text-primary transition">{song.title}</p>
                       </Link>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">

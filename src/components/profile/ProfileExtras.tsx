@@ -1,4 +1,5 @@
 import { useMemo, useState, useRef } from "react";
+import { songPath } from "@/lib/song-slug";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -290,7 +291,7 @@ export const RecentlyPlayedRow = () => {
           return (
             <SmallCard
               key={t.id}
-              to={`/song/${t.id}`}
+              to={songPath(t.id, t.title)}
               cover={t.coverUrl}
               title={t.title}
               subtitle={t.artist}
@@ -333,7 +334,7 @@ export const LikedSongsRow = ({ userId }: { userId: string }) => {
           return (
             <SmallCard
               key={s.id}
-              to={`/song/${s.id}`}
+              to={songPath(s.id, s.title)}
               cover={s.cover_url}
               title={s.title}
               subtitle={s.artists?.name}

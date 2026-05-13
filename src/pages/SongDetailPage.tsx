@@ -1,5 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
+import { extractSongId, songPath } from "@/lib/song-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSongComments } from "@/hooks/use-music-data";
@@ -30,7 +31,8 @@ import CommentThread from "@/components/CommentThread";
 import { Sparkles } from "lucide-react";
 
 const SongDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id: rawId } = useParams<{ id: string }>();
+  const id = extractSongId(rawId) ?? undefined;
   const navigate = useNavigate();
   const { user } = useAuth();
   const { play, currentTrack, isPlaying, togglePlay, currentTime, duration, seek, next, prev } = usePlayer();
@@ -82,7 +84,7 @@ const SongDetailPage = () => {
     : song
       ? `Listen to ${song.title} by ${artistName}. Stream and download free South Sudanese gospel music on SSDGUNA.`
       : undefined;
-  const songCanonicalUrl = song ? `https://ssdguna.net/song/${song.id}` : undefined;
+  const songCanonicalUrl = song ? `https://ssdguna.net${songPath(song.id, song.title)}` : undefined;
 
   useDocumentMeta({
     title: song ? `${song.title} by ${artistName}` : undefined,
@@ -467,7 +469,7 @@ const SongDetailPage = () => {
                           </div>
                         </div>
                       </div>
-                      <Link to={`/song/${rs.id}`} onClick={(e) => e.stopPropagation()}>
+                      <Link to={songPath(rs.id, rs.title)} onClick={(e) => e.stopPropagation()}>
                         <p className="text-sm font-semibold text-foreground truncate hover:underline">{rs.title}</p>
                       </Link>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{rArtist}</p>
