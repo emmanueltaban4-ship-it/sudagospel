@@ -371,11 +371,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
   const clearQueue = useCallback(() => setQueue([]), []);
 
+  const setPlaybackRate = useCallback((r: number) => setPlaybackRateState(r), []);
+  const setDataSaver = useCallback((v: boolean) => setDataSaverState(v), []);
+  const setEqEnabled = useCallback((v: boolean) => setEqEnabledState(v), []);
+  const setEqBands = useCallback((b: { bass?: number; mid?: number; treble?: number }) => {
+    if (b.bass !== undefined) setEqBass(b.bass);
+    if (b.mid !== undefined) setEqMid(b.mid);
+    if (b.treble !== undefined) setEqTreble(b.treble);
+  }, []);
+  const setSleepTimer = useCallback((minutes: number | null) => {
+    setSleepTimerEndsAt(minutes === null ? null : Date.now() + minutes * 60_000);
+  }, []);
+
   return (
     <PlayerContext.Provider
       value={{
         currentTrack, isPlaying, duration, currentTime, volume,
         queue, recentlyPlayed, shuffle, repeatMode,
+        playbackRate, setPlaybackRate,
+        dataSaver, setDataSaver,
+        eqEnabled, setEqEnabled, eqBass, eqMid, eqTreble, setEqBands,
+        sleepTimerEndsAt, setSleepTimer,
         play, togglePlay, seek, setVolume,
         next: handleNext, prev: handlePrev,
         toggleShuffle, cycleRepeat, removeFromQueue, clearQueue,
