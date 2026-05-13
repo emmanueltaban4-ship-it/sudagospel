@@ -22,10 +22,10 @@ const LOGO_URL = 'https://cmzugtsxgoaigrcrdiff.supabase.co/storage/v1/object/pub
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your verification code for Sudagospel</Preview>
+    <Preview>Your verification code for SSDGUNA</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={LOGO_URL} alt="Sudagospel" width="48" height="48" style={logo} />
+        <Img src={LOGO_URL} alt="SSDGUNA" width="48" height="48" style={logo} />
         <Heading style={h1}>Confirm your identity</Heading>
         <Text style={text}>Use the code below to verify your identity:</Text>
         <Text style={codeStyle}>{token}</Text>

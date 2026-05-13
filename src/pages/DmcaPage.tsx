@@ -46,7 +46,7 @@ const DmcaPage = () => {
             <p>Send all DMCA takedown notices to:</p>
             <div className="bg-muted/50 rounded-lg p-4 mt-2">
               <p className="text-foreground font-medium">SudaGospel DMCA Agent</p>
-              <p>Email: dmca@sudagospel.com</p>
+              <p>Email: dmca@ssdguna.net</p>
               <p>Subject line: DMCA Takedown Notice</p>
             </div>
           </div>

@@ -16,8 +16,8 @@ const MostListenedPage = () => {
 
   useDocumentMeta({
     title: "Most Listened",
-    description: "The most played gospel songs on Sudagospel — discover South Sudan's top gospel hits.",
-    keywords: "most played gospel songs, South Sudan gospel, top songs, Sudagospel charts",
+    description: "The most played gospel songs on SSDGUNA — discover South Sudan's top gospel hits.",
+    keywords: "most played gospel songs, South Sudan gospel, top songs, SSDGUNA charts",
   });
 
   const { data: songs, isLoading } = useQuery({
