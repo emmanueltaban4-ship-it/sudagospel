@@ -91,7 +91,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         </aside>
         
         {/* Main content */}
-        <main className="flex-1 min-w-0 overflow-y-auto h-[calc(100vh-3.5rem)] overscroll-contain scroll-smooth">
+        <main className="flex-1 min-w-0 lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)] lg:overscroll-contain scroll-smooth">
           <div className="pb-[140px] md:pb-[80px]">
             <PageTransition key={location.pathname}>
               {children}
