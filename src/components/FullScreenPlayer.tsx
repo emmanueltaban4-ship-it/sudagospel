@@ -263,21 +263,13 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     </button>
                   </div>
 
-                  {/* Progress bar */}
+                  {/* Waveform progress */}
                   <div className="mb-5">
-                    <div
-                      ref={progressRef}
-                      className="h-1.5 rounded-full bg-muted/40 cursor-pointer group hover:h-2 transition-all"
-                      onClick={handleSeek}
-                      onTouchMove={handleSeek}
-                    >
-                      <div
-                        className="h-full rounded-full bg-gradient-gold relative transition-[width] duration-100"
-                        style={{ width: `${progress}%` }}
-                      >
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                    </div>
+                    <Waveform
+                      trackId={currentTrack.id}
+                      progress={duration > 0 ? currentTime / duration : 0}
+                      onSeek={(pct) => seek(pct * duration)}
+                    />
                     <div className="flex justify-between mt-2">
                       <span className="text-[11px] text-muted-foreground tabular-nums">{formatTime(currentTime)}</span>
                       <span className="text-[11px] text-muted-foreground tabular-nums">{formatTime(duration)}</span>
