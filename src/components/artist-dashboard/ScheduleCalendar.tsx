@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { songPath } from "@/lib/song-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -95,7 +96,7 @@ const ScheduleCalendar = ({ artistId }: { artistId: string }) => {
         <div className="mt-5 pt-4 border-t space-y-2">
           <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Upcoming</p>
           {upcoming.map((s) => (
-            <Link key={s.id} to={`/song/${s.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition">
+            <Link key={s.id} to={songPath(s.id, s.title)} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/40 transition">
               <div className="h-9 w-9 rounded-lg bg-muted overflow-hidden flex-shrink-0">
                 {s.cover_url ? <img src={s.cover_url} className="h-full w-full object-cover"  loading="lazy" decoding="async" /> :
                   <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"><Music className="h-3.5 w-3.5 text-primary" /></div>}

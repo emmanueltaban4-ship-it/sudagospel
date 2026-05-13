@@ -1,4 +1,5 @@
 import { ArrowRight, Play, Pause, Music, TrendingUp, Clock, Headphones, Youtube, Mic2, HandMetal, Users2, BookOpen, Trophy, Sparkles, Disc3, Flame, Heart, Star, ChevronRight, Radio, Video, Award, CheckCircle } from "lucide-react";
+import { songPath } from "@/lib/song-slug";
 import { Link } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
 import { useQuery } from "@tanstack/react-query";
@@ -817,7 +818,7 @@ const SongCard = ({ song, onPlay, currentTrack, isPlaying, rank, showRank }: any
           </div>
         )}
       </div>
-      <Link to={`/song/${song.id}`} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
+      <Link to={songPath(song.id, song.title)} className="text-sm font-semibold text-foreground truncate block group-hover:text-primary transition-colors">
         {song.title}
       </Link>
       <Link to={artistPath(artist?.name || '')} className="text-xs text-muted-foreground hover:text-primary transition-colors truncate mt-0.5 flex items-center gap-1">

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { songPath } from "@/lib/song-slug";
 import { Search, X, Music, User, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { artistPath } from "@/lib/artist-slug";
@@ -67,7 +68,7 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
   };
 
   const handleViewSong = (songId: string) => {
-    navigate(`/song/${songId}`);
+    navigate(songPath(songId));
     onClose();
   };
 

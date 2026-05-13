@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { songPath } from "@/lib/song-slug";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
@@ -160,7 +161,7 @@ const PublicProfilePage = () => {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {likes.map((l: any) => l.songs && (
-                    <Link key={l.song_id} to={`/song/${l.songs.id}`} className="group block">
+                    <Link key={l.song_id} to={songPath(l.songs.id, l.songs.title)} className="group block">
                       <div className="aspect-square rounded-xl overflow-hidden bg-muted ring-1 ring-border/40 group-hover:ring-primary/40 transition">
                         {l.songs.cover_url ? (
                           <img src={l.songs.cover_url} alt={l.songs.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />

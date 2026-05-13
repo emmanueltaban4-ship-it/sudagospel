@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { songPath } from "@/lib/song-slug";
 import SongCard from "@/components/SongCard";
 import MiniPlayer from "@/components/MiniPlayer";
 import AdBanner from "@/components/AdBanner";
@@ -146,7 +147,7 @@ const MusicPage = () => {
                         </div>
                       </div>
                     </div>
-                    <Link to={`/song/${song.id}`}>
+                    <Link to={songPath(song.id, song.title)}>
                       <h3 className="font-semibold text-sm text-foreground truncate group-hover:text-primary transition-colors">{song.title}</h3>
                     </Link>
                     <p className="text-xs text-muted-foreground truncate mt-0.5">{song.artist}</p>

@@ -1,4 +1,5 @@
 import { Play, Pause, Heart, Download, CheckCircle } from "lucide-react";
+import { songPath } from "@/lib/song-slug";
 import { usePlayer, Track } from "@/hooks/use-player";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
@@ -100,7 +101,7 @@ const SongCard = ({ id, title, artist, coverUrl, plays, fileUrl, queue, isVerifi
     </div>
   );
 
-  if (id) return <Link to={`/song/${id}`}>{cardContent}</Link>;
+  if (id) return <Link to={songPath(id)}>{cardContent}</Link>;
   return cardContent;
 };
 

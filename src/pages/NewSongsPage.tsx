@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { songPath } from "@/lib/song-slug";
 import { supabase } from "@/integrations/supabase/client";
 import { useDocumentMeta } from "@/hooks/use-document-meta";
 import { usePlayer, Track } from "@/hooks/use-player";
@@ -116,7 +117,7 @@ const NewSongsPage = () => {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <Link
-                      to={`/song/${song.id}`}
+                      to={songPath(song.id, song.title)}
                       className="text-sm font-medium text-foreground truncate block hover:underline"
                     >
                       {song.title}

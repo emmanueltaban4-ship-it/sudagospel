@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { songPath } from "@/lib/song-slug";
 import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import MiniPlayer from "@/components/MiniPlayer";
@@ -59,7 +60,7 @@ const PurchasesPage = () => {
                   {p.songs?.cover_url && <img src={p.songs.cover_url} alt="" className="h-full w-full object-cover"  loading="lazy" decoding="async" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <Link to={`/song/${p.song_id}`} className="font-semibold text-sm truncate block hover:text-primary">{p.songs?.title}</Link>
+                  <Link to={songPath(p.song_id, p.title)} className="font-semibold text-sm truncate block hover:text-primary">{p.songs?.title}</Link>
                   <p className="text-xs text-muted-foreground">{p.songs?.artists?.name} • {formatCents(p.amount_cents)}</p>
                 </div>
                 <Button size="sm" variant="outline" onClick={() => downloadFile(p.songs.file_url, `${p.songs.title}.mp3`)}>

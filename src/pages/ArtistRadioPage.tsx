@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { songPath } from "@/lib/song-slug";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useArtistRadio } from "@/hooks/use-discovery";
@@ -76,7 +77,7 @@ const ArtistRadioPage = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm truncate">{s.title}</p>
-                    <Link to={`/song/${s.song_id}`} onClick={(e) => e.stopPropagation()} className="text-xs text-muted-foreground hover:text-primary truncate">
+                    <Link to={songPath(s.song_id, s.title)} onClick={(e) => e.stopPropagation()} className="text-xs text-muted-foreground hover:text-primary truncate">
                       {s.artist_name}
                     </Link>
                   </div>

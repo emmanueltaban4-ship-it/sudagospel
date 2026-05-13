@@ -155,7 +155,7 @@ const MiniPlayer = () => {
                     )}
                   </div>
                 </button>
-                <button onClick={() => navigate(`/song/${currentTrack.id}`)} className="min-w-0 text-left">
+                <button onClick={() => navigate(songPath(currentTrack.id, currentTrack.title))} className="min-w-0 text-left">
                   <p className="text-sm font-semibold truncate text-foreground hover:text-primary transition-colors leading-tight">{currentTrack.title}</p>
                   <p className="text-[11px] text-muted-foreground truncate hover:text-foreground transition-colors">{currentTrack.artist}</p>
                 </button>
