@@ -102,6 +102,7 @@ const App = () => {
               <Toaster />
               <Sonner />
               <InstallPWA />
+              {!showSplash && <FirstVisitInstallBanner />}
               {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
               <BrowserRouter>
                 <Suspense fallback={<PageLoader />}>
