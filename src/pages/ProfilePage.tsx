@@ -23,6 +23,7 @@ import BoostSongDialog from "@/components/BoostSongDialog";
 import ProfileExtras, { CoverBanner, ShareProfileButton } from "@/components/profile/ProfileExtras";
 import ArtistApplicationDialog from "@/components/profile/ArtistApplicationDialog";
 import ArtistStudioLinks from "@/components/profile/ArtistStudioLinks";
+import InstallAppCard from "@/components/InstallAppCard";
 import { Sparkles } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
