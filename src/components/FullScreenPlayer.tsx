@@ -31,7 +31,7 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
     currentTrack, isPlaying, togglePlay, next, prev,
     currentTime, duration, seek, queue, volume, setVolume,
     shuffle, repeatMode, toggleShuffle, cycleRepeat,
-    play, removeFromQueue
+    play, removeFromQueue, playbackRate, sleepTimerEndsAt,
   } = usePlayer();
 
   const { isLiked, toggleLike } = useLikeSong(currentTrack?.id || "");
