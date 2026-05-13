@@ -335,7 +335,7 @@ class OfflineDownloadManager {
       this.notify();
       this.pump();
     } catch (err: any) {
-      if (a.status === "paused") {
+      if ((a.status as DownloadStatus) === "paused") {
         // Pause was the cause; keep accumulated chunks and progress for resume
         this.notify();
         this.pump();
