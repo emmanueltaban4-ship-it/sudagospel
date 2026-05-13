@@ -48,7 +48,7 @@ const NewsPage = () => {
             📰 Gospel News & Blog
           </h1>
           <p className="text-sm text-muted-foreground">
-            Latest stories, releases, and updates from the SSDGUNA gospel community.
+            Latest stories, releases, and updates from the Suda Gospel gospel community.
           </p>
         </header>
 

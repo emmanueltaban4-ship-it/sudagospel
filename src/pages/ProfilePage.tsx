@@ -375,7 +375,7 @@ const ProfilePage = () => {
                 <Headphones className="h-10 w-10 text-primary" />
               </div>
             </div>
-            <h2 className="font-heading font-extrabold text-2xl text-foreground mb-2">Join SSDGUNA</h2>
+            <h2 className="font-heading font-extrabold text-2xl text-foreground mb-2">Join Suda Gospel</h2>
             <p className="text-sm text-muted-foreground mb-8 max-w-[260px] mx-auto">Sign in to save favorites, follow artists, create playlists, and more.</p>
             <div className="flex flex-col gap-3">
               <Button onClick={() => navigate("/auth")} className="gap-2 rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground h-12 font-bold shadow-lg shadow-primary/20"><LogIn className="h-4 w-4" /> Sign In</Button>

@@ -121,8 +121,8 @@ const AuthPage = () => {
           {/* Logo & branding */}
           <div className="mb-10">
             <div className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="SSDGUNA" className="h-12 w-12 rounded-xl shadow-lg"  loading="lazy" decoding="async" />
-              <span className="font-heading text-xl font-extrabold text-foreground">SSDGUNA</span>
+              <img src={logo} alt="Suda Gospel" className="h-12 w-12 rounded-xl shadow-lg"  loading="lazy" decoding="async" />
+              <span className="font-heading text-xl font-extrabold text-foreground">Suda Gospel</span>
             </div>
             <h1 className="font-heading text-3xl md:text-4xl font-extrabold text-foreground tracking-tight leading-tight">
               Feel the spirit.<br />
@@ -377,7 +377,7 @@ const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: str
   return <>{count}{suffix}</>;
 };
 const testimonials = [
-  { name: "Gospel Minister", quote: "SSDGUNA changed how I share my music with South Sudan." },
+  { name: "Gospel Minister", quote: "Suda Gospel changed how I share my music with South Sudan." },
   { name: "Worship Leader", quote: "Finally a platform that understands gospel music in our community." },
   { name: "Church Choir", quote: "Our songs reached thousands of listeners we never knew existed." },
 ];

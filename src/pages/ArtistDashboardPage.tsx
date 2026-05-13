@@ -927,7 +927,7 @@ const MonetizationSection = ({ artist }: { artist: any }) => {
         <div className="mt-4 p-3 rounded-xl bg-muted/40 border border-border/50 flex items-start gap-2">
           <Info className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
           <p className="text-[11px] text-muted-foreground">
-            Payouts are processed manually by SSDGUNA via bank transfer or mobile money. Reach out from the contact page to request your payout.
+            Payouts are processed manually by Suda Gospel via bank transfer or mobile money. Reach out from the contact page to request your payout.
           </p>
         </div>
       </Card>
@@ -1157,8 +1157,8 @@ const AudienceSection = ({ artist, range, setRange }: { artist: any; range: 7 | 
         <div className="grid md:grid-cols-2 gap-3">
           <ShareKit
             url={`${window.location.origin}${artistPath(artist.name)}`}
-            title={`${artist.name} on SSDGUNA`}
-            description={`Listen to ${artist.name} — gospel music on SSDGUNA`}
+            title={`${artist.name} on Suda Gospel`}
+            description={`Listen to ${artist.name} — gospel music on Suda Gospel`}
             trigger={
               <Card className="p-4 rounded-xl border-border/50 hover:border-primary/40 transition cursor-pointer">
                 <div className="flex items-center gap-3">

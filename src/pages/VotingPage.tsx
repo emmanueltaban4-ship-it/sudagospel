@@ -14,7 +14,7 @@ const VotingPage = () => {
   const queryClient = useQueryClient();
 
   useDocumentMeta({
-    title: "Vote — SSDGUNA",
+    title: "Vote — Suda Gospel",
     description: "Vote for your favorite gospel artists in our community polls.",
   });
 

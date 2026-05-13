@@ -82,9 +82,9 @@ const SongDetailPage = () => {
   const songSeoDescription = song?.description
     ? `${song.description.slice(0, 140)}${song.description.length > 140 ? "…" : ""}`
     : song
-      ? `Listen to ${song.title} by ${artistName}. Stream and download free South Sudanese gospel music on SSDGUNA.`
+      ? `Listen to ${song.title} by ${artistName}. Stream and download free South Sudanese gospel music on Suda Gospel.`
       : undefined;
-  const songCanonicalUrl = song ? `https://ssdguna.net${songPath(song.id, song.title)}` : undefined;
+  const songCanonicalUrl = song ? `https://sudagospel.net${songPath(song.id, song.title)}` : undefined;
 
   useDocumentMeta({
     title: song ? `${song.title} by ${artistName}` : undefined,
@@ -94,7 +94,7 @@ const SongDetailPage = () => {
     ogImage: song?.cover_url || undefined,
     ogType: "music.song",
     canonicalUrl: songCanonicalUrl,
-    keywords: song ? `${song.title}, ${artistName}, South Sudan gospel, ${song.genre || "gospel"}, SSDGUNA, download` : undefined,
+    keywords: song ? `${song.title}, ${artistName}, South Sudan gospel, ${song.genre || "gospel"}, Suda Gospel, download` : undefined,
     jsonLd: song ? {
       "@context": "https://schema.org",
       "@type": "MusicRecording",

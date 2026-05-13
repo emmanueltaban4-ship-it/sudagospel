@@ -18,8 +18,8 @@ const PERIODS: { value: TrendingPeriod; label: string; sub: string }[] = [
 
 const ChartsPage = () => {
   useDocumentMeta({
-    title: "Trending Charts — SSDGUNA",
-    description: "The hottest gospel songs trending today, this week, and this month on SSDGUNA.",
+    title: "Trending Charts — Suda Gospel",
+    description: "The hottest gospel songs trending today, this week, and this month on Suda Gospel.",
   });
   const [period, setPeriod] = useState<TrendingPeriod>("week");
   const { data: songs = [], isLoading } = useTrendingSongs(period);
@@ -70,7 +70,7 @@ const ChartsPage = () => {
           <div className="px-4 pt-8 pb-6 max-w-5xl mx-auto">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary font-bold">
               <Sparkles className="h-3.5 w-3.5" />
-              SSDGUNA Charts
+              Suda Gospel Charts
             </div>
             <h1 className="font-heading text-4xl md:text-6xl font-extrabold text-foreground mt-2 leading-[0.95]">
               Trending<br/>
