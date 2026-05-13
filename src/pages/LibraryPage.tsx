@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { songPath } from "@/lib/song-slug";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { usePlaylists } from "@/hooks/use-playlists";
@@ -166,7 +167,7 @@ const LibraryPage = () => {
                   {likedSongs?.map((song: any) => (
                     <Link
                       key={song.id}
-                      to={`/song/${song.id}`}
+                      to={songPath(song.id, song.title)}
                       className="flex items-center gap-3 p-3 rounded-xl hover:bg-card/80 transition-colors group"
                     >
                       <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">
@@ -246,7 +247,7 @@ const LibraryPage = () => {
                     {downloads.slice(0, 20).map(song => (
                       <Link
                         key={song.id}
-                        to={`/song/${song.id}`}
+                        to={songPath(song.id, song.title)}
                         className="flex items-center gap-3 p-3 rounded-xl hover:bg-card/80 transition-colors group"
                       >
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 shadow-sm">

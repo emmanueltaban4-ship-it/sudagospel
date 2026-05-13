@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { songPath } from "@/lib/song-slug";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,7 +68,7 @@ const PreSavePage = () => {
   // If song is already published, redirect to song page
   useEffect(() => {
     if (song && song.release_status === "published" && song.is_approved) {
-      navigate(`/song/${song.id}`, { replace: true });
+      navigate(songPath(song.id, song.title), { replace: true });
     }
   }, [song, navigate]);
 
