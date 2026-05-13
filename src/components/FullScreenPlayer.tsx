@@ -4,11 +4,13 @@ import { addDownload } from "@/pages/DownloadsPage";
 import {
   Play, Pause, SkipForward, SkipBack, Heart, Download, Share2,
   ChevronDown, Music, ListMusic, Shuffle, Repeat, Repeat1,
-  Volume, Volume1, Volume2, VolumeX, X, Trash2
+  Volume, Volume1, Volume2, VolumeX, X, Settings2, Moon
 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import ShareDialog from "@/components/ShareDialog";
+import Waveform from "@/components/Waveform";
+import PlaybackExtrasSheet from "@/components/PlaybackExtrasSheet";
 import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
