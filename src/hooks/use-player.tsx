@@ -31,6 +31,20 @@ interface PlayerContextType {
   recentlyPlayed: Track[];
   shuffle: boolean;
   repeatMode: RepeatMode;
+  // New: playback prefs
+  playbackRate: number;
+  setPlaybackRate: (r: number) => void;
+  dataSaver: boolean;
+  setDataSaver: (v: boolean) => void;
+  eqEnabled: boolean;
+  setEqEnabled: (v: boolean) => void;
+  eqBass: number;
+  eqMid: number;
+  eqTreble: number;
+  setEqBands: (b: { bass?: number; mid?: number; treble?: number }) => void;
+  // New: sleep timer
+  sleepTimerEndsAt: number | null;
+  setSleepTimer: (minutes: number | null) => void;
   play: (track: Track, queue?: Track[]) => void;
   togglePlay: () => void;
   seek: (time: number) => void;
@@ -53,6 +67,18 @@ const PlayerContext = createContext<PlayerContextType>({
   recentlyPlayed: [],
   shuffle: false,
   repeatMode: "off",
+  playbackRate: 1,
+  setPlaybackRate: () => {},
+  dataSaver: false,
+  setDataSaver: () => {},
+  eqEnabled: false,
+  setEqEnabled: () => {},
+  eqBass: 0,
+  eqMid: 0,
+  eqTreble: 0,
+  setEqBands: () => {},
+  sleepTimerEndsAt: null,
+  setSleepTimer: () => {},
   play: () => {},
   togglePlay: () => {},
   seek: () => {},
