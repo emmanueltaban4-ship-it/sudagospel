@@ -973,6 +973,8 @@ const ProfilePage = () => {
                 <NavItem icon={<ListMusic className="h-5 w-5" />} label="My Playlists" badge={myPlaylists > 0 ? String(myPlaylists) : undefined} onClick={() => navigate("/playlists")} />
                 <NavItem icon={<Crown className="h-5 w-5" />} label="Premium" sublabel="Unlock all features" onClick={() => navigate("/subscription")} />
 
+                <div className="pt-2"><InstallAppCard /></div>
+
                 {followedArtists && followedArtists.length > 0 && (
                   <>
                     <div className="pt-4 pb-1"><p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Following</p></div>
