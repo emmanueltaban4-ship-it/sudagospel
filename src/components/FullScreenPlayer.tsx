@@ -327,8 +327,24 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                     </div>
                   </div>
 
+                  {/* Active extras status */}
+                  {(playbackRate !== 1 || sleepTimerEndsAt) && (
+                    <div className="flex items-center justify-center gap-2 mb-2 text-[10px]">
+                      {playbackRate !== 1 && (
+                        <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold tabular-nums">
+                          {playbackRate}x
+                        </span>
+                      )}
+                      {sleepTimerEndsAt && (
+                        <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold inline-flex items-center gap-1">
+                          <Moon className="h-2.5 w-2.5" /> Sleep on
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {/* Action buttons */}
-                  <div className="flex items-center justify-center gap-10 pb-6">
+                  <div className="flex items-center justify-center gap-8 pb-6">
                     <button onClick={handleDownload} className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                       <Download className="h-5 w-5" />
                     </button>
@@ -341,6 +357,14 @@ const FullScreenPlayer = ({ isOpen, onClose }: FullScreenPlayerProps) => {
                       trigger={
                         <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
                           <Share2 className="h-5 w-5" />
+                        </button>
+                      }
+                    />
+                    <PlaybackExtrasSheet
+                      trackId={currentTrack.id}
+                      trigger={
+                        <button className="p-2 text-muted-foreground hover:text-foreground active:scale-90 transition-all">
+                          <Settings2 className="h-5 w-5" />
                         </button>
                       }
                     />
