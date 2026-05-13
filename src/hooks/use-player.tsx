@@ -138,7 +138,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (audioRef.current) {
       const audio = audioRef.current;
       setIsPlaying(true);
-      resolvePlayableUrl(track.fileUrl)
+      resolveTrackUrl(track.id, track.fileUrl)
         .then((src) => {
           audio.src = src;
           return audio.play();
