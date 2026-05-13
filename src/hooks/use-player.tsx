@@ -271,13 +271,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         supabase.from('user_listening_history').insert({ user_id: data.user.id, song_id: track.id }).then(() => {});
       }
     });
-    // Preload next track in queue
-    requestIdleCallback(() => {
-      const q = queueRef.current;
-      const idx = q.findIndex(t => t.id === track.id);
-      const next = q[idx + 1];
-      if (next) preloadAudio(next.fileUrl);
-    });
+    // Preload next track in queue (skipped in data-saver mode)
+    if (!dataSaverRef.current) {
+      requestIdleCallback(() => {
+        const q = queueRef.current;
+        const idx = q.findIndex(t => t.id === track.id);
+        const next = q[idx + 1];
+        if (next) preloadAudio(next.fileUrl);
+      });
+    }
   }, []);
 
   const play = useCallback((track: Track, newQueue?: Track[]) => {
