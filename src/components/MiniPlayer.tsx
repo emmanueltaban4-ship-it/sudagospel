@@ -1,5 +1,4 @@
 import {
-import { songPath } from "@/lib/song-slug";
   Play, Pause, SkipForward, SkipBack, Volume, Volume1, Volume2, VolumeX,
   Repeat, Shuffle, Heart, ListMusic, Maximize2, Music, ChevronUp
 } from "lucide-react";
