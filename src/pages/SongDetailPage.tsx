@@ -469,7 +469,7 @@ const SongDetailPage = () => {
                           </div>
                         </div>
                       </div>
-                      <Link to={`/song/${rs.id}`} onClick={(e) => e.stopPropagation()}>
+                      <Link to={songPath(rs.id, rs.title)} onClick={(e) => e.stopPropagation()}>
                         <p className="text-sm font-semibold text-foreground truncate hover:underline">{rs.title}</p>
                       </Link>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{rArtist}</p>
