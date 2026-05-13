@@ -41,7 +41,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <TopBar />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 lg:overflow-hidden">
         {/* Desktop sidebar */}
         <aside className="hidden lg:flex flex-col w-[240px] flex-shrink-0 h-[calc(100vh-3.5rem)] sticky top-14 overflow-hidden border-r border-border/40 bg-card/20">
           <div className="flex-1 overflow-y-auto py-4 px-2.5 overscroll-contain scrollbar-hide">
@@ -91,7 +91,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         </aside>
         
         {/* Main content */}
-        <main className="flex-1 min-w-0 overflow-y-auto h-[calc(100vh-3.5rem)] overscroll-contain scroll-smooth">
+        <main className="flex-1 min-w-0 lg:overflow-y-auto lg:h-[calc(100vh-3.5rem)] lg:overscroll-contain scroll-smooth">
           <div className="pb-[140px] md:pb-[80px]">
             <PageTransition key={location.pathname}>
               {children}
