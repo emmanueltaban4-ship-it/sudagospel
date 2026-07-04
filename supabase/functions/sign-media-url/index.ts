@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
   // historically stored the full public URL.
   const { data: songs, error: songErr } = await admin
     .from("songs")
-    .select("id, uploaded_by, is_approved, release_status, file_url, is_paid")
+    .select("id, uploaded_by, is_approved, release_status, file_url, is_paid_download")
     .ilike("file_url", `%${objectPath}`)
     .limit(1);
 
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
   if (!song) return json(404, { error: "Track not found" });
 
   // Authorization
-  let allowed = song.is_approved && song.release_status === "published" && !song.is_paid;
+  let allowed = song.is_approved && song.release_status === "published" && !song.is_paid_download;
 
   if (!allowed && userId) {
     if (song.uploaded_by === userId) {
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (roleRow) allowed = true;
     }
-    if (!allowed && song.is_paid) {
+    if (!allowed && song.is_paid_download) {
       const { data: paid } = await admin
         .from("paid_downloads")
         .select("id")
