@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
   if (!song) return json(404, { error: "Track not found" });
 
   // Authorization
-  let allowed = song.is_approved && song.release_status === "published" && !song.is_paid;
+  let allowed = song.is_approved && song.release_status === "published" && !song.is_paid_download;
 
   if (!allowed && userId) {
     if (song.uploaded_by === userId) {
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (roleRow) allowed = true;
     }
-    if (!allowed && song.is_paid) {
+    if (!allowed && song.is_paid_download) {
       const { data: paid } = await admin
         .from("paid_downloads")
         .select("id")
