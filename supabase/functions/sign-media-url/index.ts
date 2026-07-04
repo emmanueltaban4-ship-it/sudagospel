@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
   // historically stored the full public URL.
   const { data: songs, error: songErr } = await admin
     .from("songs")
-    .select("id, uploaded_by, is_approved, release_status, file_url, is_paid")
+    .select("id, uploaded_by, is_approved, release_status, file_url, is_paid_download")
     .ilike("file_url", `%${objectPath}`)
     .limit(1);
 
